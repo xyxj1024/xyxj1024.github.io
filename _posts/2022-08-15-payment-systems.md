@@ -15,7 +15,7 @@ Financial market infrastructures (FMI) provide **payments**, **clearing**, **set
 {:toc}
 <br />
 
-## Terminology
+## Key Terms
 
 - A **payment system** is a set of instruments, procedures, and rules for the transfer of funds between or among participants; the system includes the participants and the entity operating the arrangement. Payment systems are typically based on an agreement between or among participants and the operator of the arrangement, and the transfer of funds is effected using an agreed-upon operational infrastructure.[^1]
 
@@ -33,7 +33,7 @@ In 2017, a consortium of large banks inaugurated a new interbank platform called
 
 ## References
 
-[^1]: Committee on Payment and Settlement Systems and International Organization of Securities Commissions, *Principles for Financial Market Infrastructure*, BIS/[CPMI](https://www.bis.org/cpmi/about/overview.htm), April 2012. In 2014, CPSS changed name to Committee on Payments and Market Infrastructure (CPMI).
+[^1]: Committee on Payment and Settlement Systems and International Organization of Securities Commissions, *Principles for Financial Market Infrastructure*, BIS/[CPMI](https://www.bis.org/cpmi/about/overview.htm), April 2012. Note: In 2014, CPSS changed name to Committee on Payments and Market Infrastructure (CPMI).
 
 [^2]: Committee on Payments and Market Infrastructures, *A glossary of terms used in payments and settlement systems*, BIS/CPMI, updated October 17, 2016. Available at: [https://www.bis.org/cpmi/publ/d00b.htm](https://www.bis.org/cpmi/publ/d00b.htm).
 
