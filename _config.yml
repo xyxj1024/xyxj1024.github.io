@@ -15,7 +15,7 @@ permalink:        pretty
 
 # Setup
 title:            Xingjian Xuanyuan
-tagline:          'Personal Website'
+# tagline:          'Personal Website'
 description:      '譬大道之在天下猶川谷之於江海'
 baseurl:          https://XingjianXuanyuan.github.io/
 
