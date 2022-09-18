@@ -5,10 +5,10 @@ layout: default
 <div class="post">
   <h1 class="post-title">{{ page.title }}</h1>
   <span class="post-date">{{ page.date | date_to_string }}</span>
-  {% if post.last_modified_at %}
+  {{ content }}
+  {% if page.last_modified_at %}
   Last updated: {{ post.last_modified_at | date_to_string }}
   {% endif %}
-  {{ content }}
 </div>
 
 <div class="related">
