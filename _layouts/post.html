@@ -7,7 +7,7 @@ layout: default
   <span class="post-date">{{ page.date | date_to_string }}</span>
   {{ content }}
   {% if page.last_modified_at %}
-  Last updated: {{ post.last_modified_at | date_to_string }}
+  <p style="color:darkgrey;font-family:'Courier New', Courier, monospace" Last updated: {{ post.last_modified_at }}</p>
   {% endif %}
 </div>
 
