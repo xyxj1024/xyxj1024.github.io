@@ -11,7 +11,7 @@ excerpt_separator:    <!-- excerpt-end -->
 mathjax:              true
 
 # Permalinks
-permalink:        pretty
+permalink:        :title/
 
 # Setup
 title:            Xingjian Xuanyuan
