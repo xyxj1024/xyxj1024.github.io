@@ -1,8 +1,8 @@
 ---
-layout: page
-title: Blog Posts
-permalink: /posts/
-nav_order: 3
+layout:     page
+title:      Blog Posts
+permalink:  /posts/
+nav_order:  3
 ---
 
 {% for category in site.categories %}
