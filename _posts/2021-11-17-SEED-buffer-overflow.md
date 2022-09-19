@@ -1,7 +1,8 @@
 ---
-layout: post
-title: "SEED Labs 2.0: Buffer-Overflow Attack Lab (Set-UID Version) Writeup"
-category: "Computing Systems"
+layout:       post
+title:        "SEED Labs 2.0: Buffer-Overflow Attack Lab (Set-UID Version) Writeup"
+categories:   "Computing Systems"
+permalink:    /seed-buffer-overflow/
 ---
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org). The lab assignments were conducted using SEED virtual machine configured on a AWS EC2 instance.

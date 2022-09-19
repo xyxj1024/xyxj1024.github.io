@@ -1,7 +1,8 @@
 ---
-layout: post
-title: "Linux Processes: fork() and execve() Under the Hood"
-category: "Computing Systems"
+layout: 		post
+title: 			"Linux Processes: fork() and execve() Under the Hood"
+categories:		"Computing Systems"
+permalink:		/linux-processes-fork-execve/
 ---
 
 In this post, I would like to give a brief account of two Linux system calls---[<code>fork(2)</code>](https://man7.org/linux/man-pages/man2/fork.2.html) and [<code>execve(2)</code>](https://man7.org/linux/man-pages/man2/execve.2.html)---with operating system kernel implementation details (not glibc wrappers) presented and two code examples explained. <code>fork(2)</code> and <code>execve(2)</code> are commonly used by Linux processes from both user and kernel spaces. In particular, as you can see below, they are involved in the Linux kernel initialization process (the GitBook ["Linux Insides"](https://0xax.gitbooks.io/linux-insides/content/) provides a comprehensive discussion on this topic).
