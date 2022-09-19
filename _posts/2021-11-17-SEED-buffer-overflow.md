@@ -6,7 +6,7 @@ tags:         system-security
 permalink:    /seed-buffer-overflow/
 ---
 
-For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org). The lab assignments were conducted using SEED virtual machine configured on a AWS EC2 instance.
+For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org). The lab assignment was conducted using SEED virtual machine configured on a AWS EC2 instance.
 
 <!-- excerpt-end -->
 
