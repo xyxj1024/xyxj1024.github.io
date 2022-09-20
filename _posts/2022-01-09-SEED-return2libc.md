@@ -17,6 +17,22 @@ For general overview and the setup package for this lab, please go to [SEED Labs
 {:toc}
 <br />
 
+```console
+     Non-Executable Stack
+-----------------------------
+|                        _  |
+| ...                    |  |
+-------------------------|---          Executable Code Region
+| Return Address         |  |--------> -----------------------
+-------------------------|---          |  system() function  |
+| Previous Frame Pointer |  |          -----------------------
+-------------------------|---
+| ...           Overflow |  |
+| ...           Buffer   |  |
+-----------------------------
+|                           |
+```
+
 ## Environment Setup
 
 First, Ubuntu and several other Linux-based systems use **address space randomization** to randomize the starting address of heap and stack, making guessing the exact addresses difficult. Guessing addresses is one of the critical steps of buffer-overflow attacks. In this lab, we disable this
@@ -40,6 +56,8 @@ Always compile a program using the "<code>-z noexecstack</code>" option in this 
 ```console
 $ gcc -m32 -z noexecstack   -o test test.c
 ```
+
+The non-executable stack countermeasure is exactly what we are trying to defeat!
 
 Link <code>/bin/sh</code> to <code>zsh</code> to disable the protection by <code>/bin/dash</code> so that our commands can be executed in a <code>Set-UID</code> process:
 
@@ -157,3 +175,49 @@ $1 = {<text variable, no debug info>} 0xf7e08420 <system>
 gdb-peda$ p exit
 $2 = {<text variable, no debug info>} 0xf7dfaf80 <exit>
 ```
+
+Or we can also put these <code>gdb</code> commands into a file and then ask <code>gdb</code> to execute the commands from this file:
+
+```console
+$ cat gdb_command.txt
+break main
+run
+p system
+p exit
+quit
+$ gdb -q -batch -x gdb_command.txt ./retlib
+```
+
+## Task 2: Putting the shell string in the memory
+
+Let us define a new shell variable <code>MYSHELL</code>, and let it contain the string "<code>/bin/sh</code>":
+
+```console
+$ export MYSHELL=/bin/sh
+$ env | grep MYSHELL
+MYSHELL=/bin/sh
+```
+
+The location of this variable in the memory can be found out easily using the following program:
+
+```c
+#include <stdio.h>
+
+void main()
+{
+    char* shell = getenv("MYSHELL");
+    if (shell)
+        printf("%x\n", (unsigned int) shell);
+}
+```
+
+The program name <code>prtenv</code> is chosen to match the length of <code>retlib</code>.
+
+```console
+$ gcc -m32 -z noexecstack -o prtenv prtenv.c
+$ ./prtenv
+ffffd838
+```
+
+## Task 3: Launching the Attack
+
