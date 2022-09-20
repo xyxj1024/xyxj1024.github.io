@@ -93,6 +93,7 @@ execv(): 0xf7e8a410
 In this second program, we ask the <code>dlsym()</code> function to return the addresses where these three shared objects are dynamically loaded into memory:
 
 ```c
+/* sysa2.c */
 #include <stdio.h>
 #include <dlfcn.h>
 
@@ -488,7 +489,7 @@ Dump of assembler code for function bof:
    0x565562c3 <+86>:    add    esp,0x10
    0x565562c6 <+89>:    mov    eax,0x1
    0x565562cb <+94>:    mov    ebx,DWORD PTR [ebp-0x4]
-   0x565562ce <+97>:    leave  # That's it
+   0x565562ce <+97>:    leave  ; That's it
    0x565562cf <+98>:    ret    
 End of assembler dump.
 ```
