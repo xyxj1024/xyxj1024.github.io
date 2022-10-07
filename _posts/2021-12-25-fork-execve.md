@@ -2,7 +2,7 @@
 layout: 		post
 title: 			"Linux Processes: fork() and execve() Under the Hood"
 category:		"Computing Systems"
-tags:			linux
+tags:			linux-kernel operating-systems
 permalink:		/linux-processes-fork-execve/
 ---
 
