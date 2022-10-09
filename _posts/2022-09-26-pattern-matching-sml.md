@@ -34,24 +34,24 @@ datatype valu = Const of int
               | Constructor of string * valu
 
 fun g f1 f2 p =
-    let 
-        val r = g f1 f2 
-    in
-        case p of
-            Wildcard          => f1 ()
-          | Variable x        => f2 x
-          | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
-          | ConstructorP(_,p) => r p
-          | _                 => 0
-    end
+  let 
+    val r = g f1 f2 
+  in
+    case p of
+      Wildcard          => f1 ()
+    | Variable x        => f2 x
+    | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
+    | ConstructorP(_,p) => r p
+    | _                 => 0
+  end
 
 (**** for the challenge problem only ****)
 
 datatype typ = Anything           (* any type of value is okay *)
-	         | UnitT              (* type of Unit *)
-	         | IntT               (* type for integers *)
-	         | TupleT of typ list (* tuple types *)
-	         | Datatype of string (* some named datatype *)
+             | UnitT              (* type of Unit *)
+             | IntT               (* type for integers *)
+             | TupleT of typ list (* tuple types *)
+             | Datatype of string (* some named datatype *)
 ```
 
 ## Challenge Problem: <code>typecheck_patterns()</code>
