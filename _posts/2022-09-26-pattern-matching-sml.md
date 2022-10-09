@@ -95,7 +95,45 @@ Write a function that takes a <code>string</code> and returns the <code>string</
 val rev_string = implode o rev o explode
 ```
 
-## Utilities for Pattern Matching
+## Pattern Matching Functions
+
+### Utilities for Pattern Matching
+
+Write a function <code>first_answer()</code> of type:
+```sml
+('a -> 'b option) -> 'a list -> 'b
+```
+The first argument should be applied to elements of the second argument in order until the first time it returns <code>SOME v</code> for some <code>v</code> and then <code>v</code> is the result of the call to <code>first_answer()</code>. If the first argument returns <code>NONE</code> for all list elements, then <code>first_answer()</code> should raise the exception <code>NoAnswer</code>.
+
+```sml
+fun first_answer f lst =
+  case lst of 
+    [] => raise NoAnswer
+  | x::xs => 
+      case f x of
+        SOME v => v
+      | NONE => first_answer f xs
+```
+
+Next, write another function <code>all_answers()</code> of type:
+```sml
+('a -> 'b list option) -> 'a list -> 'b list option
+```
+The first argument should be applied to elements of the second argument. If it returns <code>NONE</code> for any element, then the result for <code>all_answers()</code> is <code>NONE</code>. Else the calls to the first argument will have produced <code>SOME lst1</code>, <code>SOME lst2</code>, ... <code>SOME lstn</code> and the result of <code>all_answers()</code> is <code>SOME lst</code> where <code>lst</code> is <code>lst1</code>, <code>lst2</code>, ... <code>lstn</code> appended together (order doesn't matter).
+
+```sml
+fun all_answers f lst =
+  let fun aux(f, lst, acc) =
+    case lst of
+      [] => SOME acc
+    | x::xs =>
+        case f x of
+          SOME v => aux(f, xs, v@acc)
+        | NONE => NONE
+  in
+    aux(f, lst, [])
+  end
+```
 
 ### Type Declarations
 
@@ -127,14 +165,6 @@ fun g f1 f2 p =
     | ConstructorP(_,p) => r p
     | _                 => 0
   end
-
-(**** for the challenge problem only ****)
-
-datatype typ = Anything           (* any type of value is okay *)
-             | UnitT              (* type of Unit *)
-             | IntT               (* type for integers *)
-             | TupleT of typ list (* tuple types *)
-             | Datatype of string (* some named datatype *)
 ```
 
 The rules for matching are:
@@ -147,7 +177,118 @@ The rules for matching are:
 * <code>ConstructorP(s1, p)</code> matches <code>Constructor(s2, v)</code> if <code>s1</code> and <code>s2</code> are the same string (we can compare them with <code>=</code>) and <code>p</code> matches <code>v</code>. The list of bindings produced is the list from the nested pattern matche. We call the strings <code>s1</code> and <code>s2</code> the *constructor name*;
 * Nothing else matches.
 
+### <code>count_wildcards()</code>
+
+Use the provided <code>g</code> function to define a function that takes a pattern and returns how many <code>Wildcard</code> patterns it contains:
+
+```sml
+val count_wildcards = g (fn _ => 1) (fn _ => 0)
+```
+
+### <code>count_wild_and_variable_lengths()</code>
+
+Use the provided <code>g</code> function to define a function that takes a pattern and returns the number of <code>Wildcard</code> patterns it contains plus the sum of the string lengths of all the variables in the variable patterns it contains:
+
+```sml
+val count_wild_and_variable_lengths = g (fn _ => 1) String.size
+```
+
+### <code>count_some_var()</code>
+
+Use the provided <code>g</code> function to define a function that takes a string-pattern pair and returns the number of times the string appears as a variable in the pattern:
+
+```sml
+val count_some_var = fn (str, pat) =>
+  g (fn _ => 0) (fn x => case x = str of true => 1 | false => 0) pat
+```
+
+### <code>check_pat()</code>
+
+Write a function that takes a pattern and returns true if and only if all the variables appearing in the pattern are distinct from each other (i.e., use different strings):
+
+```sml
+val check_pat =
+  let
+    (* Takes a pattern and returns a list of all strings the pattern
+     * uses for variables. *)
+    fun get_strlst pat =
+      case pat of
+        Variable x => [x]
+      | TupleP ps => foldl (fn (p, acc) => (get_strlst p)@acc) [] ps
+      | ConstructorP(_, p) => get_strlst p
+      | _ => []
+
+    (* Takes a list of strings and returns true iff no repeated strings. *)
+    fun diff_str lst =
+      case lst of
+        [] => true 
+      | x::xs =>
+          case List.exists (fn y => x = y) xs of
+            false => diff_str xs
+          | true => false
+  in
+    diff_str o get_strlst
+  end
+```
+
+### <code>match()</code>
+
+Write a function that takes a <code>valu * pattern</code> pair and returns a <code>(string * valu) list option</code>, namely <code>NONE</code> if the pattern does not match and <code>SOME lst</code> where <code>lst</code> is the list of bindings if it does. Note that if the value matches but the pattern has no patterns of the form <code>Variable s</code>, then the result is <code>SOME []</code>.
+
+```sml
+fun match x = (* To recursively call match, avoid the anonymous function binding *)
+  case x of
+    (* Wildcard matches everything *)
+    (_, Wildcard) => SOME []
+  | (v, Variable s) => SOME [(s, v)]
+    (* UnitP matches only Unit *)
+  | (Unit, UnitP) => SOME []
+    (* int value matches *)
+  | (Const y, ConstP z) => 
+      case y = z of 
+      true => SOME [] 
+    | false => NONE
+  | (Tuple vs, TupleP ps) =>
+      case List.length vs = List.length ps of
+        true => all_answers match (ListPair.zip (vs, ps))
+      | false => NONE
+  | (Constructor(s, v), ConstructorP(t, p)) =>
+      case s = t of 
+        true => match(v, p)
+      | false => NONE )
+  | _ => NONE
+```
+
+### <code>first_match()</code>
+
+Write a function that takes a <code>valu</code> and a list of patterns and returns a <code>(string * valu) list option</code>, namely <code>NONE</code> if no pattern in the list matches or <code>SOME lst</code> where <code>lst</code> is the list of bindings for the first pattern in the list that matches.
+
+```sml
+fun first_match v lst =
+  SOME (first_answer (fn p => match (v, p)) lst)
+  handle NoAnswer => NONE
+```
+
 ### Challenge Problem: <code>typecheck_patterns()</code>
+
+Write a function <code>typecheck_patterns()</code> of type
+```sml
+((string * string * typ) list) * (pattern list) -> typ option
+```
+that "type-checks" a pattern list. Types for our made-up pattern language are of type <code>typ</code>, which is defined by:
+```sml
+datatype typ = Anything           (* any type of value is okay *)
+             | UnitT              (* type of Unit *)
+             | IntT               (* type for integers *)
+             | TupleT of typ list (* tuple types *)
+             | Datatype of string (* some named datatype *)
+```
+
+The first argument contains elements that look like
+```sml
+("foo", "bar", IntT)
+```
+which means constructor <code>foo</code> makes a value of type <code>datatype "bar"</code> given a value of type <code>IntT</code>. Assume list elements all have different first fields (the constructor name), but there are probably elements with the same second field (the datatype name). <code>typecheck_patterns()</code> "type-check" the pattern list to see if there exists some <code>typ t</code> that all the patterns in the list can have. If so, return <code>SOME t</code>, else return <code>NONE</code>.
 
 Consider a case expression with different patterns:
 
