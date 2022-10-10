@@ -9,7 +9,7 @@ last_modified_at: "2022-10-09"
 
 Homework 3 of the [programming language course](https://www.coursera.org/learn/programming-languages/) taught by Professor Dan Grossman from University of Washington.
 
-The use of **pattern matching**{: style="color: red"} to access components of aggregate data structures is one of the most powerful, and distinctive, features of Standard ML[^1].
+**Standard ML**{: style="color: red"} extensively revised earlier dialects of the functional programming language ML, including the module facility that supports large-scale program development. The use of **pattern matching**{: style="color: red"} to access components of aggregate data structures is one of the most powerful, and distinctive, features of ML family[^1].
 
 <!-- excerpt-end -->
 
@@ -299,7 +299,7 @@ Consider a case expression with different patterns:
 case x of p1 | p2 | ... | pn
 ```
 
-> The objective of this challenge exercise is to create an algorithm that, like the SML compiler, is capable of inferring the type <code>t</code> of <code>x</code> based on the patterns <code>p1</code>, <code>p2</code>, ..., <code>pn</code>.
+> The objective of this challenge exercise is to create an algorithm that, like the SML compiler[^2], is capable of inferring the type <code>t</code> of <code>x</code> based on the patterns <code>p1</code>, <code>p2</code>, ..., <code>pn</code>.
 
 My implementation here includes four helper functions. The first one, <code>pattern_to_typ()</code>, converts a <code>pattern</code> to a <code>typ</code>:
 
@@ -393,3 +393,5 @@ fun typecheck_patterns (conslst, patlst) =
 ```
 
 [^1]: [Robert Harper, *Programming in Standard ML*, 2011.](http://www.cs.cmu.edu/~rwh/isml/book.pdf)
+
+[^2]: For the SML/NJ compiler's type-checking code, please go to the GitHub directory: [https://github.com/smlnj/smlnj/compiler/](https://github.com/smlnj/smlnj/blob/main/compiler/Elaborator/types/typecheck.sml).
