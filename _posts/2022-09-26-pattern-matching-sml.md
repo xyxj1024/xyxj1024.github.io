@@ -9,6 +9,8 @@ last_modified_at: "2022-10-09"
 
 Homework 3 of the [programming language course](https://www.coursera.org/learn/programming-languages/) taught by Professor Dan Grossman from University of Washington.
 
+The use of **pattern matching**{: style="color: red"} to access components of aggregate data structures is one of the most powerful, and distinctive, features of Standard ML[^1].
+
 <!-- excerpt-end -->
 
 <br />
@@ -31,7 +33,7 @@ val only_capitals =
 
 ### <code>longest_string1()</code>
 
-Write a function that takes a <code>string list</code> and returns the longest <code>string</code> in the list. If the list is empty, return <code>""</code>. In the case of a tie, return the string closest to the beginning of the list:
+Write a function that takes a <code>string list</code> and returns the longest <code>string</code> in the list. If the list is empty, return empty string <code>""</code>. In the case of a tie, return the string closest to the beginning of the list:
 
 ```sml
 val longest_string1 =
@@ -60,7 +62,7 @@ val longest_string2 =
 
 * <code>longest_string3()</code> has the same behavior as <code>longest_string1()</code> and <code>longest_string4()</code> has the same behavior as <code>longest_string2()</code>;
 * <code>longest_string_helper()</code> has type <code>(int * int -> bool) -> string list -> string</code>. This function is more general that takes a function as an argument;
-* If <code>longest_string_helper()</code> is passed a function that behaves like <code>></code>, then the function returned has the same behavior as <code>longest_string1()</code>;
+* If <code>longest_string_helper()</code> is passed a function that behaves like <code>></code> operator, then the function returned has the same behavior as <code>longest_string1()</code>;
 * <code>longest_string3()</code> and <code>longest_string4()</code> are defined with value bindings and partial applications of <code>longest_string_helper()</code>.
 
 ```sml
@@ -174,7 +176,7 @@ The rules for matching are:
 * <code>UnitP</code> matches only <code>Unit</code> and produces the empty list of bindings;
 * <code>ConstP 17</code> matches only <code>Const 17</code> and produces the empty list of bindings (similarly for other integers).
 * <code>TupleP ps</code> matches a value of the form <code>Tuple vs</code> if <code>ps</code> and <code>vs</code> have the same length and for all $i$, the $i$th element of <code>ps</code> matches the $i$th element of <code>vs</code>. The list of bindings produced is all the lists from the nested pattern matches appended together.
-* <code>ConstructorP(s1, p)</code> matches <code>Constructor(s2, v)</code> if <code>s1</code> and <code>s2</code> are the same string (we can compare them with <code>=</code>) and <code>p</code> matches <code>v</code>. The list of bindings produced is the list from the nested pattern matche. We call the strings <code>s1</code> and <code>s2</code> the *constructor name*;
+* <code>ConstructorP(s1, p)</code> matches <code>Constructor(s2, v)</code> if <code>s1</code> and <code>s2</code> are the same string (we can compare them with <code>=</code> operator) and <code>p</code> matches <code>v</code>. The list of bindings produced is the list from the nested pattern matche. We call the strings <code>s1</code> and <code>s2</code> the *constructor name*;
 * Nothing else matches.
 
 ### <code>count_wildcards()</code>
@@ -275,7 +277,7 @@ Write a function <code>typecheck_patterns()</code> of type
 ```sml
 ((string * string * typ) list) * (pattern list) -> typ option
 ```
-that "type-checks" a pattern list. Types for our made-up pattern language are of type <code>typ</code>, which is defined by:
+that "type-checks" a pattern list. Types for our made-up pattern language are values of type <code>typ</code>, which is defined as:
 ```sml
 datatype typ = Anything           (* any type of value is okay *)
              | UnitT              (* type of Unit *)
@@ -284,11 +286,12 @@ datatype typ = Anything           (* any type of value is okay *)
              | Datatype of string (* some named datatype *)
 ```
 
-The first argument contains elements that look like
+The first argument of type <code>(string * string * typ) list</code> contains elements that take the form of:
 ```sml
+(* constructor name, datatype name, typ *)
 ("foo", "bar", IntT)
 ```
-which means constructor <code>foo</code> makes a value of type <code>datatype "bar"</code> given a value of type <code>IntT</code>. Assume list elements all have different first fields (the constructor name), but there are probably elements with the same second field (the datatype name). <code>typecheck_patterns()</code> "type-check" the pattern list to see if there exists some <code>typ t</code> that all the patterns in the list can have. If so, return <code>SOME t</code>, else return <code>NONE</code>.
+which means constructor <code>foo</code> makes a value of type <code>datatype bar</code> given a value of type <code>IntT</code>. Assume list elements all have different first fields (the constructor name), but there are probably elements with the same second field (the datatype name). <code>typecheck_patterns()</code> "type-check" the pattern list to see if there exists some <code>typ t</code> that all the patterns in the list can have. If so, return <code>SOME t</code>, else return <code>NONE</code>.
 
 Consider a case expression with different patterns:
 
@@ -296,4 +299,97 @@ Consider a case expression with different patterns:
 case x of p1 | p2 | ... | pn
 ```
 
-> The objective of this challenge exercise is to create an algorithm that, like the SML compiler, is capable of inferring the type <code>t<code> of <code>x</code> based on the patterns <code>p1</code>, <code>p2</code>, ..., <code>pn</code>.
+> The objective of this challenge exercise is to create an algorithm that, like the SML compiler, is capable of inferring the type <code>t</code> of <code>x</code> based on the patterns <code>p1</code>, <code>p2</code>, ..., <code>pn</code>.
+
+My implementation here includes four helper functions. The first one, <code>pattern_to_typ()</code>, converts a <code>pattern</code> to a <code>typ</code>:
+
+```sml
+fun pattern_to_typ (pat, cons) =
+  case pat of
+    Wildcard => Anything
+  | Variable _ => Anything
+  | UnitP => UnitT
+  | ConstP _ => IntT
+  | TupleP ps =>
+      (* Converts every pattern to typ in ps,
+       * where foldl returns a typ list *)
+      TupleT (foldl (fn (p, acc) => acc@[pattern_to_typ (p, cons)]) [] ps)
+  | ConstructorP (s, p) => 
+    (* Matches a ConstructorP in a list of string * string * typ pairs
+     * (the constructor list) and converts it to a named Datatype *)
+      let
+        fun cons_to_nd cs =
+          case cs of
+            [] => Datatype ""
+          | (x, y, z)::rest =>
+              if (x = s) andalso
+                 (pattern_to_typ (p, cons) = z orelse
+                  pattern_to_typ (p, cons) = Anything)
+              then Datatype y
+              else cons_to_nd rest
+      in
+        cons_to_nd cons
+      end
+```
+
+The second helper function, <code>patlst_to_typlst()</code>, takes a list of patterns and returns a <code>typ list</code> making use of the above function:
+
+```sml
+fun patlst_to_typlst (cons, pats, acc) =
+  case (pats, acc) of
+    ([], []) => [Datatype ""]
+  | ([], _) => acc
+  | (p::ps, _) => patlst_to_typlst (cons, ps, acc@[pattern_to_typ (p, cons)])
+```
+
+The third helper function, <code>typlst_to_typ()</code>, takes a <code>typ list</code> and returns the "most lenient" <code>typ</code>:
+
+```sml
+val typlst_to_typ =
+  foldl
+  (* Given two typs, returns an appropriate typ *)
+  ( fn (t1, t2) => case (t1, t2) of
+      (Anything, t2) => t2
+    | (t1, Anything) => t1
+    | (TupleT(x), TupleT(y)) =>
+        let
+          fun aux(ps, acc) =
+            case ps of
+              [] => TupleT(acc)
+            | (p1, p2)::rest => aux(rest, acc@[typlst_to_typ([p1, p2])])
+        in
+          (* raises UnequalLengths with zipEq *)
+          aux(ListPair.zipEq(x, y), [])
+          handle UnequalLengths => TupleT([Datatype ""])
+        end
+    | (d1, d2) => case d1 = d2 of true => d1 | false => Datatype ""
+  Anything
+```
+
+The last helper function, <code>typop()</code>, converts a <code>typ</code> to a <code>typ option</code>:
+
+```sml
+fun typop t =
+  case t of
+    Datatype "" => NONE
+  | TupleT(typlst) =>
+      let 
+        fun find([]) = SOME t
+          | find(head::rest) =
+              case typop head of
+                NONE => NONE
+              | _ => find(rest)
+      in
+        find(typlst)
+      end
+  | _ => SOME t
+```
+
+Finally, our <code>typecheck_patterns()</code> function is just a wrapper:
+
+```sml
+fun typecheck_patterns (conslst, patlst) =
+  (typop o typlst_to_typ o patlst_to_typlst) (conslst, patlst, [])
+```
+
+[^1]: [Robert Harper, *Programming in Standard ML*, 2011.](http://www.cs.cmu.edu/~rwh/isml/book.pdf)
