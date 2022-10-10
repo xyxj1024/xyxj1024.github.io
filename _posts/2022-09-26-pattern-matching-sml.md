@@ -392,6 +392,8 @@ fun typecheck_patterns (conslst, patlst) =
   (typop o typlst_to_typ o patlst_to_typlst) (conslst, patlst, [])
 ```
 
-[^1]: [Robert Harper, *Programming in Standard ML*, 2011.](http://www.cs.cmu.edu/~rwh/isml/book.pdf)
+## Notes
 
-[^2]: For the SML/NJ compiler's type-checking code, please go to the GitHub directory: [https://github.com/smlnj/smlnj/compiler/](https://github.com/smlnj/smlnj/blob/main/compiler/Elaborator/types/typecheck.sml).
+[^1]: See [Robert Harper, *Programming in Standard ML*, 2011.](http://www.cs.cmu.edu/~rwh/isml/book.pdf)
+
+[^2]: For the SML/NJ compiler's type-checking code, please go to the GitHub directory: [https://github.com/smlnj/smlnj/compiler/](https://github.com/smlnj/smlnj/blob/main/compiler/).
