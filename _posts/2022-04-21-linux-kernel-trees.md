@@ -42,7 +42,7 @@ Matthew Wilcox[^2]
 
 Each node in the tree contains a value and up to two children; the node's value will be greater than that of all children in the "left" child branch, and less than that of all children in the "right" branch. (Thus, it is possible to serialize a red-black tree by performing a depth-first. left-to-right traversal.) Implementations of the red-black tree algorithms will usually include the **sentinel**{: style="color: red"} nodes as a convenient means of flagging that you have reached a leaf node. They are <code>NULL</code> black nodes of **Property 2**. Formally, a red-black tree with $n$ internal nodes has height at least $\log_{2}(n+1)$ but at most $2\log_{2}(n+1)$.
 
-Linux kernel's <code>rbtree</code> representation lives in the file [<code>include/linux/rbtree_types.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_types.h). Basic utilities can be viewed in: [<code>include/linux/rbtree_augmented.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_augmented.h) and [<code>include/linux/rbtree.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree.h). To use the red-black tree facility, do:
+Linux kernel's <code>rbtree</code> representation lives in the file [<code>include/linux/rbtree_types.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_types.h). Basic utilities can be viewed in: [<code>include/linux/rbtree_augmented.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_augmented.h) and [<code>include/linux/rbtree.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree.h). To import the red-black tree facility, do:
 
 ```c
 #include <linux/rbtree.h>
@@ -89,9 +89,48 @@ static inline void rb_set_parent(struct rb_node *rb, struct rb_node *p)
 or at the same time assigned with <code>RB_BlACK</code> so that <code>rb</code> is changed into a black node:
 ```c
 static inline void rb_set_parent_color(struct rb_node *rb,
-				                       struct rb_node *p, int color)
+                                       struct rb_node *p, int color)
 {
     rb->__rb_parent_color = (unsigned long)p | color;
+}
+```
+This latter task can also be done with
+```c
+static inline void rb_set_black(struct rb_node *rb)
+{
+    rb->__rb_parent_color |= RB_BLACK;
+}
+```
+
+Whenver we want to insert a new node onto a <code>rbtree</code>, we should first make a call to function:
+```c
+static inline void rb_link_node(struct rb_node *node,
+                                struct rb_node *parent,
+                                struct rb_node **rb_link)
+{
+    node->__rb_parent_color = (unsigned long)parent;
+    node->rb_left = node->rb_right = NULL;
+
+    *rb_link = node;
+}
+```
+which finds the place to insert the node, and then call:
+```c
+void rb_insert_color(struct rb_node *node, struct rb_root *root)
+{
+    __rb_insert(node, root, dummy_rotate);
+}
+```
+which inserts the node onto the tree and "recolors" the tree.
+
+Whenever we want to remove an existing node, make a call to function:
+```c
+void rb_erase(struct rb_node *node, struct rb_root *root)
+{
+    struct rb_node *rebalance;
+    rebalance = __rb_erase_augmented(node, root, &dummy_callbacks);
+    if (rebalance)
+        ____rb_erase_color(rebalance, root, dummy_rotate);
 }
 ```
 
