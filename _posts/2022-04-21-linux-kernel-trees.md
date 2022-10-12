@@ -205,9 +205,9 @@ where
 
 ### Virtual Memory Areas
 
-Noncontiguous physical memory can be mapped into virtually contiguous memory between <code>VMALLOC_START</code> and <code>VMALLOC_END</code> with the <code>vmalloc()</code> function. This function actually wraps <code>__vmalloc_node_range()</code> in order to perform memory allocation and return the address of the allocated kernel virtual area. Note that <code>VMALLOC_START</code> and <code>VMALLOC_END</code> are architecture-specific.
+Red-black tree suppots virtual memory area tracking in the Linux kernel. Noncontiguous physical memory can be mapped into virtually contiguous memory between <code>VMALLOC_START</code> and <code>VMALLOC_END</code> with the <code>vmalloc()</code> function. This function actually wraps <code>__vmalloc_node_range()</code> in order to perform memory allocation and return the address of the allocated kernel virtual area. Note that <code>VMALLOC_START</code> and <code>VMALLOC_END</code> are architecture-specific.
 
-Virtual memory areas are characterized by two different structures at the same time, defined in [<code>include/linux/vmalloc.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/vmalloc.h):
+Virtual memory areas are represented by two different structures at the same time, defined in [<code>include/linux/vmalloc.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/vmalloc.h):
 
 ```c
 struct vm_struct {
@@ -237,6 +237,8 @@ struct vmap_area {
     }
 }
 ```
+
+Every <code>vmap_area</code> contains a pointer to a corresponding <code>vm_struct</code> and can be accessed by both the red-black tree and doubly linked list data structures.
 
 ## References
 
