@@ -171,9 +171,8 @@
     font-size: .75rem;
     line-height: 1.4;
     overflow-x: auto;
-    white-space: pre;
+    white-space: pre-wrap;
     /*
-     * white-space: pre-wrap;
      * word-break: break-all;
      * word-wrap: break-word;
      */
@@ -193,6 +192,7 @@
   }
   .highlight pre {
     margin-bottom: 0;
+    word-wrap: normal;
   }
   
   /* Gist via GitHub Pages */

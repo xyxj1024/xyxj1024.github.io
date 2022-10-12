@@ -203,7 +203,7 @@ where
 
 ### Virtual Memory Areas
 
-Noncontiguous physical memory can be mapped into virtually contiguous memory (between <code>VMALLOC_START</code> and <code>VMALLOC_END</code>) with <code>vmalloc()</code>, which uses <code>__vmalloc_node_range()</code> to perform memory allocation and returns the address of the allocated kernel virtual area. On $32$-bit x86 systems, the kernel virtual memory starts 8MB after the physical memory (<code>high_memory</code>):
+Noncontiguous physical memory can be mapped into virtually contiguous memory (between <code>VMALLOC_START</code> and <code>VMALLOC_END</code>) with <code>vmalloc()</code>, which uses <code>__vmalloc_node_range()</code> to perform memory allocation and returns the address of the allocated kernel virtual area. On $32$-bit x86 systems, the kernel virtual memory starts $8$ MB after the physical memory (<code>high_memory</code>):
 
 ```c
 #define VMALLOC_OFFSET	(8 * 1024 * 1024)
@@ -211,7 +211,7 @@ Noncontiguous physical memory can be mapped into virtually contiguous memory (be
 #define VMALLOC_START	((unsigned long)high_memory + VMALLOC_OFFSET)
 ```
 
-Virtual memory areas are characterized by two different structures at the same time, defined in [<code>include/linux/vmalloc.h](https://elixir.bootlin.com/linux/latest/source/include/linux/vmalloc.h):
+Virtual memory areas are characterized by two different structures at the same time, defined in [<code>include/linux/vmalloc.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/vmalloc.h):
 
 ```c
 struct vm_struct {
