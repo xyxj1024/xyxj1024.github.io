@@ -181,9 +181,9 @@ where
 
 ### Virtual Memory Areas
 
-Red-black tree suppots virtual memory area tracking in the Linux kernel. Noncontiguous physical memory can be mapped into virtually contiguous memory between <code>VMALLOC_START</code> and <code>VMALLOC_END</code> with the <code>vmalloc()</code> function. This function actually wraps <code>__vmalloc_node_range()</code> in order to perform memory allocation and return the address of the allocated kernel virtual area. Note that <code>VMALLOC_START</code> and <code>VMALLOC_END</code> are architecture-specific.
+Red-black tree suppots virtual memory area tracking in the Linux **kernel space**. Noncontiguous physical memory can be mapped into virtually contiguous memory between <code>VMALLOC_START</code> and <code>VMALLOC_END</code> with the <code>vmalloc()</code> function. This function wraps <code>__vmalloc_node_range()</code> in order to perform memory allocation and return the address of the allocated kernel virtual area (KVA). Note that <code>VMALLOC_START</code> and <code>VMALLOC_END</code> are architecture-specific.
 
-Virtual memory areas are represented by two different structures at the same time, defined in [<code>include/linux/vmalloc.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/vmalloc.h):
+KVAs are represented by two different <code>struct</code>'s at the same time, defined in [<code>include/linux/vmalloc.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/vmalloc.h):
 ```c
 struct vm_struct {
     struct vm_struct    *next;
@@ -212,8 +212,49 @@ struct vmap_area {
     }
 }
 ```
+Connections between them can be setup using:
+```c
+static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
+    struct vmap_area *va, unsigned long flags, const void *caller)
+{
+    vm->flags = flags;
+    vm->addr = (void *)va->va_start;
+    vm->size = va->va_end - va->va_start;
+    vm->caller = caller;
+    va->vm = vm;
+}
+```
 
-Every <code>vmap_area</code> contains a pointer to a corresponding <code>vm_struct</code> and can be accessed by both the red-black tree and doubly linked list data structures.
+Every <code>vmap_area</code> contains a pointer to a corresponding <code>vm_struct</code> and allows operations from two global data structures: red-black tree and doubly linked list. When performing KVA allocation given certain size and alignment, <code>vmalloc()</code> calls <code>insert_vmap_area()</code>:
+```c
+static void
+insert_vmap_area(struct vmap_area *va, 
+                 struct rb_root *root, 
+                 struct list_head *head)
+{
+    struct rb_node **link;
+    struct rb_node *parent;
+
+    link = find_va_links(va, root, NULL, &parent);
+    if (link)
+        link_va(va, root, parent, link, head);
+}
+```
+to insert a free block onto the global red-black tree and the allocation is done over free area lookups rather than finding a hole between two busy blocks, [which allows to have lower number of objects representing the free space and thus to have less external fragmentation](https://patchwork.kernel.org/project/linux-mm/cover/20190406183508.25273-1-urezki@gmail.com/). <code>vmap_struct</code>'s are sorted by their <code>va_start</code> fields. Given a virtual memory address <code>addr</code>, a tree lookup probably resembles this:
+```c
+while (node) {
+    struct vmap_area *va;
+
+    va = rb_entry(node, struct vmap_area, rb_node);
+    if (addr < va->va_start) {
+        node = node->rb_left;
+    } else if (addr >= va->va_end) {
+        node = node->rb_right;
+    } else {
+        /* do something */
+    }
+}
+```
 
 ## References
 
