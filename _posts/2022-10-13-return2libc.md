@@ -137,6 +137,9 @@ gdb-peda$ x/20s 0xffffd7e2
 The above results show that the string starts at <code>0xffffd7ec</code>. Nevertheless, running <code>find\_var.c</code>, I got the output <code>0xffffd832</code>. If we type <code>unset environment LINES</code> and <code>unset environment COLUMNS</code> in <code>gdb</code>, the two addresses should be identical.
 <input type="checkbox" id="cb1" /><label for="cb1"><sup></sup></label><span><br><br>This is the footnote text.<br><br></span>
 blablabla
+<input type="checkbox" id="cb1" /><label for="cb1"><sup></sup></label><span><br><br>This is the footnote text.<br><br></span>
+blablablabla
+<input type="checkbox" id="cb1" /><label for="cb1"><sup></sup></label><span><br><br>This is the footnote text.<br><br></span>
 
 ### Assemble the Payload
 
