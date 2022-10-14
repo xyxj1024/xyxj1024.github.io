@@ -18,9 +18,9 @@ permalink:        pretty
 # Setup
 title:            Xingjian
 # tagline:          'Personal Website'
-description:      '譬大道之在天下猶川谷之於江海\nEventually, \
-                   all things merge into one, \
-                   and a river runs through it.'
+description: |
+  '譬大道之在天下猶川谷之於江海
+  Eventually, all things merge into one, and a river runs through it.'
 baseurl:          https://xingjianxuanyuan.github.io/
 
 include: ["_pages", "_posts"]
