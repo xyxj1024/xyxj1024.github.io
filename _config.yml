@@ -6,7 +6,8 @@ kramdown:
   syntax_highlighter: rouge
   syntax_highlighter_opts:
           # Use existing pygments syntax highlighting css
-          css_class: 'highlight'
+          css_class:  'highlight'
+  footnote_backlink:  "⤴"
 highlighter:          pygments
 excerpt_separator:    <!-- excerpt-end -->
 mathjax:              true
@@ -27,6 +28,7 @@ plugins:
   - jekyll-gist
   - jekyll-paginate
   - jekyll-seo-tag
+  - jekyll-target-blank
 
 author:
   name:           'Xingjian Xuanyuan'
