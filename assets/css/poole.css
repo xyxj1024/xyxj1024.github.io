@@ -112,6 +112,19 @@
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
+
+  p#console {
+    font-family: Menlo, Monaco, "Courier New", monospace;
+    display: block;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    font-size: .75rem;
+    line-height: 1.4;
+    overflow-x: auto;
+    white-space: pre;
+    background-color: #f9f9f9;
+  }​
   
   strong {
     color: #303030;

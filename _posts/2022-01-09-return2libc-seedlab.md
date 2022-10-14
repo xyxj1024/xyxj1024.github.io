@@ -3,7 +3,7 @@ layout:       post
 title:        "SEED Labs 2.0: Return-to-libc Attack Lab (32-bit) Writeup"
 category:     "Computing Systems"
 tags:         system-security
-permalink:    /seed-return2libc/
+permalink:    /return2libc-seedlab/
 ---
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org). The lab assignment was conducted using SEED virtual machine configured on a AWS EC2 instance.
