@@ -61,6 +61,8 @@
   body {
     color: #515151;
     background-color: #fff;
+    font-variant-east-asian: simplified;
+    /* font-variant-east-asian: traditional */
     -webkit-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
   }

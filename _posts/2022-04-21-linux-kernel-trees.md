@@ -2,7 +2,7 @@
 layout:           post
 title:            "Tree Data Structures in the Linux Kernel"
 category:         "Computing Systems"
-tags:		      unix operating-system linux-kernel
+tags:		      unix operating-system data-structures
 permalink:        /linux-trees/
 last_modified_at: "2022-10-10"
 ---
