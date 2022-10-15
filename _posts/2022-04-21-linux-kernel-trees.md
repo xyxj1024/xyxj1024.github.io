@@ -45,7 +45,7 @@ Each node in the tree contains a value and up to two children; the node's value 
 
 ### Kernel Source Code
 
-Linux kernel's <code>rbtree</code> representation lives in the file [<code>include/linux/rbtree_types.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_types.h). Basic utilities can be viewed in: [<code>include/linux/rbtree_augmented.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_augmented.h) and [<code>include/linux/rbtree.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree.h). To import the red-black tree facility, do:
+The Linux kernel documentation for <code>rbtree</code> can be found [here](https://www.kernel.org/doc/html/latest/core-api/rbtree.html). Linux kernel's <code>rbtree</code> representation lives in the file [<code>include/linux/rbtree_types.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_types.h). Basic utilities can be viewed in: [<code>include/linux/rbtree_augmented.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_augmented.h) and [<code>include/linux/rbtree.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree.h). To import the red-black tree facility, do:
 ```c
 #include <linux/rbtree.h>
 ```
@@ -179,9 +179,13 @@ where
 }
 ```
 
-### Virtual Memory Areas
+### Virtual Memory Areas in the Kernel Space
 
-Red-black tree suppots virtual memory area tracking in the Linux **kernel space**. Noncontiguous physical memory can be mapped into virtually contiguous memory between <code>VMALLOC_START</code> and <code>VMALLOC_END</code> with the <code>vmalloc()</code> function. This function wraps <code>__vmalloc_node_range()</code> in order to perform memory allocation and return the address of the allocated kernel virtual area (KVA). Note that <code>VMALLOC_START</code> and <code>VMALLOC_END</code> are architecture-specific.
+Red-black tree suppots virtual memory area tracking in the Linux **kernel space**. Here is a [quote](https://lwn.net/Articles/304188/) from Jonathan Corbet:
+
+> Kernel memory is normally allocated in relatively small chunks - usually just a single page at a time. As the size of an allocation grows, satisfying that allocation with physically-contiguous pages gets progressively harder. So most of the kernel has been written with an eye toward avoiding the use of large, contiguous allocations. There are times, though, when a large memory array needs to be virtually contiguous, but not necessarily physically contiguous. One example is the allocation of space for loadable modules; any given module should live in a single, contiguous address range, but nobody cares how it's laid out in physical RAM.[^4]
+
+Noncontiguous physical memory can be mapped into virtually contiguous memory between <code>VMALLOC_START</code> and <code>VMALLOC_END</code> with the <code>vmalloc()</code> function. This function wraps <code>__vmalloc_node_range()</code> in order to perform memory allocation and return the address of the allocated kernel virtual area (KVA). Note that <code>VMALLOC_START</code> and <code>VMALLOC_END</code> are architecture-specific.
 
 KVAs are represented by two different <code>struct</code>'s at the same time, defined in [<code>include/linux/vmalloc.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/vmalloc.h):
 ```c
@@ -256,10 +260,129 @@ while (node) {
 }
 ```
 
+### <code>epoll</code> Subsystem
+
+The eventpoll API was first introduced in version 2.5.44 of the Linux kernel to manage I/O events on high loads with $O(1)$ performance. It uses red-black tree to sort all the file descriptors that are added to the eventpoll interface based on their <code>struct file</code> pointers. Inside [the <code>eventpoll</code> structure](https://elixir.bootlin.com/linux/latest/source/fs/eventpoll.c), there is a field called "<code>rbr</code>":
+```c
+struct rb_root_cached rbr;
+```
+which is the tree root used to store monitored file descriptors. The <code>rb_root_cached</code> structure represents a augmented tree root that caches the leftmost node of the tree:
+```c
+struct rb_root_cached {
+    struct rb_root rb_root;
+    struct rb_node *rb_leftmost;
+};
+```
+
+Each <code>struct file</code> is linked to a <code>struct epitem</code>, which is treated as a tree node by the eventpoll red-black tree:
+```c
+struct epitem {
+    union {
+        struct rn_node rbn;      /* Tree node that links this structure to the eventpoll red-black tree */
+        struct rcu_head rcu;     /* Used to free the struct epitem */
+    };
+    struct list_head     rdllink;
+    struct epitem        *next;
+    struct epoll_filefd  ffd;
+    struct eppoll_entry  *pwqlist;
+    struct eventpoll     *ep;    /* The container of this item */
+    struct hlist_node    fllink; /* List head used to link this item to the struct file items list */
+    struct wakeup_source __rcu *ws;
+    struct epoll_event   event;
+}
+```
+
+To find an <code>epitem</code> given an <code>epoll_filefd</code>, the following function is used:
+```c
+static struct epitem *ep_find(struct eventpoll *ep, struct file *file, int fd)
+{
+    int kcmp;
+    struct rb_node *rbp;
+    struct epitem *epi, *epir = NULL;
+    struct epoll_filefd ffd;
+
+    ep_set_ffd(&ffd, file, fd);
+    for (rbp = ep->rbr.rb_root.rb_node; rbp; ) {
+        epi = rb_entry(rbp, struct epitem, rbn);
+        kcmp = ep_cmp_ffd(&ffd, &epi->ffd);
+        if (kcmp > 0)
+            rbp = rbp->rb_right;
+        else if (kcmp < 0)
+            rbp = rbp->rb_left;
+        else {
+            epir = epi;
+            break;
+        }
+	}
+
+    return epir;
+}
+```
+
+To insert an <code>epitem</code> onto the tree, the following function is used:
+```c
+static void ep_rbtree_insert(struct eventpoll *ep, struct epitem *epi)
+{
+    int kcmp;
+    struct rb_node **p = &ep->rbr.rb_root.rb_node, *parent = NULL;
+    struct epitem *epic;
+    bool leftmost = true;
+
+    while (*p) {
+        parent = *p;
+        epic = rb_entry(parent, struct epitem, rbn);
+        kcmp = ep_cmp_ffd(&epi->ffd, &epic->ffd);
+        if (kcmp > 0) {
+            p = &parent->rb_right;
+            leftmost = false;
+        } else
+            p = &parent->rb_left;
+	}
+    rb_link_node(&epi->rbn, parent, p);
+    rb_insert_color_cached(&epi->rbn, &ep->rbr, leftmost);
+}
+```
+
+It is more complicated to remove an <code>epitem</code> from the tree because all the associated resources and links should be freed as well. We need to first remove it from the wait queue:
+```c
+ep_unregister_pollwait(ep, epi);
+```
+Remove it from the <code>hlist</code> maintained by the file structure pointer <code>file = epi->ffd.file</code>:
+```c
+spin_lock(&file->f_lock);
+to_free = NULL;
+head = file->f_ep;
+if (head->first == &epi->fllink && !epi->fllink.next) {
+    file->f_ep = NULL;
+	if (!is_file_epoll(file)) {
+	    struct epitems_head *v;
+		v = container_of(head, struct epitems_head, epitems);
+		if (!smp_load_acquire(&v->next))
+		    to_free = v;
+	}
+}
+hlist_del_rcu(&epi->fllink);
+spin_unlock(&file->f_lock);
+free_ephead(to_free);
+```
+Then, remove it from the eventpoll tree:
+```c
+rb_erase_cached(&epi->rbn, &ep->rbr);
+```
+Finally, remove it from the read list:
+```c
+write_lock_irq(&ep->lock);
+if (ep_is_linked(epi))
+    list_del_init(&epi->rdllink);
+write_unlock_irq(&ep->lock);
+```
+
 ## References
 
-[^1]: *Trees I: Radix Trees* by Jonathan Corbet, March 13, 2006, [lwn.net/Articles/175432/](https://lwn.net/Articles/175432/).
+[^1]: [Linux Weekly News](lwn.net): "Trees I: Radix Trees" by Jonathan Corbet, March 13, 2006.
 
 [^2]: *XArray* by Matthew Wilcox, [kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt).
 
 [^3]: *Examining Linux 2.6 Page-Cache Performance* by Sonny Rao, Dominique Heger, and Steven Pratt, [landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf](https://landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf)
+
+[^4]: [Linux Weekly News](lwn.net): "Reworking <code>vmap()</code>" By Jonathan Corbet, October 21, 2008.
