@@ -48,7 +48,7 @@
   }
   
   html {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif, "PMingLiU";
     font-size: 16px;
     line-height: 1.5;
   }
@@ -61,8 +61,6 @@
   body {
     color: #515151;
     background-color: #fff;
-    font-variant-east-asian: simplified;
-    /* font-variant-east-asian: traditional */
     -webkit-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
   }
