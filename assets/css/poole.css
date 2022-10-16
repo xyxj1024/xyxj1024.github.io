@@ -127,6 +127,18 @@
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
+  p.epigraph {
+    text-indent: 30px;
+    text-align: center;
+    color: #268bd2;
+    font-family: verdana;
+    font-size: 110%;
+  }
+  p.emph {
+    text-align: left;
+    text-emphasis: filled #bf616a;
+    font-style: italic;
+  }
 
   p#console {
     font-family: Menlo, Monaco, "Courier New", monospace;
@@ -383,7 +395,7 @@
   .post-date {
     display: block;
     margin-top: 2rem;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
     color: #9a9a9a;
   }
   
