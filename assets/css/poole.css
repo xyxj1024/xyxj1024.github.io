@@ -124,15 +124,16 @@
   
   /* Body text */
   p {
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
   }
   p.epigraph {
+    margin-top: -1rem;
+    margin-bottom: 2rem;
     text-indent: 30px;
     text-align: left;
     color: #7a7a7a;
     font-family: verdana;
-    font-size: 110%;
   }
   p.emph {
     text-indent: 30px;
