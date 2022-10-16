@@ -390,6 +390,47 @@ while (node) {
 }
 ```
 
+Memory objects allocated by <code>vmalloc()</code> may be traced by the [kmemleak API (kernel memory leak detector)](https://elixir.bootlin.com/linux/latest/source/mm/kmemleak.c) with
+```c
+static int kmemleak_enabled = 1;
+```
+If <code>CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF</code> is set, the function <code>kmemleak_disable()</code> will be called at boot-time and the variable <code>kmemleak_enabled</code> will be set to zero. A <code>kmemleak_object</code> can be accessed through red-black tree operations since the structure contains a <code>rb_node</code> field. Two types of search trees are supported by the kmemleak API depending on whether a memory object is allocated with physical address:
+```c
+#define OBJECT_PHYS     (1 << 4)
+
+static struct rb_root object_tree_root = RB_ROOT;
+static struct rb_root object_phys_tree_root = RB_ROOT;
+```
+The lookup function looks like this:
+```c
+static struct kmemleak_object *__lookup_object(unsigned long ptr, int alias, bool is_phys)
+{
+    struct rb_node *rb = is_phys ? object_phys_tree_root.rb_node : object_tree_root.rb_node;
+    unsigned long untagged_ptr = (unsigned long)kasan_reset_tag((void *)ptr);
+
+    while (rb) {
+        struct kmemleak_object *object;
+        unsigned long untagged_objp;
+
+        object = rb_entry(rb, struct kmemleak_object, rb_node);
+        untagged_objp = (unsigned long)kasan_reset_tag((void *)object->pointer);
+
+        if (untagged_ptr < untagged_objp)
+            rb = object->rb_node.rb_left;
+        else if (untagged_objp + object->size <= untagged_ptr)
+            rb = object->rb_node.rb_right;
+        else if (untagged_objp == untagged_ptr || alias)
+            return object;
+        else {
+            kmemleak_warn("Found object by alias at 0x%08lx\n", ptr);
+            dump_object_info(object);
+            break;
+        }
+    }
+    return NULL;
+}
+```
+
 ### <code>epoll</code> Subsystem
 
 The eventpoll API was first introduced in version 2.5.44 of the Linux kernel to manage I/O events on high loads with $O(1)$ performance. It uses red-black tree to sort all the file descriptors that are added to the eventpoll interface based on their <code>struct file</code> pointers. Inside [the <code>eventpoll</code> structure](https://elixir.bootlin.com/linux/latest/source/fs/eventpoll.c), there is a field called "<code>rbr</code>":
