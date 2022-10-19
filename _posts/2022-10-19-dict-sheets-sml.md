@@ -244,3 +244,45 @@ The function <code>to_dictionaires_using_headers_as_keys</code> should return a 
   { TEXT("Name") => TEXT("Wayne Gretzky"), TEXT("Uniform Number") => INTEGER(99), TEXT("Birth Year") => INTEGER(1961), INTEGER("Games Played") => INTEGER(1487), TEXT("Goals") => INTEGER(894), TEXT("Assists") => INTEGER(1963) }, 
   { TEXT("Name") => TEXT("Mario Lemieux"), TEXT("Uniform Number") => INTEGER(66), TEXT("Birth Year") => INTEGER(1965), INTEGER("Games Played") => INTEGER(915),  TEXT("Goals") => INTEGER(690), TEXT("Assists") => INTEGER(1033) } ]
 ```
+
+```sml
+structure SpreadsheetToDictionaries = struct
+  open Spreadsheet
+
+  fun spreadsheet_to_dictionaries_using_headers_as_keys(s : sheet) : (cell, cell) SingleChainedDictionary.dictionary list =
+
+    let
+      (* returns a cell list, which is the first row of s *)
+      val keys = Spreadsheet.row_at(s, 0)
+
+      (* returns a (key, value) pair list list *)
+      fun spreadsheet_to_kvs_list(s) =
+        let
+          fun values l =
+            case l of
+              [] => []
+            | _::rest => rest
+        in
+          List.map (fn clist => ListPair.zip(keys, clist)) (values s)
+        end
+      
+      (* returns a dictionary given a list of pairs *)
+      fun pairs_to_dictionary(ps, dict) =
+        case ps of
+          [] => dict
+        | (k, v)::t =>
+            let
+              val (new_dict, _) = SingleChainedDictionary.put(dict, k, v)
+            in
+              pairs_to_dictionary(t, new_dict)
+            end
+      
+      (* returns a dictionary list given a pair list list *)
+      fun spreadsheet_to_dict_helper(pslist, dict) =
+        List.map (fn ps => pairs_to_dictionary(ps, dict)) pslist
+    in
+      spreadsheet_to_dict_helper(spreadsheet_to_kvs_list(s), SingleChainedDictionary.create())
+    end
+
+end
+```
