@@ -156,3 +156,91 @@ fun create_sheet(word_lists : string list list) : sheet =
     List.map create_line word_lists
   end
 ```
+
+Below are all the utility methods:
+```sml
+fun row_count(s : sheet) : int =
+  foldl (fn (x,acc) => acc + 1) 0 s
+
+fun column_count(s : sheet) : int =
+  case s of 
+    [] => 0
+  | head::_ => foldl (fn (x,acc) => acc + 1) 0 head
+
+fun row_at(s : sheet, row_index : int) : cell list =
+  List.nth(s, row_index)
+
+fun cell_in_row_at_column_index(r : cell list, col_index : int) : cell = 
+  List.nth(r, col_index)
+
+fun cell_at(s : sheet, row_index : int, col_index : int) : cell = 
+  cell_in_row_at_column_index(row_at(s, row_index), col_index)
+
+fun column_at(s : sheet, col_index : int) : cell list =
+  case s of
+    [] => []
+  | head::rest => List.nth(head, col_index)::column_at(rest, col_index)
+
+fun sum_in_cell_list(cells : cell list) : int =
+  case cells of
+    [] => 0
+  | head::rest => 
+      case head of
+        INTEGER(x) => x + sum_in_cell_list(rest)
+      | _ => sum_in_cell_list(rest)
+
+fun sum_in_row(s : sheet, row_index : int) : int =
+  sum_in_cell_list(row_at(s, row_index))
+
+fun sum_in_column(s : sheet, column_index : int) : int =
+  sum_in_cell_list(column_at(s, column_index))
+
+fun max_in_cell_list(cells : cell list) : int option =
+  let
+    fun int_list(cells: cell list) : int list =
+      case cells of
+        [] => []
+      | head::rest => 
+          case head of
+            INTEGER(x) => x::int_list(rest)
+          | _ => int_list(rest)
+  in 
+    case int_list(cells) of 
+      [] => NONE
+    | _ => SOME (foldl Int.max 0 (int_list(cells)))
+  end
+
+fun max_in_row(s : sheet, row_index : int) : int option =
+  max_in_cell_list(row_at(s, row_index))
+
+fun max_in_column(s : sheet, column_index : int) : int option =
+  max_in_cell_list(column_at(s, column_index))
+
+fun count_if_in_cell_list(cells : cell list, predicate : (cell -> bool)) : int = 
+  foldl (fn (c, acc) => if predicate(c) then acc + 1 else acc) 0 cells
+
+fun count_if_in_row(s : sheet, row_index : int, predicate : (cell -> bool)) : int = 
+  count_if_in_cell_list(row_at(s, row_index), predicate)
+
+fun count_if_in_column(s : sheet, col_index : int, predicate : (cell -> bool)) : int = 
+  count_if_in_cell_list(column_at(s, col_index), predicate)
+```
+
+## Spreadsheet to Dictionaries
+
+Given this spreadsheet:
+
+|---
+| **Name** | **Uniform Number** | **Birth Year** | **Games Played** | **Goals** | **Assists**
+|:-|:-:|:-:|:-:|:-:|:-:|
+| Bobby Orr | 4 | 1948 | 657 | 270 | 645
+| Wayne Gretzky | 99 | 1961 | 1487 | 894 | 1963
+| Mario Lemieux | 66 | 1965 | 915 | 690 | 1033
+
+The function <code>to_dictionaires_using_headers_as_keys</code> should return a list with 3 single list dictionaries, one for each non-header row. The dictionaries would be filled with entries for each column, using the cell in the header of the column as the key and the cell in the particular row of the column as the value.
+
+```text
+[ { TEXT("Name") => TEXT("Bobby Orr"), TEXT("Uniform Number") => INTEGER(4), TEXT("Birth Year") => INTEGER(1948), TEXT("Games Played") => INTEGER(657), TEXT("Goals") => INTEGER(270), TEXT("Assists") => INTEGER(645) }, 
+  { TEXT("Name") => TEXT("Wayne Gretzky"), TEXT("Uniform Number") => INTEGER(99), TEXT("Birth Year") => INTEGER(1961), INTEGER("Games Played") => INTEGER(1487), TEXT("Goals") => INTEGER(894), TEXT("Assists") => INTEGER(1963) }, 
+  { TEXT("Name") => TEXT("Mario Lemieux"), TEXT("Uniform Number") => INTEGER(66), TEXT("Birth Year") => INTEGER(1965), INTEGER("Games Played") => INTEGER(915),  TEXT("Goals") => INTEGER(690), TEXT("Assists") => INTEGER(1033) } ]
+```
