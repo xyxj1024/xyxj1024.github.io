@@ -2,7 +2,7 @@
 layout:       post
 title:        "SEED Labs 2.0: Shellshock Attack Lab Writeup"
 category:     "Computing Systems"
-tags:         system-security bash
+tags:         system-security docker reverse-shell
 permalink:    /shellshock-seedlab/
 ---
 
@@ -57,7 +57,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 
-# CSE 523S Studio 6
+# SEED 2.0 Shellshock
 10.9.0.80 www.seedlab-shellshock.com
 ```
 
@@ -307,7 +307,9 @@ _apt:x:100:65534::/nonexistent:/usr/sbin/nologin
 ```
 I obtained the same results if I replace <code>-A</code> with <code>-e</code> or <code>-H</code>.
 
-#### Task 3.B: Get the server to tell you its process' user ID. You can use the <code>/bin/id</code> command to print out the ID information.
+#### Task 3.B: Get the server to tell you its process' user ID.
+
+You can use the <code>/bin/id</code> command to print out the ID information.
 
 **Ans:** Below is the commands I used:
 ```bash
@@ -316,7 +318,9 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 I obtained the same results if I replace <code>-e</code> with <code>-A</code> or <code>-H</code>.
 
-#### Task 3.C: Get the server to create a file inside the <code>/tmp</code> folder. You need to get into the container to see whether the file is created or not, or use another Shellshock attack to list the <code>/tmp</code> folder.}
+#### Task 3.C: Get the server to create a file inside the <code>/tmp</code> folder.
+
+You need to get into the container to see whether the file is created or not, or use another Shellshock attack to list the <code>/tmp</code> folder.
 
 **Ans:** Below is the commands I used:
 ```bash
