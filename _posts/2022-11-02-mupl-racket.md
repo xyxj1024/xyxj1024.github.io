@@ -2,7 +2,7 @@
 layout: 		      post
 title: 			      "A Made Up Programming Language in Racket"
 category:		      "Programming Languages"
-tags:			        data-structures functional-programming
+tags:			        interpreter functional-programming
 permalink:		    /mupl-racket/
 last_modified_at: "2022-11-04"
 ---
@@ -41,7 +41,7 @@ Below is our starter code:
 (struct closure (env fun) #:transparent)
 ```
 
-Our main tasks in this assignment has to do with a Racket function <code>eval-exp</code>, which is an interpreter of our Made Up Programming Language (hereinafter "MUPL") that takes a MUPL expression <code>e</code> and either returns the MUPL value that <code>e</code> evaluates to under the empty environment or calls Racket's <code>error</code> if evaluation encounters a run-time MUPL type error or unbound MUPL variable. A MUPL *value* is a MUPL integer constant, a MUPL closure, a MUPL aunit, or a MUPL pair of MUPL values. A environment is represented by a Racket list of [Racket pairs](https://docs.racket-lang.org/reference/pairs.html) <code>'(name . value)</code> where <code>name</code> is a Racket string and <code>value</code> is a MUPL value.
+Our main tasks in this assignment have to do with a Racket function <code>eval-exp</code>, which is an interpreter of our Made Up Programming Language (hereinafter "MUPL") that takes a MUPL expression <code>e</code> and either returns the MUPL value that <code>e</code> evaluates to under the empty environment or calls Racket's <code>error</code> if evaluation encounters a run-time MUPL type error or unbound MUPL variable. A MUPL *value* is a MUPL integer constant, a MUPL closure, a MUPL aunit, or a MUPL pair of MUPL values. A environment is represented by a Racket list of [Racket pairs](https://docs.racket-lang.org/reference/pairs.html) <code>'(name . value)</code> where each <code>name</code> is a Racket string and each <code>value</code> is a MUPL value.
 
 <br />
 ## Table of Contents
@@ -72,3 +72,117 @@ Then write a Racket function <code>mupllist->racketlist</code> that takes a MUPL
 
 ## Problem 2
 
+```racket
+;; lookup a variable in an environment
+;; Do NOT change this function
+(define (envlookup env str)
+  (cond [(null? env) (error "unbound variable during evaluation" str)]
+        [(equal? (car (car env)) str) (cdr (car env))]
+        [#t (envlookup (cdr env) str)]))
+```
+
+```racket
+;; Author: Xingjian Xuanyuan
+;; CSE 425 utility
+;; Evaluates to #t if value is any of the MUPL value types
+(define (mupl-value? value)
+  (let ([reg (and (not (int? value))
+                  (not (closure? value))
+                  (not (aunit? value))
+                  (not (apair? value)))])
+    (not reg)))
+
+;; CSE 425 utility
+;; Evaluates to an expanded version of the provided list env
+; by cons-ing a racket (name, value) pair onto env
+(define (expand-environment name value env)
+  (cond
+    [(not (string? name)) (error (string-append "illegal name: " (~a name)))]
+    [(not (mupl-value? value)) (error (string-append "illegal value: " (~a value)))]
+    [#t (cons (cons name value) env)]))
+```
+
+Here is a description of the semantics of MUPL expressions:
+- All values (including closures) evaluates to themselves.
+- A variable evaluates to the value associated with it in the environment.
+- An addition evaluates its subexpressions, assuming they both produce integers, and produces the integer that is their sum.
+- Functions are lexically scoped: A function evaluates to a closure holding the function and the current environment.
+- An <code>ifgreater</code> evaluates its first two subexpressions to values <code>v1</code> and <code>v2</code> respectively. If both values are integers, it evaluates its third subexpression if <code>v1</code> is a strictly greater integer than <code>v2</code>, else it evaluates its fourth subexpression.
+- An <code>mlet</code> expression evaluates its first expression to a value <code>v</code>. Then it evaluates the second expression to a value, in an environment extended to map the name in the <code>mlet</code> expression to <code>v</code>.
+- A <code>call</code> evaluates its first and second subexpressions to values. If the first is not a closure, it is an error. Else, it evaluates the closure's function's body in the closure's environment extended to map the function's name to the closure (unless the name field is <code>#f</code>) and the function's argument-name (i.e., the parameter name) to the result of the second subexpression.
+- An <code>apair</code> expression evaluates its two subexpressions and produces a (new) pair holding the results.
+- A <code>fst</code> expression evaluates its subexpression. If the result for the subexpression is a pair, then the result for the <code>fst</code> expression is the <code>e1</code> field in the pair.
+- A <code>snd</code> expression evaluates its subexpression. If the result for the subexpression is a pair, then the result for the <code>snd</code> expression is the <code>e2</code> field in the pair.
+- An <code>isaunit</code> expression evaluates its subexpression. If the result is an <code>aunit</code> expression, then the result for the <code>isaunit</code> expression is the MUPL value <code>(int 1)</code>, else the result is the MUPL value <code>(int 0)</code>.
+
+```racket
+(define (eval-under-env e env)
+  (cond [(var? e) 
+         (envlookup env (var-string e))]
+        [(int? e) e] ; this is trivial
+        [(add? e) 
+         (let ([v1 (eval-under-env (add-e1 e) env)]
+               [v2 (eval-under-env (add-e2 e) env)])
+           (if (and (int? v1)
+                    (int? v2))
+               (int (+ (int-num v1) 
+                       (int-num v2)))
+               (error "MUPL addition applied to non-number")))]
+        [(ifgreater? e)
+         (let ([v1 (eval-under-env (ifgreater-e1 e) env)]
+               [v2 (eval-under-env (ifgreater-e2 e) env)])
+           (if (and (int? v1) (int? v2))
+               (if (> (int-num v1) (int-num v2))
+                   (eval-under-env (ifgreater-e3 e) env)
+                   (eval-under-env (ifgreater-e4 e) env))
+               (error "MUPL ifgreater comparing non-numbers")))]
+        [(fun? e) (closure env e)] ; this is trivial
+        [(call? e)
+         (let ([v1 (eval-under-env (call-funexp e) env)]
+               [v2 (eval-under-env (call-actual e) env)])
+           (if (not (closure? v1))
+               (error "MUPL call-funexp not a closure")
+               (let ([function-name (fun-nameopt (closure-fun v1))])
+                 (if (not function-name) ; the first argument is #f
+                     (eval-under-env (fun-body (closure-fun v1))
+                                     (expand-environment (fun-formal (closure-fun v1))
+                                                         v2
+                                                         (closure-env v1)))
+                     (eval-under-env (fun-body (closure-fun v1))
+                                     (expand-environment (fun-formal (closure-fun v1))
+                                                         v2
+                                                         (expand-environment function-name
+                                                                             v1
+                                                                             (closure-env v1))))))))]
+        [(mlet? e)
+         (let ([v (eval-under-env (mlet-e e) env)])
+           (eval-under-env (mlet-body e) (expand-environment (mlet-var e) v env)))]
+        [(apair? e)
+         (let ([v1 (eval-under-env (apair-e1 e) env)]
+               [v2 (eval-under-env (apair-e2 e) env)])
+           (apair v1 v2))]
+        [(fst? e)
+         (let ([v (eval-under-env (fst-e e) env)])
+           (if (apair? v)
+               (apair-e1 v)
+               (error "MUPL fst applied to non-pair")))]
+        [(snd? e)
+         (let ([v (eval-under-env (snd-e e) env)])
+           (if (apair? v)
+               (apair-e2 v)
+               (error "MUPL snd applied to non-pair")))]
+        [(aunit? e) e] ; this is trivial
+        [(isaunit? e)
+         (let ([v (eval-under-env (isaunit-e e) env)])
+           (if (aunit? v) (int 1) (int 0)))]
+        [(closure? e) e] ; this is trivial
+        [#t (error (format "bad MUPL expression: ~v" e))]))
+
+;; Function eval-exp takes a MUPL expression e and either
+;; returns the MUPL value that e evaluates to under the empty environment or
+;; calls Racket's error if evaluation encounters a run-time MUPL type error
+;; or unbound UPL variable.
+;; Do NOT change
+(define (eval-exp e)
+  (eval-under-env e null))
+```
