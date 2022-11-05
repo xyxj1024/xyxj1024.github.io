@@ -41,9 +41,34 @@ Below is our starter code:
 (struct closure (env fun) #:transparent)
 ```
 
+Our main tasks in this assignment has to do with a Racket function <code>eval-exp</code>, which is an interpreter of our Made Up Programming Language (hereinafter "MUPL") that takes a MUPL expression <code>e</code> and either returns the MUPL value that <code>e</code> evaluates to under the empty environment or calls Racket's <code>error</code> if evaluation encounters a run-time MUPL type error or unbound MUPL variable. A MUPL *value* is a MUPL integer constant, a MUPL closure, a MUPL aunit, or a MUPL pair of MUPL values. A environment is represented by a Racket list of [Racket pairs](https://docs.racket-lang.org/reference/pairs.html) <code>'(name . value)</code> where <code>name</code> is a Racket string and <code>value</code> is a MUPL value.
+
 <br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
 <br />
+
+## Problem 1
+
+First, write a Racket function <code>racketlist->mupllist</code> that takes a Racket list (presumably of MUPL values but that will not affect the solution) and produces an analogous MUPL list with the same elements in the same order.
+
+```racket
+(define (racketlist->mupllist rl)
+  (cond
+    [(null? rl) (aunit)] ; (aunit) is a MUPL expression but aunit is not
+    [#t (apair (first rl) (racketlist->mupllist (list-tail rl 1)))]))
+```
+
+Then write a Racket function <code>mupllist->racketlist</code> that takes a MUPL list (presumably of MUPL values but that will not affect the solution) and produces an analogous Racket list (of MUPL values) with the same elements in the same order.
+
+```racket
+(define (mupllist->racketlist ml)
+  (cond
+    [(aunit? ml) '()]
+    [#t (cons (apair-e1 ml) (mupllist->racketlist (apair-e2 ml)))]))
+```
+
+## Problem 2
+
