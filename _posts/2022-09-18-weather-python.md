@@ -6,7 +6,7 @@ tags:           web-scraping python
 permalink:      /weather-py/
 ---
 
-It was an ordinary Sunday morning. I woke up a little late and just couldn't decide whether I should got to the lab. Typically, to deal with this situation, I will first check the weather using iPhone's built-in weather app. However, a random thought came to me: how about letting the Terminal display weather information for me?
+It was a cozy Midwest Sunday morning. I woke up a little later than usual and just couldn't decide whether I should go to the lab. Typically, to deal with this situation, I will first check the weather using iPhone's built-in weather app. However, a random thought came to me: how about letting the Terminal display weather information for me?
 
 <!-- excerpt-end -->
 
@@ -82,8 +82,8 @@ def weather(lat, lon):
     soup = BeautifulSoup(res.text, "html.parser")
     items = soup.find_all("div", class_ = "tombstone-container")
     times = [item.find(class_ = "period-name").get_text(separator = " ") for item in items]
-    weathers = [item.find(class_ = "short-desc").get_text() for item in items]
-    temperatures = [item.find(class_ = "temp").get_text() for item in items]
+    weathers = [item.find(class_ = "short-desc").get_text(separator = " ") for item in items]
+    temperatures = [item.find(class_ = "temp").get_text(separator = " ") for item in items]
     print("".join(f'{times[i]:^20}' for i in range(4)))
     print("".join(f'{weathers[i]:^20}' for i in range(4)))
     print("".join(f'{temperatures[i]:^20}' for i in range(4)))
