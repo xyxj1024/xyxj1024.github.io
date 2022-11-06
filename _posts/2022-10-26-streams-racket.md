@@ -11,12 +11,14 @@ Some code collected from the Homework 4 of [Programming Languages, Part B](https
 
 <!-- excerpt-end -->
 
-Functional programming is, indeed, all about **expression evaluation**{: style="color: red"}. Expression evaluation is the computation of the value of an expression. An expression can contain variables. Here is some concise interpretation of the **evaluation model** of functional programming as well as the concept of "**lazy evaluation**" from [UCSD CSE130: Programming Languages: Principles & Paradigms](https://cseweb.ucsd.edu/classes/wi00/cse130/):
+Functional programming is, indeed, all about **expression evaluation**{: style="color: red"}. Expression evaluation is the computation of the value of an expression. An expression can contain variables. Here is some concise interpretation of the **evaluation model** of functional programming as well as the concept of "**lazy evaluation**" from [UCSD CSE130: Programming Languages: Principles & Paradigms](https://cseweb.ucsd.edu/classes/wi00/cse130/) (another pretty informative note on lazy evaluation can be found at [Cornell CS312's course website](https://www.cs.cornell.edu/courses/cs312/2004fa/lectures/rec08.htm)):
 > The values for the variables are taken from an *environment* which holds name-value pairs. Ideally, the evaluation of an expression should not change the environment. This property is called *referential transparency*.
 > ...
 > Functional languages have the facility for function creation. Such functions are associated with two environments: *definition environment* and *activation environment*. So a function should always carry its definition environment. The pair <code>(function, definition-environment)</code> is called a *closure*.
 > ...
 > There are two ways of evaluating expressions. In the *innermost evaluation* rule, a function application <code>function-name (actual-parameter)</code> is calculated by: (1) evaluating the expression represented by <code>actual-parameter</code>; (2) substituting the result for the formal in the function body; (3) evaluating the body; (4) finally returning the result. Under the *outermost evaluation* rule, a function application is calculated by: (1) substituting the actual for the formal in the function body; (2) evaluating the body; (3) finally returning its value as the answer. Both type of evaluation produce the same result under "normal" circumstances. ... Outermost evaluation is also called *lazy evaluation* since an expression is not evaluated unless it is required. Compiler can prevent duplicate evaluations. So the programmer is free from such concerns.
+
+Technically, in a functional language like Haskell, lazy evaluation means ["call-by-name" plus "sharing"](https://wiki.haskell.org/Lazy_evaluation). A **thunk**{: style="color: red"} <code>fn () => e</code> is a value (or zero-argument function) that is yet to be evaluated. A lazy run-time system does not evaluate a thunk unless it has to. Below is a thunk ADT implemented in Standard ML:
 
 ```sml
 signature THUNK =
@@ -55,6 +57,37 @@ structure Thunk :> THUNK =
             (th := Done ans; ans)
           end
   end
+```
+
+Thunks represent explicit emulation of lexically-scoped call-by-name semantics as shown by the following ML code:
+
+```sml
+fun if_by_name x y z =
+  if x () then y () else z ()
+
+fun fac n =
+  if_by_name (fn () => n = 0)
+             (fn () => 1)
+             (fn () => n * (fac (n - 1)))
+```
+
+A lazy version of function application implemented in Scheme by [Barzilay and Clements (2005)](https://www2.ccs.neu.edu/racket/pubs/fdpe05-bc.pdf):
+
+```scheme
+(module lazy mzscheme
+  (define-syntax (~app stx)
+    (syntax-case stx (!)
+      [(_ ! x) (syntax/loc stx (! x))]
+      [(_ f x ...)
+       (with-syntax ([(y ...) (generate-temporaries #'(x ...))])
+         (~ (let ([p (! f)] [y x] ...)
+              (if (lazy? p) (p y ...) (p (! y) ...)))))]))
+  (define (~apply f . xs)
+    (let ([f (! f)] [xs (!list (apply list* xs))])
+      (apply f (if (lazy? f) xs (map ! xs)))))
+  (provide (all-from-except mzscheme #%app apply)
+           (rename ~app #%app)
+           (rename ~apply apply)))
 ```
 
 <br />
