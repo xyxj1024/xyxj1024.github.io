@@ -115,7 +115,7 @@ Here is a description of the semantics of MUPL expressions:
 - A <code>snd</code> expression evaluates its subexpression. If the result for the subexpression is a pair, then the result for the <code>snd</code> expression is the <code>e2</code> field in the pair.
 - An <code>isaunit</code> expression evaluates its subexpression. If the result is an <code>aunit</code> expression, then the result for the <code>isaunit</code> expression is the MUPL value <code>(int 1)</code>, else the result is the MUPL value <code>(int 0)</code>.
 
-<br />
+<br>
 
 ```racket
 (define (eval-under-env e env)
