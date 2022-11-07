@@ -397,3 +397,89 @@ let fibm(n) =
   in
     f_mem(n)
 ```
+
+Write a function <code>vector-assoc</code> that takes a value and a vector. It should behave like Racket’s <code>assoc</code> library function except:
+1. it processes a vector (Racket’s name for an array) instead of a list,
+2. it allows vector elements not to be pairs in which case it skips them, and
+3. it always takes exactly two arguments.
+The function returns false if no vector element is a pair with a <code>car</code> field equal to the value, else returns the first pair with an equal <code>car</code> field. Process the vector elements in order starting from zero.
+
+```racket
+(define (vector-assoc v vec)
+  (letrec
+      ([f (lambda (n)
+            (cond
+              [(= n (vector-length vec)) #f]
+              [else
+               (let ([p (vector-ref vec n)])
+                 (cond
+                   [(pair? p) (if (equal? v (car p)) p (f (+ n 1)))]
+                   [else (f (+ n 1))]))]))])
+    (f 0)))
+;
+; Sample solution
+; (define (vector-assoc v vec)
+;   (letrec ([loop (lambda (i)
+;                    (if (= i (vector-length vec))
+;                        #f
+;                        (let ([x (vector-ref vec i)])
+;                          (if (and (cons? x) (equal? (car x) v))
+;                              x
+;                              (loop (+ i 1))))))])
+;     (loop 0)))
+```
+
+Write a function <code>cached-assoc</code> that takes a list <code>xs</code> and a number <code>n</code> and returns a function that takes one argument <code>v</code> and returns the same thing that <code>(assoc v xs)</code> would return. However, an <code>n</code>-element cache of recent results should be used to possibly make this function faster than just calling <code>assoc</code> (if <code>xs</code> is long and a few elements are returned often). The cache must be a Racket vector of length <code>n</code> that is created by the call to <code>cached-assoc</code> (use Racket library function <code>vector</code> or <code>make-vector</code>) and used-and-possibly-mutated each time the function returned by <code>cached-assoc</code> is called. Assume <code>n</code> is positive.
+```racket
+(define (cached-assoc-mine xs n) ; cache slot 1 should be used for the 2 cache miss in a cache of size 3
+  (letrec ([cache (make-vector n #f)]
+           [ctr 0])
+    (lambda (v)
+      (cond
+        [(vector-assoc v cache) (vector-assoc v cache)]
+        [#t (let ([e (assoc v xs)])
+              (if e ((lambda ()
+                       (vector-set! cache ctr e)
+                       (if (= ctr (- (vector-length cache) 1))
+                           (set! ctr 0)
+                           (+ ctr 1))
+                       e))
+                  #f))]))))
+;
+; Sample solution
+(define (cached-assoc lst n)
+  (let ([cache (make-vector n #f)]
+        [next-to-replace 0])
+    (lambda (v)
+      (or (vector-assoc v cache)
+          (let ([ans (assoc v lst)])
+            (and ans
+                 (begin (vector-set! cache next-to-replace ans)
+                        (set! next-to-replace 
+                              (if (= (+ next-to-replace 1) n)
+                                  0
+                                  (+ next-to-replace 1)))
+                        ans)))))))
+```
+
+## Recursive Thunk
+
+Define a macro that is used like "<code>while-less e1 do e2</code>" where <code>e1</code> and <code>e2</code> are expressions and <code>while-less</code> and <code>do</code> are syntax (keywords). The macro should do the following:
+1. It evaluates <code>e1</code> exactly once.
+2. It evaluates <code>e2</code> at least once.
+3. It keeps evaluating <code>e2</code> until and only until the result is not a number less than the result of the evaluation of <code>e1</code>.
+4. Assuming evaluation terminates, the result is true.
+5. Assume <code>e1</code> and <code>e2</code> produce numbers.
+
+```racket
+(define-syntax while-less
+  (syntax-rules (do)
+    [(while-less e1 do e2)
+     (let ([condition e1])
+       (letrec ([loop (lambda ()
+                        (let ([body e2])
+                          (if (or (not (number? body)) (>= body condition))
+                              #t
+                              (loop))))])
+         (loop)))]))
+```
