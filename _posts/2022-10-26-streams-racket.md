@@ -18,7 +18,9 @@ Functional programming is, indeed, all about **expression evaluation**{: style="
 > ...
 > There are two ways of evaluating expressions. In the *innermost evaluation* rule, a function application <code>function-name (actual-parameter)</code> is calculated by: (1) evaluating the expression represented by <code>actual-parameter</code>; (2) substituting the result for the formal in the function body; (3) evaluating the body; (4) finally returning the result. Under the *outermost evaluation* rule, a function application is calculated by: (1) substituting the actual for the formal in the function body; (2) evaluating the body; (3) finally returning its value as the answer. Both type of evaluation produce the same result under "normal" circumstances. ... Outermost evaluation is also called *lazy evaluation* since an expression is not evaluated unless it is required. Compiler can prevent duplicate evaluations. So the programmer is free from such concerns.
 
-Technically, in a functional language like Haskell, lazy evaluation means ["call-by-name" plus "sharing"](https://wiki.haskell.org/Lazy_evaluation). A **thunk**{: style="color: red"} <code>fn () => e</code> is a value (or zero-argument function) that is yet to be evaluated. A lazy run-time system does not evaluate a thunk unless it has to. Below is a thunk ADT implemented in Standard ML:
+Technically, in a functional language like Haskell, lazy evaluation means ["call-by-name" plus "sharing"](https://wiki.haskell.org/Lazy_evaluation). Unlike Haskell, Racket (and most other languages) *eagerly evaluates* function arguments, i.e. [a function call is performed as soon as it is encountered in a procedure](https://en.wikipedia.org/wiki/Evaluation_strategy#Eager_evaluation).
+
+A **thunk**{: style="color: red"} <code>fn () => e</code> is a value (or zero-argument function) that is yet to be evaluated. A lazy run-time system does not evaluate a thunk unless it has to. Below is a thunk ADT implemented in Standard ML:
 
 ```sml
 signature THUNK =
@@ -59,6 +61,42 @@ structure Thunk :> THUNK =
   end
 ```
 
+A **promise**{: style="color: red"} is a <code>struct</code> containing a mutable field (a pointer). A promise can hold a thunk:
+
+```sml
+signature PROMISE =
+  sig
+    (* Type of promises for 'a. *)
+    type 'a t
+
+    (* Takes a thunk for an 'a and
+     * makes a promise to produce an 'a. *)
+    val delay : (unit -> 'a) -> 'a t
+
+    (* Calls thunk and saves if promise not yet forced;
+     * Returns saved thunk result. *)
+    val force : 'a t -> 'a
+  end
+
+structure Promise :> PROMISE =
+  struct
+    datatype 'a promise = Thunk of unit -> 'a
+                        | Value of 'a
+    type 'a t = 'a promise ref
+    fun delay thunk = ref (Thunk thunk)
+    fun force p =
+      case !p of
+        Value v => v
+      | Thunk th =>
+          let
+            val = th ()
+            val _ = p := Value v
+          in
+            v
+          end
+  end
+```
+
 Thunks represent explicit emulation of lexically-scoped call-by-name semantics as shown by the following ML code:
 
 ```sml
@@ -88,6 +126,60 @@ A lazy version of function application implemented in Scheme by [Barzilay and Cl
   (provide (all-from-except mzscheme #%app apply)
            (rename ~app #%app)
            (rename ~apply apply)))
+```
+
+**Streams**{: style="color: red"}, or lazy lists, are a sequential data structure containing elements computed only on demand and cached afterwards in case of being needed again. A stream is either <code>null</code> or a pair with a stream in its <code>cdr</code>. Streams can be of infinite length since their elements are computed only when accessed. [Abelson and Sussman (1996)](https://web.mit.edu/6.001/6.037/sicp.pdf) implemented stream as a <code>cons</code> pair with a delayed object in its <code>cdr</code>:
+
+```scheme
+(cons-stream a b)
+```
+
+is equivalent to
+
+```scheme
+(cons a (delay b))
+```
+
+Accessor functions:
+
+```scheme
+(define (stream-car stream) (car stream))
+(define (stream-cdr stream) (force (cdr stream)))
+```
+
+[Philip L. Bewig](https://sites.google.com/site/schemephil/) implemented *even* stream where the parity of the number of constructors in the stream is even:
+
+```scheme
+(define-syntax stream-cons
+  (syntax-rules ()
+    ((stream-cons obj strm)
+      (stream-eager (make-stream-pair (stream-delay obj) (stream-lazy strm))))))
+```
+
+Below is a stream ADT implemented in Standard ML:
+
+```sml
+signature STREAM =
+  sig
+    type 'a stream
+    val make : ('a * ('a -> 'a)) -> 'a stream
+    val next : 'a stream -> ('a * 'a stream)
+    val make2 : ('b * ('b -> 'a * 'b)) -> 'a stream
+  end
+
+structure Stream :> STREAM =
+  struct
+    datatype 'a stream = Cons of ('a * 'a stream) Thunk.thunk
+    fun make (init : 'a, f : 'a -> 'a) : 'a stream =
+      Cons (Thunk.make(fn () => (init, make (f init, f))))
+    fun make2 (init : 'b, f: 'b -> 'a * 'b): 'a stream =
+      Cons (Thunk.make(fn () =>
+        let
+          val (next_elem, next_state) = f init
+        in
+          (next_elem, make2 (next_state, f))
+        end))
+  end
 ```
 
 <br />
@@ -124,3 +216,28 @@ The behavior of Racket's <code>values</code> shows similarity to pattern matchin
 (printf-div-mod-pair 425 231)
 (printf-div-mod-values 425 231)
 ```
+
+## Thunk Utilities
+
+Define a function <code>thunk?</code> which returns whether the specified parameter is a thunk or not:
+```racket
+(define (thunk? th)
+  (if (and (procedure? th) (zero? (procedure-arity th))) #t #f))
+```
+
+Define a macro <code>thunk-that</code> which takes a parameter <code>e</code> and creates a thunk:
+```racket
+(define-syntax-rule (thunk-that e)
+  (lambda () e))
+```
+
+Define a function <code>dethunk</code> which takes a thunk parameter <code>e</code> and returns the result of invoking <code>e</code>:
+```racket
+(define (dethunk-that thunk)
+  (if (thunk? thunk) (thunk) (raise-argument-error 'thunk "thunk?" thunk)))
+```
+
+(It may seem unnecessary to use <code>dethunk-that</code> when implementing UW Homework 4 when we could simply <code>(thunk)</code>. However, a bit of verbosity can sometimes help in debugging a sea already full of parentheses.)
+
+## Stream Utilities
+
