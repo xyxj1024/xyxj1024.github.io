@@ -241,3 +241,49 @@ Define a function <code>dethunk</code> which takes a thunk parameter <code>e</co
 
 ## Stream Utilities
 
+Define a function <code>destream</code> which takes a <code>stream</code> parameter and evaluates to the resulting dethunked pair:
+```racket
+(define (destream stream)
+  (let ([res (dethunk-that stream)])
+    (if (pair? res)
+        (if (thunk? (cdr res)) res
+            (error "Wrong next-stream"))
+        (error "Failed dethunking stream"))))
+```
+
+Define a function <code>cons-with-thunk-check-on-next-stream</code> which takes two parameters <code>value</code> and <code>next-stream</code>:
+```racket
+(define (cons-with-thunk-check-on-next-stream element next-stream)
+  (cond
+    [(thunk? next-stream) (cons element next-stream)]
+    [else
+     (raise-argument-error 'next-stream "thunk?" next-stream)]))
+```
+
+## UW Warm-Up Exercises for Racket
+
+Write a function <code>sequence</code> that takes three arguments <code>low</code>, <code>high</code>, and <code>stride</code>, all assumed to be numbers, and produces a list of numbers from <code>low</code> to <code>high</code> (including <code>low</code> and possibly <code>high</code>) separated by <code>stride</code> and in sorted order. Further assume <code>stride</code> is positive.
+```racket
+(define (sequence low high stride)
+  (if (< high low) '()
+      (cons low (sequence (+ low stride) high stride))))
+```
+
+Write a function <code>string-append-map</code> that takes a list of strings and a string suffix and returns a list of strings. Each element of the output should be the corresponding element of the input appended with suffix (with no extra space between the element and suffix).
+```racket
+(define (string-append-map string-list suffix)
+  (map (lambda (e) (string-append e suffix)) string-list))
+```
+
+Write a function <code>list-nth-mod</code> that takes a list and a number. If the number is negative, terminate the computation with <code>(error "list-nth-mod: negative number")</code>. Else if the list is empty, terminate the computation with <code>(error "list-nth-mod: empty list")</code>. Else return the <code>i</code>th element of the list where we count from zero and <code>i</code> is the remainder of the number divided by the length of the list.
+```racket
+(define (list-nth-mod xs n)
+  (cond
+    [(< n 0) (error "list-nth-mod: negative number")]
+    [(empty? xs) (error "list-nth-mod: empty list")]
+    [#t
+     (let ([rem (remainder n (length xs))])
+       (list-ref xs rem))]))
+```
+
+## Stream Processing
