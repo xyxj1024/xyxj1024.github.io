@@ -287,3 +287,113 @@ Write a function <code>list-nth-mod</code> that takes a list and a number. If th
 ```
 
 ## Stream Processing
+
+Write a function <code>stream-for-n-steps</code> that takes a stream <code>s</code> and a number <code>n</code>, and returns a list holding the first <code>n</code> values produced by <code>s</code> in order. Assume <code>n</code> is non-negative.
+```racket
+(define (stream-for-n-steps s n)
+  (cond
+    [(zero? n) '()]
+    [else (let ([p (destream s)])
+            (cons (car p) (stream-for-n-steps (cdr p) (- n 1))))]))
+```
+
+Write a stream <code>funny-number-stream</code> that is like the stream of natural numbers except numbers divisible by five are negated.
+```racket
+(define funny-number-stream
+  (letrec ([f (lambda (x)
+                (cons x (lambda ()
+                          (if (= (remainder (+ x 1) 5) 0)
+                              (f (- 0 (+ x 1)))
+                              (f (+ (abs x) 1))))))])
+    (lambda () (f 1))))
+;
+; Sample solution is better:
+; (define funny-number-stream
+;   (letrec ([f (lambda (n) (cons (if (= (remainder n 5) 0) (- n) n)
+;                                 (lambda () (f (+ n 1)))))])
+;     (lambda () (f 1))))
+```
+
+Write a stream <code>dan-then-dog</code>, where the elements of the stream alternate between the strings "<code>dan.jpg</code>" and "<code>dog.jpg</code>", starting with "<code>dan.jpg</code>".
+```racket
+(define dan-then-dog
+  (letrec
+      ([f (lambda (str ctr)
+            (cons str
+                  (lambda () (let ([new-ctr (+ ctr 1)])
+                               (if (= (remainder new-ctr 2) 0)
+                                   (f "dog.jpg" new-ctr)
+                                   (f "dan.jpg" new-ctr))))))])
+    (lambda () (f "dan.jpg" 1))))
+;
+; Sample solution is better:
+; (define dan-then-dog
+;   (letrec ([dan-st (lambda () (cons "dan.jpg" dog-st))]
+;            [dog-st (lambda () (cons "dog.jpg" dan-st))])
+;     dan-st))
+;
+; or even shorter:
+;
+; (define (dan-then-dog)
+;   (cons "dan.jpg"
+;         (lambda () (cons "dog.jpg" dan-then-dog))))
+```
+
+Write a function <code>stream-add-zero</code> that takes a stream <code>s</code> and returns another stream. If <code>s</code> would produce <code>v</code> for its <code>i</code>th element, then <code>stream-add-zero s</code> would produce the pair <code>'(0 . v)</code> for its <code>i</code>th element.
+```racket
+(define (stream-add-zero s)
+  (letrec ([f (lambda (s)
+                (let ([p (destream s)])
+                  (cons-with-thunk-check-on-next-stream (cons 0 (car p))
+                                                        (stream-add-zero (cdr p)))))])
+    (lambda () (f s))))
+;
+; Sample solution:
+; (define (stream-add-zero s)
+;   (lambda ()
+;     (let ([next (s)])
+;       (cons (cons 0 (car next)) (stream-add-zero (cdr next))))))
+```
+
+Write a function <code>cycle-lists</code> that takes two lists and returns a stream. The elements produced by the stream are pairs where the first part is from the first input list and the second part is from the second input list. The stream cycles forever through the lists.
+```racket
+(define (cycle-lists xs ys)
+  (letrec
+      ([f (lambda (n)
+            (cons (cons (list-nth-mod xs n)
+                        (list-nth-mod ys n))
+                  (lambda () (f (+ n 1)))))])
+    (lambda () (f 0))))
+```
+
+## Memoization
+
+> [(Frost, 1994)](https://dl.acm.org/doi/pdf/10.1145/181761.181764): The conventional notion of memoization involves a process by which a function is made to automatically memoize and subsequently recall all results computed.
+> ...
+> Memoization can result in an improvement in efficiency and in some cases an improvement in complexity owing to the fact that a memoized function never recomputes any result.
+
+> [(Brown and Cook, 2009)](https://www.cs.utexas.edu/users/wcook/Drafts/2009/sblp09-memo-mixins.pdf): Memoization can be implemented in many ways. A function can be memoized by rewriting it to explicitly maintain its own memo table, but rewriting many functions this way is tedious and fails localize the common memoization behavior, which could otherwise allow modular memoization strategies.
+> ...
+> Lazy functional languages indirectly support a form of memoization as a side effect of the lazy evaluation strategy.
+
+As an example (borrowed from [Cornell CS3110](https://www.cs.cornell.edu/courses/cs3110/)), consider the problem of computing the <code>n</code>th Fibonacci number <code>f(n) = f(n-1) + f(n-2)</code>:
+```ocaml
+let f(n) =
+  if n < 2
+  then 1
+  else f(n-1) + f(n-2)
+```
+The key observation is that the recursive implementation is inefficient because it recomputes the same Fibonacci numbers over and over again. If we store the value of <code>f(n)</code> whenever we compute it in a table indexed by <code>n</code>, we can avoid this redundant work:
+```ocaml
+let fibm(n) =
+  let memo: int option array = Array.create (n+1) None in
+  let rec f_mem(n) =
+    match memo.(n) with
+    Some result -> result
+       | None ->
+          let result = if n < 2 then 1 else f_mem(n-1) + f_mem(n-2) in
+            memo.(n) <- (Some result)
+            result
+  in
+    f_mem(n)
+```
