@@ -399,9 +399,11 @@ let fibm(n) =
 ```
 
 Write a function <code>vector-assoc</code> that takes a value and a vector. It should behave like Racket’s <code>assoc</code> library function except:
+
 1. it processes a vector (Racket’s name for an array) instead of a list,
 2. it allows vector elements not to be pairs in which case it skips them, and
-3. it always takes exactly two arguments.
+3. it always takes exactly two arguments.<br>
+
 The function returns false if no vector element is a pair with a <code>car</code> field equal to the value, else returns the first pair with an equal <code>car</code> field. Process the vector elements in order starting from zero.
 
 ```racket
@@ -465,11 +467,12 @@ Write a function <code>cached-assoc</code> that takes a list <code>xs</code> and
 ## Recursive Thunk
 
 Define a macro that is used like "<code>while-less e1 do e2</code>" where <code>e1</code> and <code>e2</code> are expressions and <code>while-less</code> and <code>do</code> are syntax (keywords). The macro should do the following:
+
 1. It evaluates <code>e1</code> exactly once.
 2. It evaluates <code>e2</code> at least once.
 3. It keeps evaluating <code>e2</code> until and only until the result is not a number less than the result of the evaluation of <code>e1</code>.
 4. Assuming evaluation terminates, the result is true.
-5. Assume <code>e1</code> and <code>e2</code> produce numbers.
+5. Assume <code>e1</code> and <code>e2</code> produce numbers.<br>
 
 ```racket
 (define-syntax while-less
