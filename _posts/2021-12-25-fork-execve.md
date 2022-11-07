@@ -110,14 +110,14 @@ It is this <code>kernel_clone()</code> function that actually does the work for 
 SYSCALL_DEFINE0(fork)
 {
 #ifdef CONFIG_MMU
-	struct kernel_clone_args args = {
-		.exit_signal = SIGCHLD,
-	};
+    struct kernel_clone_args args = {
+        .exit_signal = SIGCHLD,
+    };
 
-	return kernel_clone(&args);
+    return kernel_clone(&args);
 #else
-	/* can not support in nommu mode */
-	return -EINVAL;
+    /* can not support in nommu mode */
+    return -EINVAL;
 #endif
 }
 ```
@@ -134,11 +134,11 @@ We can find the definition of the <code>execve()</code> function inside [<code>/
 
 ```c
 SYSCALL_DEFINE3(execve,
-		const char __user *, filename,
-		const char __user *const __user *, argv,
-		const char __user *const __user *, envp)
+                const char __user *, filename,
+                const char __user *const __user *, argv,
+                const char __user *const __user *, envp)
 {
-	return do_execve(getname(filename), argv, envp);
+    return do_execve(getname(filename), argv, envp);
 }
 ```
 
@@ -147,71 +147,71 @@ The <code>do_execve()</code> function is a wrapper function that calls <code>do_
 ```c
 static int
 do_execveat_common(int fd, struct filename *filename,
-				   struct user_arg_ptr argv,
-				   struct user_arg_ptr envp,
-				   int flags)
+                   struct user_arg_ptr argv,
+                   struct user_arg_ptr envp,
+                   int flags)
 {
-	struct linux_binprm *bprm;
-	int retval;
+    struct linux_binprm *bprm;
+    int retval;
 
-	if (IS_ERR(filename))
-		return PTR_ERR(filename);
+    if (IS_ERR(filename))
+        return PTR_ERR(filename);
+
+    if ((current->flags & PF_NPROC_EXCEEDED) && is_ucounts_overlimit(current_ucounts(), UCOUNT_RLIMIT_NPROC, rlimit(RLIMIT_NPROC))) {
+        retval = -EAGAIN;
+        goto out_ret;
+    }
+
+    current->flags &= ~PF_NPROC_EXCEEDED;
+
+    bprm = alloc_bprm(fd, filename);
+    if (IS_ERR(bprm)) {
+        retval = PTR_ERR(bprm);
+        goto out_ret;
+    }
+
+    retval = count(argv, MAX_ARG_STRINGS);
+    if (retval == 0)
+        pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n", current->comm, bprm->filename);
+    if (retval < 0)
+        goto out_free;
+    bprm->argc = retval;
+
+    retval = count(envp, MAX_ARG_STRINGS);
+    if (retval < 0)
+        goto out_free;
+    bprm->envc = retval;
+
+    retval = bprm_stack_limits(bprm);
+    if (retval < 0)
+        goto out_free;
+
+    retval = copy_string_kernel(bprm->filename, bprm);
+    if (retval < 0)
+        goto out_free;
+    bprm->exec = bprm->p;
+
+    retval = copy_strings(bprm->envc, envp, bprm);
+    if (retval < 0)
+        goto out_free;
 	
-	if ((current->flags & PF_NPROC_EXCEEDED) && is_ucounts_overlimit(current_ucounts(), UCOUNT_RLIMIT_NPROC, rlimit(RLIMIT_NPROC))) {
-		retval = -EAGAIN;
-		goto out_ret;
-	}
+    retval = copy_strings(bprm->argc, argv, bprm);
+    if (retval < 0)
+        goto out_free;
 	
-	current->flags &= ~PF_NPROC_EXCEEDED;
-	
-	bprm = alloc_bprm(fd, filename);
-	if (IS_ERR(bprm)) {
-		retval = PTR_ERR(bprm);
-		goto out_ret;
-	}
+    if (bprm->argc == 0) {
+        retval = copy_string_kernel("", bprm);
+        if (retval < 0)
+            goto out_free;
+        bprm->argc = 1;
+    }
 
-	retval = count(argv, MAX_ARG_STRINGS);
-	if (retval == 0)
-		pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n", current->comm, bprm->filename);
-	if (retval < 0)
-		goto out_free;
-	bprm->argc = retval;
-
-	retval = count(envp, MAX_ARG_STRINGS);
-	if (retval < 0)
-		goto out_free;
-	bprm->envc = retval;
-
-	retval = bprm_stack_limits(bprm);
-	if (retval < 0)
-		goto out_free;
-
-	retval = copy_string_kernel(bprm->filename, bprm);
-	if (retval < 0)
-		goto out_free;
-	bprm->exec = bprm->p;
-
-	retval = copy_strings(bprm->envc, envp, bprm);
-	if (retval < 0)
-		goto out_free;
-	
-	retval = copy_strings(bprm->argc, argv, bprm);
-	if (retval < 0)
-		goto out_free;
-	
-	if (bprm->argc == 0) {
-		retval = copy_string_kernel("", bprm);
-		if (retval < 0)
-			goto out_free;
-		bprm->argc = 1;
-	}
-
-	retval = bprm_execve(bprm, fd, filename, flags);
+    retval = bprm_execve(bprm, fd, filename, flags);
 out_free:
-	free_bprm(bprm);
+    free_bprm(bprm);
 out_ret:
-	putname(filename);
-	return retval;
+    putname(filename);
+    return retval;
 }
 ```
 
@@ -267,8 +267,8 @@ The server program <code>unp_server.c</code> modified from SFR(2004) first creat
 
 ```c
 /* str_echo: performs server processing for each client.
- *           It reads data from the client and echoes it
- *           back to the client.
+ * It reads data from the client and echoes it
+ * back to the client.
  */
 void str_echo(int sockfd)
 {
@@ -318,12 +318,12 @@ The functions with capitalized names are wrapper functions that perform error ch
 
 ```c
 /* Socket wrapper functions */
-int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr);		/* accept() */
-void Bind(int fd, const strut sockaddr *sa, socklen_t salen);		/* bind() */
-void Connect(int fd, const struct sockaddr *sa, socklen_t salen);	/* connect() */
-int Socket(int family, int type, int protocol);						/* socket() */
-void Close(int fd);													/* close() */
-pid_t Fork(void);													/* fork() */
+int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr);       /* accept() */
+void Bind(int fd, const strut sockaddr *sa, socklen_t salen);       /* bind() */
+void Connect(int fd, const struct sockaddr *sa, socklen_t salen);   /* connect() */
+int Socket(int family, int type, int protocol);                     /* socket() */
+void Close(int fd);                                                 /* close() */
+pid_t Fork(void);                                                   /* fork() */
 ```
 
 The whole program code can be found [here](https://github.com/XingjianXuanyuan/CSE422S-OperatingSystemsOrganization/blob/main/Src/Studio16/unp_server.c).

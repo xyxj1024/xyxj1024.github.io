@@ -11,7 +11,7 @@ Some code collected from the Homework 4 of [Programming Languages, Part B](https
 
 <!-- excerpt-end -->
 
-Functional programming is, indeed, all about **expression evaluation**{: style="color: red"}. Expression evaluation is the computation of the value of an expression. An expression can contain variables. Here is some concise interpretation of the **evaluation model** of functional programming as well as the concept of "**lazy evaluation**" from [UCSD CSE130: Programming Languages: Principles & Paradigms](https://cseweb.ucsd.edu/classes/wi00/cse130/) (another pretty informative note on lazy evaluation can be found at [Cornell CS312's course website](https://www.cs.cornell.edu/courses/cs312/2004fa/lectures/rec08.htm)):
+Functional programming is, indeed, all about **expression evaluation**{: style="color: red"}. Expression evaluation is the computation of the value of an expression. An expression can contain variables. Here is some concise interpretation of the **evaluation model** of functional programming as well as the concept of "**lazy evaluation**" from [UCSD CSE130's course website](https://cseweb.ucsd.edu/classes/wi00/cse130/) (another pretty informative note on lazy evaluation can be found at [Cornell CS312's course website](https://www.cs.cornell.edu/courses/cs312/2004fa/lectures/rec08.htm)):
 > The values for the variables are taken from an *environment* which holds name-value pairs. Ideally, the evaluation of an expression should not change the environment. This property is called *referential transparency*.
 > ...
 > Functional languages have the facility for function creation. Such functions are associated with two environments: *definition environment* and *activation environment*. So a function should always carry its definition environment. The pair <code>(function, definition-environment)</code> is called a *closure*.
@@ -472,7 +472,7 @@ Define a macro that is used like "<code>while-less e1 do e2</code>" where <code>
 2. It evaluates <code>e2</code> at least once.
 3. It keeps evaluating <code>e2</code> until and only until the result is not a number less than the result of the evaluation of <code>e1</code>.
 4. Assuming evaluation terminates, the result is true.
-5. Assume <code>e1</code> and <code>e2</code> produce numbers.<br>
+5. Assume <code>e1</code> and <code>e2</code> produce numbers.<br />
 
 ```racket
 (define-syntax while-less
