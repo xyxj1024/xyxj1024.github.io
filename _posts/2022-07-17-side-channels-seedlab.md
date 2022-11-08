@@ -26,7 +26,7 @@ Assume that a **set-associative memory cache** on modern processors is organized
 
 "Higher-level" caches, which are closer to the processor core, are smaller but faster than "lower-level" caches, which are closer to main memory. The last-level cache (LLC) is a *unified* cache (storing both data and instruction), typically shared among all cores of a multicore chip. An important feature of the LLC in modern Intel processors is its *inclusivity*, i.e. the LLC contains copies of all of the data stored in the higher cache levels. The $\log_{2}B$ lowest-order bits of the memory address (the *line offset*) are used to locate a datum in the cache line. The $\log_{2}S$ consecutive bits starting from bit $\log_{2}B$ of the memory address (the *set index*) is used to locate a cache set when the cache is accessed. The remaining high-order bits are used as a *tag* for each cache line. After locating the cache set, the tag field of the address is matched against the tag of the $W$ lines in the set to identify if one of the cache lines is a cache hit.
 
-[The 2005 paper by Colin Percival](https://www.daemonology.net/papers/htt.pdf) investigated the cryptographic side-channel created by cache memory sharing (on the 2.8 GHz Intel Pentium 4 processor).
+[The 2005 paper by Colin Percival](https://www.daemonology.net/papers/htt.pdf) investigated the cryptographic side-channel created by cache memory sharing (on the 2.8 GHz Intel Pentium 4 processor)[^1].
 
 ```assembly
     mov         ecx, start_of_buffer
@@ -190,3 +190,20 @@ $$h = (m_{p} - m_{q})(q^{-1} \pmod{p}) \pmod{p},$$
 and
 
 $$m = m_{q} + hq.$$
+
+AES software relies heavily upon **S-box lookups**, which are table lookups using input-dependent indices; i.e., loads from input-dependent addresses in memory. As an example, Barreto's 2003 implementation scrambles a $16$-byte input $n$ using a $16$-byte key $k$, a constant $256$-byte table $S = (99, 124, 119, 123, 242, ...)$, and another constant $256$-byte table $S' = (198, 248, 238, 246, 255, ...)$. These two $256$-byte tables are expanded into four $1024$-byte tables $T_{0}, T_{1}, T_{2}, T_{3}$:
+
+$$
+\begin{align}
+T_{0}[b] &= (S'[b], S[b], S[b], S[b] \oplus S'[b]) \\
+T_{1}[b] &= (S[b] \oplus S'[b], S'[b], S[b], S[b]) \\
+T_{2}[b] &= (S[b], S[b] \oplus S'[b], S'[b], S[b]) \\
+T_{3}[b] &= (S[b], S[b], S[b] \oplus S'[b], S'[b]).    
+\end{align}
+$$
+
+where $\oplus$ means exclusive-or. What is the consequence? Consider calculating $T_{0}[k[0] \oplus n[0]]$ near the beginning of the AES computation.
+
+## References
+
+[^1]: Colin Percival, "Cache Missing for Fun and Profit," In *BSDCan 2005*, Ottawa, CA, 2005.
