@@ -22,7 +22,7 @@ In 2017, it was discovered that many modern processors, including those from Int
 
 ## An Introduction to Cache Attacks
 
-Assume that a **set-associative memory cache** on modern processors is organized into $S$ *cache sets*, each of which contains $W$ *cache lines*. In common terminology, $W$ is called the *associativity* and the corresponding cache is called $W$-*way associative*. A cache line is a storage cell consisting of, let's say, $B$ bytes. Thus, a cache has $S \cdot W \cdot B$ bytes in size.
+Assume that a **set-associative memory cache**{: style="color: red"} on modern processors is organized into $S$ *cache sets*, each of which contains $W$ *cache lines*. In common terminology, $W$ is called the *associativity* and the corresponding cache is called $W$-*way associative*. A cache line is a storage cell consisting of, let's say, $B$ bytes. Thus, a cache has $S \cdot W \cdot B$ bytes in size.
 
 "Higher-level" caches, which are closer to the processor core, are smaller but faster than "lower-level" caches, which are closer to main memory. The last-level cache (LLC) is a *unified* cache (storing both data and instruction), typically shared among all cores of a multicore chip. An important feature of the LLC in modern Intel processors is its *inclusivity*, i.e. the LLC contains copies of all of the data stored in the higher cache levels. The $\log_{2}B$ lowest-order bits of the memory address (the *line offset*) are used to locate a datum in the cache line. The $\log_{2}S$ consecutive bits starting from bit $\log_{2}B$ of the memory address (the *set index*) is used to locate a cache set when the cache is accessed. The remaining high-order bits are used as a *tag* for each cache line. After locating the cache set, the tag field of the address is matched against the tag of the $W$ lines in the set to identify if one of the cache lines is a cache hit.
 
@@ -35,7 +35,7 @@ Assume that a **set-associative memory cache** on modern processors is organized
     mov         esi, eax
     xor         edi, edi                    ; %edi <- 0
 loop:
-    prefetcht2   [ecx + edi + 0x2800]       ; buffer[64i + 10240]
+    prefetcht2  [ecx + edi + 0x2800]        ; buffer[64i + 10240]
     add         cx, [ecx + edi + 0x0000]    ; %cx <- buffer[64i]
     imul        ecx, 1
     add         cx, [ecx + edi + 0x0800]    ; %cx <- buffer[64i + 2048]
@@ -202,8 +202,26 @@ T_{3}[b] &= (S[b], S[b], S[b] \oplus S'[b], S'[b]).
 \end{align}
 $$
 
-where $\oplus$ means exclusive-or. What is the consequence? Consider calculating $T_{0}[k[0] \oplus n[0]]$ near the beginning of the AES computation.
+where $\oplus$ means exclusive-or. What is the consequence? Consider calculating $T_{0}[k[0] \oplus n[0]]$ near the beginning of the AES computation. It is reasonable to speculate that the time for this lookup depends on the array index and the AES timing might leak information about $k[0] \oplus n[0]$. How to exploit this? A simple idea is to watch the time taken by a victim program, total the AES times for each possible $n[13]$, and track the value of $n[13]$ when the overall AES time reaches maximum (e.g. $n[13] = 147$). If we already know that when $k[13] \oplus n[13] = 8$ the overall AES time reaches maximum, we can directly compute $k[13] = 147 \oplus 8 = 155$[^2].
+
+A timing method called **Evict+Time** assumes that we know the memory address of each (lookup) table $T_{\ell}$ (denoted as $V(T_{\ell})$) and the cache sets of all tables are distinct, and proceeds as follows:
+- Trigger an encryption of plaintext $\mathbf{p}$;
+- Access some $W$ (cache associativity) memory addresses, at least $B$ (cache line size) bytes apart, that are all congruent to $V(T_{\ell}) + y \cdot B / \delta \pmod{S \cdot B}$ (where $y$ is the table index and $\delta$ is $B$ divided by the size of each table entry);
+- Trigger a second encryption of $\mathbf{p}$ and time it as the measurement score.
+
+This method is not sound if we are extracting AES keys from "heavy-weight" services because triggering the encryption (e.g., through a kernel system call) typically executes additional code and the timing can be influenced by instruction scheduling, conditional branches, page table misses, etc.
+
+Another timing method called **Prime+Probe** tries to discover the set of memory blocks read by the encryption *a posteriori*, by examining the state of the cache after encryption. Assume the tables $T_{0}, T_{1}, T_{2}. T_{3}$ are contiguous. The attacker will first allocate a contiguous byte array $A[0, \dots , S \cdot W \cdot B - 1]$ starting from a known address congruent modulo $S \cdot B$ to the start address of $T_{0}$. Then, the method proceeds as follows:
+- Read a value from every memory block in $A$;
+- Trigger an encryption of $\mathbf{p}$;
+- For every table $\ell = 0, \dots , 3$, and index $y = 0, \delta, 2\delta, \dots , 256 - \delta$, read memory addresses $A[1024\ell + 4y + tSB]$ for $t = 0, \dots , W - 1$ and time these $W$ memory accesses.
+
+Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^3].
 
 ## References
 
 [^1]: Colin Percival, "Cache Missing for Fun and Profit," In *BSDCan 2005*, Ottawa, CA, 2005.
+
+[^2]: Daniel J. Bernstein, "Cache-Timing Attacks on AES," [https://cr.yp.to/antiforgery/cachetiming-20050414.pdf](https://cr.yp.to/antiforgery/cachetiming-20050414.pdf), April 2005.
+
+[^3]: [Eran Tromer](http://www.cs.tau.ac.il/~tromer/cache/), Dag Arne Osvik, and Adi Shamir, "Efficient Cache Attacks on AES, and Countermeasures," *Journal of Cryptology*, Vol. 23, No. 1, 37-71, Springer, 2010.
