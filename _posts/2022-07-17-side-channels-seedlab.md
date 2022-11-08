@@ -1,13 +1,13 @@
 ---
 layout:             post
-title:              "SEED Labs 2.0: Meltdown and Spectre Attack Labs Writeup"
+title:              "SEED Labs 2.0: Meltdown and Spectre Attack Labs Preview"
 category:           "Computing Systems"
 tags:               hardware-security microarchitecture cache
 permalink:          /side-channels-seedlab/
 last_modified_at:   "2022-11-07"
 ---
 
-For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org). The lab assignment was conducted using SEED virtual machine configured on a AWS EC2 instance.
+This is a preview of SEED Meltdown and Spectre Attack Labs.
 
 In 2017, it was discovered that many modern processors, including those from Intel and ARM, are vulnerable to attacks called **Meltdown**{: style="color: red"} and **Spectre**{: style="color: red"}. Meltdown allows a user-level program to read data stored inside the kernel memory, leading to data leakage. Spectre exploits a race condition vulnerability in the design of the speculative execution implemented in most CPUs, which allows a malicious program to read the data from the area that is not accessible to it. Unlike the Meltdown attack, the restricted area does not need to be inside the kernel; it can be in the same process space as the malicious program, making defending the Spectre attack much more difficult.
 
@@ -218,7 +218,7 @@ Another timing method called **Prime+Probe** tries to discover the set of memory
 
 Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^3]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy.
 
-The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416.) targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
+The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416)[^4] targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
 - Flush the array to make sure none of the $256$ elements (<code>array[k * 4096 + DELTA]</code> for <code>k = 0..255</code>) is cached;
 - Access the array element at position $S$ where $S$ is a one-byte secret value we happen to know;
 - Access $256$ elements of the array. The access time for the element at position $S$ should be faster than that for the other elements.
@@ -233,7 +233,7 @@ char secret = 94;                   /* Secret value */
 int temp;                           /* Stores the value of the array element at the secret position */
 
 #define CACHE_HIT_THRESHOLD (80)    /* May vary based on CPU and memory speed */
-#define DELTA 1025
+#define DELTA 1024
 
 void flushSideChannel()
 {
@@ -285,23 +285,136 @@ Compile the program and run it multiple times:
 ```console
 $ gcc -march=native FlushReload.c -o FlushReload
 $ ./FlushReload
-array[94 * 4096 + 1025] is in cache!
+array[94 * 4096 + 1024] is in cache!
 The secret is 94.
 $ ./FlushReload
 $ ./FlushReload
-array[94 * 4096 + 1025] is in cache!
+array[94 * 4096 + 1024] is in cache!
 The secret is 94.
 $ ./FlushReload
-array[94 * 4096 + 1025] is in cache!
+array[94 * 4096 + 1024] is in cache!
 The secret is 94.
 $ ./FlushReload
-array[94 * 4096 + 1025] is in cache!
+array[94 * 4096 + 1024] is in cache!
 The secret is 94.
 $ ./FlushReload
-array[94 * 4096 + 1025] is in cache!
+array[94 * 4096 + 1024] is in cache!
 The secret is 94.
 ```
 Note that in the second program run, no secret value was identified. This is the noisy nature of side channels.
+
+### Out-of-Order Execution and Branch Prediction by Modern CPUs
+
+Reusing some code from the previous section, let us conduct an experiment in which our <code>victim()</code> function only accesses the array element at the secret position if some <code>x</code> is less than $10$. To take advantage of CPU's speculative execution feature, we train the CPU to expect the <code>if</code> condition to come out to be true.
+```c
+/* An experiment to observe the effect caused by an out-of-order execution */
+#include <x86intrin.h>
+#include <stdio.h>
+
+int size = 10;
+uint8_t array[256 * 4096];
+uint8_t temp = 0;
+
+#define CACHE_HIT_THRESHOLD (80)
+#define DELTA 1024
+
+void victim(size_t x)
+{
+    if (x < size) {
+        temp = array[x * 4096 + DELTA];
+    }
+}
+
+void flushSideChannel()
+{
+    int i;
+
+    /* Write to array to bring it to RAM to prevent COW */
+    for (i = 0; i < 256; i++) {
+        array[i * 4096 + DELTA] = 1;
+    }
+    /* Flush the values of the array from cache */
+    for (i = 0; i < 256; i++) {
+       _mm_clflush(&array[i * 4096 + DELTA]);
+    }
+}
+
+void reloadSideChannel()
+{
+    unsigned int junk = 0;
+    register uint64_t time1, time2;
+    volatile uint8_t *addr;
+    int i;
+    for (i = 0; i < 256; i++) {
+        addr = &array[i * 4096 + DELTA];
+        time1 = __rdtscp(&junk);
+        junk = *addr;
+        time2 = __rdtscp(&junk) - time1;
+        if (time2 <= CACHE_HIT_THRESHOLD) {
+            printf("array[%d * 4096 + %d] is in cache!\n", i, DELTA);
+            printf("The secret is %d.\n", i);
+        }
+    }
+}
+
+int main()
+{
+    int i;
+    /* The training procedure */
+    for (i = 0; i < 10; i++) {
+        _mm_clflush(&size);
+        victim(i);
+    }
+
+    /* Flush the probing array */
+    flushSideChannel();
+
+    /* Access the secret */
+    _mm_clflush(&size);
+    victim(97);
+
+    /* Reload the probing array */
+    reloadSideChannel();
+
+    return 0;
+}
+```
+
+Compile the program and run it multiple times:
+```console
+$ gcc -march=native specexec.c -o specexec
+$ ./specexec
+array[97 * 4096 + 1024] is in cache!
+The secret is 97.
+$ ./specexec
+array[97 * 4096 + 1024] is in cache!
+The secret is 97.
+$ ./specexec
+array[97 * 4096 + 1024] is in cache!
+The secret is 97.
+$ ./specexec
+array[97 * 4096 + 1024] is in cache!
+The secret is 97.
+$ ./specexec
+$ ./specexec
+array[97 * 4096 + 1024] is in cache!
+The secret is 97.
+```
+We can see that although $97 > 10$, the secret element appears in the cache, which is due to the out-of-order execution and the branch prediction at the microarchitectural level. However, if we call <code>victim(i + 11)</code> rather than <code>victim(i)</code> (so that <code>i + 20</code> always greater than <code>size</code> for <code>i = 0..9</code>) during the training procedure, the output becomes:
+```console
+$ gcc -march=native specexec.c -o specexec
+$ ./specexec
+$ ./specexec
+array[97 * 4096 + 1024] is in cache!
+The secret is 97.
+$ ./specexec
+$ ./specexec
+$ ./specexec
+$ ./specexec
+$ ./specexec
+```
+
+## The Spectre Attack
 
 ## References
 
@@ -310,3 +423,5 @@ Note that in the second program run, no secret value was identified. This is the
 [^2]: Daniel J. Bernstein, "Cache-Timing Attacks on AES," [https://cr.yp.to/antiforgery/cachetiming-20050414.pdf](https://cr.yp.to/antiforgery/cachetiming-20050414.pdf), April 2005.
 
 [^3]: [Eran Tromer](http://www.cs.tau.ac.il/~tromer/cache/), Dag Arne Osvik, and Adi Shamir, "Efficient Cache Attacks on AES, and Countermeasures," *Journal of Cryptology*, Vol. 23, No. 1, 37-71, Springer, 2010.
+
+[^4]: Yuval Yarom and Katrina Falkner, "$\textsc{Flush+Reload}$: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA.
