@@ -173,19 +173,19 @@ We can see that the accesses of <code>array[3 * 4096]</code> and <code>array[7 *
 
 [RSA](https://cs.ru.nl/~joan/papers/JDA_VRI_Rijndael_2002.pdf) is a public-key cryptosystem which supports both encryption and digital signatures. To generate an RSA key pair $(N, e)$, the user randomly generates two prime numbers $p$, $q$, and computes $N = pq$. Next, given a public exponnet $e$ (e.g. $65537$ used by GnuPG and OpenSSL), the user computes the secret exponent
 
-$$d \equiv e^{-1} (\mod (p - 1)(q - 1)).$$
+$$d \equiv e^{-1} (\pmod (p - 1)(q - 1)).$$
 
-The private key is the triple $(p, q, d)$. In textbook RSA encryption, a message $m$ is encrypted by computing $m^{e} \mod N$ and a ciphertext $c$ is decrypted by computing $c^{d} \mod N$. RSA decryption is often implemented using the Chinese remainder theorem (CRT), which splits the secret key $d$ into two parts:
+The private key is the triple $(p, q, d)$. In textbook RSA encryption, a message $m$ is encrypted by computing $m^{e} \pmod N$ and a ciphertext $c$ is decrypted by computing $c^{d} \pmod N$. RSA decryption is often implemented using the Chinese remainder theorem (CRT), which splits the secret key $d$ into two parts:
 
-$$d_{p} = d \mod (p - 1),$$
+$$d_{p} = d \pmod (p - 1),$$
 
 and
 
-$$d_{q} = d \mod (q - 1),$$
+$$d_{q} = d \pmod (q - 1),$$
 
-and then computes two parts of the message as $m_{p} = c^{d_{p}} \mod p$ and $m_{q} = c^{d_{q}} \mod q$. Then the message $m$ is calculated by
+and then computes two parts of the message as $m_{p} = c^{d_{p}} \pmod p$ and $m_{q} = c^{d_{q}} \pmod q$. Then the message $m$ is calculated by
 
-$$h = (m_{p} - m_{q})(q^{-1} \mod p) \mod p,$$
+$$h = (m_{p} - m_{q})(q^{-1} \pmod p) \pmod p,$$
 
 and
 
