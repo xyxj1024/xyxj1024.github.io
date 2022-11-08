@@ -64,6 +64,8 @@ loop:
     jge         loop
 ```
 
+The above code illustrates how a Spy process can monitor the L1 data cache ($128$ cache lines of $64$ bytes each, organized into $32$ four-way associative sets): it repeatedly measures the amount of time needed to read bytes <code>64i</code>, <code>64i + 2048</code>, <code>64i + 4096</code>, and <code>64i + 6144</code> of a $8192$-byte array for <code>i = 0..31</code>. A Trojan process accesses byte <code>64i</code> of an $2048$-byte array if and only if bit <code>i</code> of a $32$-bit word is set. One memory access by the Trojan process causes four cache misses by the Spy.
+
 ### Comparing Data Access Time of CPU Cache with Main Memory
 
 In the following code (<code>CacheTime.c</code>), we have an array of size <code>10 * 4096</code> initialized to ones. Since a typical cache block size is 64 bytes, no two elemnets used in the program fall into the same cache block.
@@ -170,8 +172,21 @@ We can see that the accesses of <code>array[3 * 4096]</code> and <code>array[7 *
 ### Attacks on AES: Exploiting Memory Access Patterns
 
 [RSA](https://cs.ru.nl/~joan/papers/JDA_VRI_Rijndael_2002.pdf) is a public-key cryptosystem which supports both encryption and digital signatures. To generate an RSA key pair $(N, e)$, the user randomly generates two prime numbers $p$, $q$, and computes $N = pq$. Next, given a public exponnet $e$ (e.g. $65537$ used by GnuPG and OpenSSL), the user computes the secret exponent
+
 $$d \equiv e^{-1} (\mod (p - 1)(q - 1)).$$
-The private key is the triple $(p, q, d)$. In textbook RSA encryption, a message $m$ is encrypted by computing $m^{e} \mod N$ and a ciphertext $c$ is decrypted by computing $c^{d} \mod N$. RSA decryption is often implemented using the Chinese remainder theorem (CRT), which splits the secret key $d$ into two parts $d_{p} = d \mod (p - 1)$ and $d_{q} = d \mod (q - 1)$, and then computes two parts of the message as $m_{p} = c^{d_{p}} \mod p$ and $m_{q} = c^{d_{q}} \mod q$.Then the message $m$ is calculated by
-$$h = (m_{p} - m_{q})(q^{-1} \mod p) \mod p,$$
+
+The private key is the triple $(p, q, d)$. In textbook RSA encryption, a message $m$ is encrypted by computing $m^{e} \mod N$ and a ciphertext $c$ is decrypted by computing $c^{d} \mod N$. RSA decryption is often implemented using the Chinese remainder theorem (CRT), which splits the secret key $d$ into two parts:
+
+$$d_{p} = d \mod (p - 1),$$
+
 and
+
+$$d_{q} = d \mod (q - 1),$$
+
+and then computes two parts of the message as $m_{p} = c^{d_{p}} \mod p$ and $m_{q} = c^{d_{q}} \mod q$. Then the message $m$ is calculated by
+
+$$h = (m_{p} - m_{q})(q^{-1} \mod p) \mod p,$$
+
+and
+
 $$m = m_{q} + hq.$$
