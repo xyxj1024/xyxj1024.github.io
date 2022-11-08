@@ -24,6 +24,10 @@ In 2017, it was discovered that many modern processors, including those from Int
 
 Assume that a **set-associative memory cache** on modern processors is organized into $S$ *cache sets*, each of which contains $W$ *cache lines*. In common terminology, $W$ is called the *associativity* and the corresponding cache is called $W$-*way associative*. A cache line is a storage cell consisting of, let's say, $B$ bytes. Thus, a cache has $S \cdot W \cdot B$ bytes in size.
 
+For example, [Intel's Broadwell (BDW) microarchitecture](https://en.wikichip.org/wiki/intel/microarchitectures/broadwell_(client)) has a three-level cache memory hierarchy where L1 cache is 32 KiB 8-way set-associative with 64-byte line size, L2 cache is 256 KiB 8-way set-associative with 64-byte line size, and L3 cache is 1.5/2.0/2.5 MiB per-core 12/16/20-way set-associative with 64-byte line size.
+
+"Higher-level" caches, which are closer to the processor core, are smaller but faster than "lower-level" caches, which are closer to main memory. The last-level cache (LLC) is a *unified* cache (storing both data and instruction), typically shared among all cores of a multicore chip. An important feature of the LLC in modern Intel processors is its *inclusivity*, i.e. the LLC contains copies of all of the data stored in the higher cache levels. The $\log_{2}B$ lowest-order bits of the memory address (the *line offset*) are used to locate a datum in the cache line. The $\log_{2}S$ consecutive bits starting from bit $\log_{2}B$ of the memory address (the *set index*) is used to locate a cache set when the cache is accessed. The remaining high-order bits are used as a *tag* for each cache line. After locating the cache set, the tag field of the address is matched against the tag of the $W$ lines in the set to identify if one of the cache lines is a cache hit.
+
 ### Comparing Data Access Time of CPU Cache with Main Memory
 
 In the following code (<code>CacheTime.c</code>), we have an array of size <code>10 * 4096</code> initialized to ones. Since a typical cache block size is 64 bytes, no two elemnets used in the program fall into the same cache block.
@@ -77,6 +81,7 @@ The prototypes for [Intel Streaming SIMD Extensions 2 (Intel SSE2) intrinsics](h
  * from all caches in the coherency domain. */
 void _mm_clflush (void const* p);
 ```
+The data size affected is the cache coherency size, which is enumerated by the CPUID instruction (typically 64 bytes).
 
 The function <code>__rdtscp()</code> is defined as:
 ```c
@@ -125,3 +130,7 @@ Access time for array[9 * 4096]:   142 CPU cycles.
 ```
 
 We can see that the accesses of <code>array[3 * 4096]</code> and <code>array[7 * 4096]</code> are consistenty faster than the accesses of other elements because these two elements are already in the cache while the others are not.
+
+### Attacks on AES: Exploiting Memory Access Patterns
+
+[RSA](https://cs.ru.nl/~joan/papers/JDA_VRI_Rijndael_2002.pdf) is a public-key cryptosystem which supports both encryption and digital signatures. To generate an RSA key pair, the user generates two prime numbers $p$, $q$, and computes $N = pq$. Next, given a public exponnet $e$, the user computes the secret exponent $d \equiv e^{-1} \mod \varphi(N)$. 
