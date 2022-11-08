@@ -2,7 +2,7 @@
 layout:       post
 title:        "SEED Labs 2.0: Return-to-libc Attack Lab (32-bit) Writeup"
 category:     "Computing Systems"
-tags:         system-security
+tags:         software-security
 permalink:    /return2libc-seedlab/
 ---
 

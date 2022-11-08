@@ -2,7 +2,7 @@
 layout:       post
 title:        "SEED Labs 2.0: Buffer-Overflow Attack Lab (Set-UID Version) Writeup"
 category:     "Computing Systems"
-tags:         system-security
+tags:         software-security
 permalink:    /buffer-overflow-seedlab/
 ---
 

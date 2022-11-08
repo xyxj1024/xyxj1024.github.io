@@ -2,7 +2,7 @@
 layout:             post
 title:              "SEED Labs 2.0: Meltdown and Spectre Attack Labs Writeup"
 category:           "Computing Systems"
-tags:               system-security microarchitecture cache
+tags:               hardware-security microarchitecture cache
 permalink:          /side-channels-seedlab/
 last_modified_at:   "2022-11-07"
 ---
@@ -27,6 +27,44 @@ Assume that a **set-associative memory cache** on modern processors is organized
 For example, [Intel's Broadwell (BDW) microarchitecture](https://en.wikichip.org/wiki/intel/microarchitectures/broadwell_(client)) has a three-level cache memory hierarchy where L1 cache is 32 KiB 8-way set-associative with 64-byte line size, L2 cache is 256 KiB 8-way set-associative with 64-byte line size, and L3 cache is 1.5/2.0/2.5 MiB per-core 12/16/20-way set-associative with 64-byte line size.
 
 "Higher-level" caches, which are closer to the processor core, are smaller but faster than "lower-level" caches, which are closer to main memory. The last-level cache (LLC) is a *unified* cache (storing both data and instruction), typically shared among all cores of a multicore chip. An important feature of the LLC in modern Intel processors is its *inclusivity*, i.e. the LLC contains copies of all of the data stored in the higher cache levels. The $\log_{2}B$ lowest-order bits of the memory address (the *line offset*) are used to locate a datum in the cache line. The $\log_{2}S$ consecutive bits starting from bit $\log_{2}B$ of the memory address (the *set index*) is used to locate a cache set when the cache is accessed. The remaining high-order bits are used as a *tag* for each cache line. After locating the cache set, the tag field of the address is matched against the tag of the $W$ lines in the set to identify if one of the cache lines is a cache hit.
+
+[The 2005 paper by Colin Percival](https://www.daemonology.net/papers/htt.pdf) investigated the cryptographic side-channel created by cache memory sharing (on the 2.8 GHz Intel Pentium 4 processor).
+
+```assembly
+    mov         ecx, start_of_buffer
+    sub         length_of_buffer, 0x2000    ; Spy's 8192-byte buffer
+    rdtsc
+    mov         esi, eax
+    xor         edi, edi                    ; %edi <- 0
+loop:
+    prefetcht2   [ecx + edi + 0x2800]       ; buffer[64i + 10240]
+    add         cx, [ecx + edi + 0x0000]    ; %cx <- buffer[64i]
+    imul        ecx, 1
+    add         cx, [ecx + edi + 0x0800]    ; %cx <- buffer[64i + 2048]
+    imul        ecx, 1
+    add         cx, [ecx + edi + 0x1000]    ; %cx <- buffer[64i + 4096]
+    imul        ecx, 1
+    add         cx, [ecx + edi + 0x1800]    ; %cx <- buffer[64i + 6144]
+    imul        ecx, 1
+
+    rdtsc
+    sub         eax, esi
+    mov         [ecx + edi], ax
+    add         esi, eax
+    imul        ecx, 1
+
+    add         edi, 0x40                   ; %edi <- %edi + 64
+    test        edi, 0x7c0                  ; Jump to loop if %edi not
+    jnz         loop                        ; equal to 1984 = 31 * 64
+
+    sub         edi, 0x7fe                  ; %edi <- %edi - 2046
+    test        edi, 0x3e                   ; Jump to loop if %edi not
+    jnz         loop                        ; equal to 62
+
+    add         edi, 0x7c0                  ; %edi <- %edi + 1984
+    sub         length_of_buffer, 0x800     ; Trojan's 2048-byte buffer
+    jge         loop
+```
 
 ### Comparing Data Access Time of CPU Cache with Main Memory
 
@@ -133,4 +171,4 @@ We can see that the accesses of <code>array[3 * 4096]</code> and <code>array[7 *
 
 ### Attacks on AES: Exploiting Memory Access Patterns
 
-[RSA](https://cs.ru.nl/~joan/papers/JDA_VRI_Rijndael_2002.pdf) is a public-key cryptosystem which supports both encryption and digital signatures. To generate an RSA key pair, the user generates two prime numbers $p$, $q$, and computes $N = pq$. Next, given a public exponnet $e$, the user computes the secret exponent $d \equiv e^{-1} \mod \varphi(N)$. 
+[RSA](https://cs.ru.nl/~joan/papers/JDA_VRI_Rijndael_2002.pdf) is a public-key cryptosystem which supports both encryption and digital signatures. To generate an RSA key pair $(N, e)$, the user randomly generates two prime numbers $p$, $q$, and computes $N = pq$. Next, given a public exponnet $e$ (e.g. $65537$ used by GnuPG and OpenSSL), the user computes the secret exponent $d \equiv e^{-1} (\mod (p - 1)(q - 1))$. The private key is the triple $(p, q, d)$. In textbook RSA encryption, a message $m$ is encrypted by computing $m^{e} \mod N$ and a ciphertext $c$ is decrypted by computing $c^{d} \mod N$. RSA decryption is often implemented using the Chinese remainder theorem (CRT), which splits the secret key $d$ into two parts $d_{p} = d \mod (p - 1)$ and $d_{q} = d \mod (q - 1)$, and then computes two parts of the message as $m_{p} = c^{d_{p}} \mod p$ and $m_{q} = c^{d_{q}} \mod q$.Then the message $m$ is calculated by $$h = (m_{p} - m_{q})(q^{-1} \mod p) \mod p$$ and $$m = m_{q} + hq$$
