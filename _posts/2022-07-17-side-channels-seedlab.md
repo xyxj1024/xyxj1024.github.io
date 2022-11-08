@@ -191,7 +191,7 @@ and
 
 $$m = m_{q} + hq.$$
 
-AES software relies heavily upon **S-box lookups**, which are table lookups using input-dependent indices; i.e., loads from input-dependent addresses in memory. As an example, Barreto's 2003 implementation scrambles a $16$-byte input $n$ using a $16$-byte key $k$, a constant $256$-byte table $S = (99, 124, 119, 123, 242, ...)$, and another constant $256$-byte table $S' = (198, 248, 238, 246, 255, ...)$. These two $256$-byte tables are expanded into four $1024$-byte tables $T_{0}, T_{1}, T_{2}, T_{3}$:
+AES software relies heavily upon **S-box lookups**, which are table lookups using input-dependent indices; i.e., loads from input-dependent addresses in memory. As an example, Barreto's 2003 implementation scrambles a $16$-byte input $n$ using a $16$-byte key $k$, a constant $256$-byte table $S = (99, 124, 119, 123, 242, ...)$, and another constant $256$-byte table $S' = (198, 248, 238, 246, 255, ...)$. These two $256$-byte tables are expanded into four $1024$-byte ($256$ times $4$-byte words) tables $T_{0}, T_{1}, T_{2}, T_{3}$:
 
 $$
 \begin{align}
@@ -216,7 +216,92 @@ Another timing method called **Prime+Probe** tries to discover the set of memory
 - Trigger an encryption of $\mathbf{p}$;
 - For every table $\ell = 0, \dots , 3$, and index $y = 0, \delta, 2\delta, \dots , 256 - \delta$, read memory addresses $A[1024\ell + 4y + tSB]$ for $t = 0, \dots , W - 1$ and time these $W$ memory accesses.
 
-Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^3].
+Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^3]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy.
+
+The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416.) targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
+- Flush the array to make sure none of the $256$ elements (<code>array[k * 4096 + DELTA]</code> for <code>k = 0..255</code>) is cached;
+- Access the array element at position $S$ where $S$ is a one-byte secret value we happen to know;
+- Access $256$ elements of the array. The access time for the element at position $S$ should be faster than that for the other elements.
+
+```c
+/* FlushReload.c */
+#include <x86intrin.h>
+#include <stdio.h>
+
+uint8_t array[256 * 4096];
+char secret = 94;                   /* Secret value */
+int temp;                           /* Stores the value of the array element at the secret position */
+
+#define CACHE_HIT_THRESHOLD (80)    /* May vary based on CPU and memory speed */
+#define DELTA 1025
+
+void flushSideChannel()
+{
+    int i;
+
+    /* Write to array to bring it to RAM to prevent COW */
+    for (i = 0; i < 256; i++) {
+        array[i * 4096 + DELTA] = 1;
+    }
+    /* Flush the values of the array from cache */
+    for (i = 0; i < 256; i++) {
+       _mm_clflush(&array[i * 4096 + DELTA]);
+    }
+}
+
+void getSecret()
+{
+    temp = array[secret * 4096 + DELTA];
+}
+
+void reloadSideChannel()
+{
+    unsigned int junk = 0;
+    register uint64_t time1, time2;
+    volatile uint8_t *addr;
+    int i;
+    for (i = 0; i < 256; i++) {
+        addr = &array[i * 4096 + DELTA];
+        time1 = __rdtscp(&junk);
+        junk = *addr;
+        time2 = __rdtscp(&junk) - time1;
+        if (time2 <= CACHE_HIT_THRESHOLD) {
+            printf("array[%d * 4096 + %d] is in cache!\n", i, DELTA);
+            printf("The secret is %d.\n", i);
+        }
+    }
+}
+
+int main(int argc, const char **argv)
+{
+    flushSideChannel();
+    getSecret();
+    reloadSideChannel();
+    return 0;
+}
+```
+
+Compile the program and run it multiple times:
+```console
+$ gcc -march=native FlushReload.c -o FlushReload
+$ ./FlushReload
+array[94 * 4096 + 1025] is in cache!
+The secret is 94.
+$ ./FlushReload
+$ ./FlushReload
+array[94 * 4096 + 1025] is in cache!
+The secret is 94.
+$ ./FlushReload
+array[94 * 4096 + 1025] is in cache!
+The secret is 94.
+$ ./FlushReload
+array[94 * 4096 + 1025] is in cache!
+The secret is 94.
+$ ./FlushReload
+array[94 * 4096 + 1025] is in cache!
+The secret is 94.
+```
+Note that in the second program run, no secret value was identified. This is the noisy nature of side channels.
 
 ## References
 
