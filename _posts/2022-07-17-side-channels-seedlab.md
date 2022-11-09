@@ -9,7 +9,7 @@ last_modified_at:   "2022-11-07"
 
 This is a preview of SEED Meltdown and Spectre Attack Labs.
 
-In 2017, it was discovered that many modern processors, including those from Intel and ARM, are vulnerable to attacks called **Meltdown**{: style="color: red"} (CVE-2017-5754, also called "rogue data cache load") and **Spectre**{: style="color: red"} (CVE-2017-5753 and CVE-2017-5715). Meltdown allows a user-level program to read data stored inside the kernel memory, which causes a trap. But before the trap is issued, the instructions that follow the access leak the contents of the accessed memory through a cache covert channel. Spectre exploits a race condition vulnerability in the design of the speculative execution implemented in most CPUs (also including most AMD processors, unlike Meltdown), which allows a malicious program to read the data from the area that is not accessible to it. Unlike the Meltdown attack, the restricted area does not need to be inside the kernel; it can be in the same process space as the malicious program, making defending the Spectre attack much more difficult.
+In 2017, it was discovered that many modern processors, including those from Intel and ARM, are vulnerable to attacks called **Meltdown**{: style="color: red"} (CVE-2017-5754) and **Spectre**{: style="color: red"} (CVE-2017-5753 and CVE-2017-5715). Meltdown allows a user-level program to read data stored inside the kernel memory, which causes a trap. But before the trap is issued, the instructions that follow the access leak the contents of the accessed memory through a cache covert channel. Spectre exploits a race condition vulnerability in the design of the speculative execution implemented in most CPUs (also including most AMD processors, unlike Meltdown), which allows a malicious program to read the data from the area that is not accessible to it. Unlike the Meltdown attack, the restricted area does not need to be inside the kernel; it can be in the same process space as the malicious program, making defending the Spectre attack much more difficult.
 
 <!-- excerpt-end -->
 
@@ -171,6 +171,8 @@ We can see that the accesses of <code>array[3 * 4096]</code> and <code>array[7 *
 
 ### Attacks on AES: Exploiting Memory Access Patterns
 
+Side channel attacks consist of three phases: the **priming phase** which is used to place a system into a desired initial state (e.g. flushing cache lines), the **triggering phase** which is used to perform the action that conveys information through the side channel, and the **observing phase**, which is used to detect the presence of the information conveyed through the side channel. These phases can occur architecturally (by actually executing instructions), or speculatively (through speculative execution)[^2].
+
 [RSA](https://cs.ru.nl/~joan/papers/JDA_VRI_Rijndael_2002.pdf) is a public-key cryptosystem which supports both encryption and digital signatures. To generate an RSA key pair $(N, e)$, the user randomly generates two prime numbers $p$, $q$, and computes $N = pq$. Next, given a public exponnet $e$ (e.g. $65537$ used by GnuPG and OpenSSL), the user computes the secret exponent
 
 $$d \equiv e^{-1} \pmod{(p - 1)(q - 1)}.$$
@@ -202,7 +204,7 @@ T_{3}[b] &= (S[b], S[b], S[b] \oplus S'[b], S'[b]).
 \end{align}
 $$
 
-where $\oplus$ means exclusive-or. What is the consequence? Consider calculating $T_{0}[k[0] \oplus n[0]]$ near the beginning of the AES computation. It is reasonable to speculate that the time for this lookup depends on the array index and the AES timing might leak information about $k[0] \oplus n[0]$. How to exploit this? A simple idea is to watch the time taken by a victim program, total the AES times for each possible $n[13]$, and track the value of $n[13]$ when the overall AES time reaches maximum (e.g. $n[13] = 147$). If we already know that when $k[13] \oplus n[13] = 8$ the overall AES time reaches maximum, we can directly compute $k[13] = 147 \oplus 8 = 155$[^2].
+where $\oplus$ means exclusive-or. What is the consequence? Consider calculating $T_{0}[k[0] \oplus n[0]]$ near the beginning of the AES computation. It is reasonable to speculate that the time for this lookup depends on the array index and the AES timing might leak information about $k[0] \oplus n[0]$. How to exploit this? A simple idea is to watch the time taken by a victim program, total the AES times for each possible $n[13]$, and track the value of $n[13]$ when the overall AES time reaches maximum (e.g. $n[13] = 147$). If we already know that when $k[13] \oplus n[13] = 8$ the overall AES time reaches maximum, we can directly compute $k[13] = 147 \oplus 8 = 155$[^3].
 
 A timing method called **Evict+Time** assumes that we know the memory address of each (lookup) table $T_{\ell}$ (denoted as $V(T_{\ell})$) and the cache sets of all tables are distinct, and proceeds as follows:
 - Trigger an encryption of plaintext $\mathbf{p}$;
@@ -216,12 +218,12 @@ Another timing method called **Prime+Probe** tries to discover the set of memory
 - Trigger an encryption of $\mathbf{p}$;
 - For every table $\ell = 0, \dots , 3$, and index $y = 0, \delta, 2\delta, \dots , 256 - \delta$, read memory addresses $A[1024\ell + 4y + tSB]$ for $t = 0, \dots , W - 1$ and time these $W$ memory accesses.
 
-Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^3]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy. Nevertheless, the Prime+Probe side channel attack has some limitations:
+Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^4]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy. Nevertheless, the Prime+Probe side channel attack has some limitations:
 - First, it can only be applied in small caches (typically the L1 cache), since only a few bits of the virtual memory address are known.
 - Second, the employment of such a Spy process in small caches restricts its application to processes co-located on the same core.
-- Finally, modern processors have very similar access times for L1 and L2 caches, only differing in a few cycles, which makes the detection method noisy and challenging[^4].
+- Finally, modern processors have very similar access times for L1 and L2 caches, only differing in a few cycles, which makes the detection method noisy and challenging[^5].
 
-The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416)[^5] targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
+The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416)[^6] targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
 - Flush the array to make sure none of the $256$ elements (<code>array[k * 4096 + DELTA]</code> for <code>k = 0..255</code>) is cached;
 - Access the array element at position $S$ where $S$ is a one-byte secret value we happen to know;
 - Access $256$ elements of the array. The access time for the element at position $S$ should be faster than that for the other elements.
@@ -308,7 +310,7 @@ Note that in the second program run, no secret value was identified. This is the
 
 ### Out-of-Order Execution and Branch Prediction by Modern CPUs
 
-A processor can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the CPU can discard the resulting state without architectural effects and continue execution on the correct execution path[^6].
+A processor, enabled by its *branch predictor*, can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the processor can discard the resulting state without architectural effects and continue execution on the correct execution path[^7]. Typically, the **Branch Prediction Unit (BPU)** takes advantage of the **Pattern History Table (PHT)** for direction prediction (i.e. speculative decision about whether a conditional branch is taken or not). The BPU can operate in different modes. In the one-level prediction mode, the branch address is the only information source to index the PHT entry. In the history-based (two-level) prediction mode, a branch history buffer maintains the history of prior branch executions. Modern processors generally choose a hybrid design that uses the one-level prediction to select PHT entry with a predetermined number of bits from the branch address and uses the history-based prediction to index into PHT with the branch address and a global history register.
 
 In Section 11.7 of [Intel's Software Developer's Manual: Vol. 3A](https://www.intel.com/content/www/us/en/architecture-and-technology/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.html), *implicit caching*, which occurs on the P6 and more recent processor families due to aggressive prefetching, branch prediction, and TLB miss handling, is defined as the situation "when a memory element is made potentially cacheable, although the element may never have been accessed in the normal von Neumann sequence."
 
@@ -427,9 +429,9 @@ $ ./specexec
 
 ## The Spectre Attack
 
-Consider the case of an attacker trying to steal data from the same process using traces of the out-of-order execution left behind by the CPU.
+Consider the case of an attacker trying to steal data from the *same* process using traces of the out-of-order execution left behind by the CPU.
 
-In the following program, assume the attacker already knows the address of the secret.
+In the following program, assume the attacker already knows the address of the secret. The training procedure done in the <code>spectreAttack()</code> is also called *branch direction mistraining* by some of the security researchers.
 ```c
 /* SpectreAttack.c */
 /* Spectre Variant 1 (CVE-2017-5753): Bounds Check Bypass */
@@ -571,12 +573,14 @@ In most cases, the secret <code>0</code> was not printed, probably because in th
 
 [^1]: Colin Percival, "Cache Missing for Fun and Profit," In *BSDCan 2005*, Ottawa, CA, 2005.
 
-[^2]: Daniel J. Bernstein, "Cache-Timing Attacks on AES," [https://cr.yp.to/antiforgery/cachetiming-20050414.pdf](https://cr.yp.to/antiforgery/cachetiming-20050414.pdf), April 2005.
+[^2]: Matt Miller, "Mitigating Speculative Execution Side Channel Hardware Vulnerabilities," [https://msrc-blog.microsoft.com/2018/03/15/mitigating-speculative-execution-side-channel-hardware-vulnerabilities/](https://msrc-blog.microsoft.com/2018/03/15/mitigating-speculative-execution-side-channel-hardware-vulnerabilities/), March 15, 2018.
 
-[^3]: [Eran Tromer](http://www.cs.tau.ac.il/~tromer/cache/), Dag Arne Osvik, and Adi Shamir, "Efficient Cache Attacks on AES, and Countermeasures," *Journal of Cryptology*, Vol. 23, No. 1, 37-71, Springer, 2010.
+[^3]: Daniel J. Bernstein, "Cache-Timing Attacks on AES," [https://cr.yp.to/antiforgery/cachetiming-20050414.pdf](https://cr.yp.to/antiforgery/cachetiming-20050414.pdf), April 2005.
 
-[^4]: Gorka Irazoqui, Thomas Eisenbarth, and Berk Sunar, "S&dollar;A: A Shared Cache Attack that Works Across Cores and Defies VM Sandboxing&mdash;and its Application to AES," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
+[^4]: [Eran Tromer](http://www.cs.tau.ac.il/~tromer/cache/), Dag Arne Osvik, and Adi Shamir, "Efficient Cache Attacks on AES, and Countermeasures," *Journal of Cryptology*, Vol. 23, No. 1, 37-71, Springer, 2010.
 
-[^5]: Yuval Yarom and Katrina Falkner, "Flush+Reload: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA, USA.
+[^5]: Gorka Irazoqui, Thomas Eisenbarth, and Berk Sunar, "S&dollar;A: A Shared Cache Attack that Works Across Cores and Defies VM Sandboxing&mdash;and its Application to AES," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
 
-[^6]: Jann Horn, Google Project Zero, "Reading Privileged Memory with a Side-Channel," [https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html](https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html).
+[^6]: Yuval Yarom and Katrina Falkner, "Flush+Reload: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA, USA.
+
+[^7]: Jann Horn, Google Project Zero, "Reading Privileged Memory with a Side-Channel," [https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html](https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html).
