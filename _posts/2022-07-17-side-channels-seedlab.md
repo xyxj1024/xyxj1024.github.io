@@ -9,7 +9,7 @@ last_modified_at:   "2022-11-07"
 
 This is a preview of SEED Meltdown and Spectre Attack Labs.
 
-In 2017, it was discovered that many modern processors, including those from Intel and ARM, are vulnerable to attacks called **Meltdown**{: style="color: red"} and **Spectre**{: style="color: red"}. Meltdown allows a user-level program to read data stored inside the kernel memory, leading to data leakage. Spectre exploits a race condition vulnerability in the design of the speculative execution implemented in most CPUs, which allows a malicious program to read the data from the area that is not accessible to it. Unlike the Meltdown attack, the restricted area does not need to be inside the kernel; it can be in the same process space as the malicious program, making defending the Spectre attack much more difficult.
+In 2017, it was discovered that many modern processors, including those from Intel and ARM, are vulnerable to attacks called **Meltdown**{: style="color: red"} (CVE-2017-5754, also called "rogue data cache load") and **Spectre**{: style="color: red"} (CVE-2017-5753 and CVE-2017-5715). Meltdown allows a user-level program to read data stored inside the kernel memory, which causes a trap. But before the trap is issued, the instructions that follow the access leak the contents of the accessed memory through a cache covert channel. Spectre exploits a race condition vulnerability in the design of the speculative execution implemented in most CPUs (also including most AMD processors, unlike Meltdown), which allows a malicious program to read the data from the area that is not accessible to it. Unlike the Meltdown attack, the restricted area does not need to be inside the kernel; it can be in the same process space as the malicious program, making defending the Spectre attack much more difficult.
 
 <!-- excerpt-end -->
 
@@ -26,7 +26,7 @@ Assume that a **set-associative memory cache**{: style="color: red"} on modern p
 
 "Higher-level" caches, which are closer to the processor core, are smaller but faster than "lower-level" caches, which are closer to main memory. The last-level cache (LLC) is a *unified* cache (storing both data and instruction), typically shared among all cores of a multicore chip. An important feature of the LLC in modern Intel processors is its *inclusivity*, i.e. the LLC contains copies of all of the data stored in the higher cache levels. The $\log_{2}B$ lowest-order bits of the memory address (the *line offset*) are used to locate a datum in the cache line. The $\log_{2}S$ consecutive bits starting from bit $\log_{2}B$ of the memory address (the *set index*) is used to locate a cache set when the cache is accessed. The remaining high-order bits are used as a *tag* for each cache line. After locating the cache set, the tag field of the address is matched against the tag of the $W$ lines in the set to identify if one of the cache lines is a cache hit.
 
-[The 2005 paper by Colin Percival](https://www.daemonology.net/papers/htt.pdf) investigated the cryptographic side-channel created by cache memory sharing (on the 2.8 GHz Intel Pentium 4 processor)[^1].
+[The 2005 paper by Colin Percival](https://www.daemonology.net/papers/htt.pdf) investigated the cryptographic side-channel created by cache memory sharing (on the 2.8 GHz Intel Pentium 4 processor)[^1]. The instruction <code>prefetcht2</code> tells the processor to prefetch data from memory into L2 cache and higher.
 
 ```assembly
     mov         ecx, start_of_buffer
@@ -216,9 +216,12 @@ Another timing method called **Prime+Probe** tries to discover the set of memory
 - Trigger an encryption of $\mathbf{p}$;
 - For every table $\ell = 0, \dots , 3$, and index $y = 0, \delta, 2\delta, \dots , 256 - \delta$, read memory addresses $A[1024\ell + 4y + tSB]$ for $t = 0, \dots , W - 1$ and time these $W$ memory accesses.
 
-Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^3]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy.
+Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^3]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy. Nevertheless, the Prime+Probe side channel attack has some limitations:
+- First, it can only be applied in small caches (typically the L1 cache), since only a few bits of the virtual memory address are known.
+- Second, the employment of such a Spy process in small caches restricts its application to processes co-located on the same core.
+- Finally, modern processors have very similar access times for L1 and L2 caches, only differing in a few cycles, which makes the detection method noisy and challenging[^4].
 
-The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416)[^4] targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
+The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416)[^5] targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
 - Flush the array to make sure none of the $256$ elements (<code>array[k * 4096 + DELTA]</code> for <code>k = 0..255</code>) is cached;
 - Access the array element at position $S$ where $S$ is a one-byte secret value we happen to know;
 - Access $256$ elements of the array. The access time for the element at position $S$ should be faster than that for the other elements.
@@ -304,6 +307,10 @@ The secret is 94.
 Note that in the second program run, no secret value was identified. This is the noisy nature of side channels.
 
 ### Out-of-Order Execution and Branch Prediction by Modern CPUs
+
+A processor can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the CPU can discard the resulting state without architectural effects and continue execution on the correct execution path[^6].
+
+In Section 11.7 of [Intel's Software Developer's Manual: Vol. 3A](https://www.intel.com/content/www/us/en/architecture-and-technology/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.html), *implicit caching*, which occurs on the P6 and more recent processor families due to aggressive prefetching, branch prediction, and TLB miss handling, is defined as the situation "when a memory element is made potentially cacheable, although the element may never have been accessed in the normal von Neumann sequence."
 
 Reusing some code from the previous section, let us conduct an experiment in which our <code>victim()</code> function only accesses the array element at the secret position if some <code>x</code> is less than $10$. To take advantage of CPU's speculative execution feature, we train the CPU to expect the <code>if</code> condition to come out to be true.
 ```c
@@ -400,7 +407,7 @@ $ ./specexec
 array[97 * 4096 + 1024] is in cache!
 The secret is 97.
 ```
-We can see that although $97 > 10$, the secret element appears in the cache, which is due to the out-of-order execution and the branch prediction at the microarchitectural level. However, if we call <code>victim(i + 11)</code> rather than <code>victim(i)</code> (so that <code>i + 20</code> always greater than <code>size</code> for <code>i = 0..9</code>) during the training procedure, the output becomes:
+We can see that although $97 > 10$, the secret element still appears in the cache, which is due to the out-of-order execution and the branch prediction at the microarchitectural level. However, if we call <code>victim(i + 11)</code> rather than <code>victim(i)</code> (so that <code>i + 11</code> always greater than <code>size</code> for <code>i = 0..9</code>) during the training procedure, the output becomes:
 ```console
 $ gcc -march=native specexec.c -o specexec
 $ ./specexec
@@ -414,6 +421,10 @@ $ ./specexec
 $ ./specexec
 ```
 
+## The Meltdown Attack
+
+
+
 ## The Spectre Attack
 
 Consider the case of an attacker trying to steal data from the same process using traces of the out-of-order execution left behind by the CPU.
@@ -421,6 +432,7 @@ Consider the case of an attacker trying to steal data from the same process usin
 In the following program, assume the attacker already knows the address of the secret.
 ```c
 /* SpectreAttack.c */
+/* Spectre Variant 1 (CVE-2017-5753): Bounds Check Bypass */
 #include <x86intrin.h>
 #include <stdio.h>
 
@@ -486,7 +498,7 @@ void spectreAttack(size_t larger_x)
     }
 
     /* Flush buffer_size and array[] from the cache */
-    _mm_clflush(&buffer_size); /* Required for the attack to take effect */
+    _mm_clflush(&buffer_size);      /* Required for the attack to take effect */
     for (i = 0; i < 256; i++) {
         _mm_clflush(&array[i * 4096 + DELTA]);
     }
@@ -553,7 +565,7 @@ $ ./SpectreAttack
 array[83 * 4096 + 1024] is in cache!
 The secret is 83.
 ```
-In most cases, the secret <code>0</code> was not printed, probably because the element was brought into the cache before our cache flushing took place.
+In most cases, the secret <code>0</code> was not printed, probably because in those cases the element was brought into the cache before our cache flushing took place.
 
 ## References
 
@@ -563,4 +575,8 @@ In most cases, the secret <code>0</code> was not printed, probably because the e
 
 [^3]: [Eran Tromer](http://www.cs.tau.ac.il/~tromer/cache/), Dag Arne Osvik, and Adi Shamir, "Efficient Cache Attacks on AES, and Countermeasures," *Journal of Cryptology*, Vol. 23, No. 1, 37-71, Springer, 2010.
 
-[^4]: Yuval Yarom and Katrina Falkner, "$\textsc{Flush+Reload}$: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA.
+[^4]: Gorka Irazoqui, Thomas Eisenbarth, and Berk Sunar, "S&dollar;A: A Shared Cache Attack that Works Across Cores and Defies VM Sandboxing&mdash;and its Application to AES," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
+
+[^5]: Yuval Yarom and Katrina Falkner, "Flush+Reload: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA, USA.
+
+[^6]: Jann Horn, Google Project Zero, "Reading Privileged Memory with a Side-Channel," [https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html](https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html).
