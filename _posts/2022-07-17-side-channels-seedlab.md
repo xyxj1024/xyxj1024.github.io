@@ -308,9 +308,9 @@ The secret is 94.
 ```
 Note that in the second program run, no secret value was identified. This is the noisy nature of side channels.
 
-### Out-of-Order Execution and Branch Prediction by Modern CPUs
+### Observing Out-of-Order Execution and Branch Prediction by Modern CPUs
 
-A processor, enabled by its *branch predictor*, can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the processor can discard the resulting state without architectural effects and continue execution on the correct execution path[^7]. Typically, the **Branch Prediction Unit (BPU)** takes advantage of the **Pattern History Table (PHT)** for direction prediction (i.e. speculative decision about whether a conditional branch is taken or not). The BPU can operate in different modes. In the one-level prediction mode, the branch address is the only information source to index the PHT entry. In the history-based (two-level) prediction mode, a branch history buffer maintains the history of prior branch executions. Modern processors generally choose a hybrid design that uses the one-level prediction to select PHT entry with a predetermined number of bits from the branch address and uses the history-based prediction to index into PHT with the branch address and a global history register.
+A processor can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the processor can discard the resulting state without architectural effects and continue execution on the correct execution path[^7].
 
 In Section 11.7 of [Intel's Software Developer's Manual: Vol. 3A](https://www.intel.com/content/www/us/en/architecture-and-technology/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.html), *implicit caching*, which occurs on the P6 and more recent processor families due to aggressive prefetching, branch prediction, and TLB miss handling, is defined as the situation "when a memory element is made potentially cacheable, although the element may never have been accessed in the normal von Neumann sequence."
 
@@ -428,6 +428,18 @@ $ ./specexec
 
 
 ## The Spectre Attack
+
+On modern processors, the (per-core) **Branch Prediction Unit (BPU)**{: style="color: red"}, or branch predictor, is composed of two structures: the **directional predictor**{: style="color: red"} and the **branch target buffer (BTB)**{: style="color: red"}.
+
+Typically, the directional predictor takes advantage of the **Pattern History Table (PHT)**{: style="color: red"} for direction prediction (i.e. speculative decision about whether a conditional branch is taken or not). The BPU can operate in different modes: 
+- In the one-level prediction mode, the branch address is the only information source to index the PHT entry. 
+- In the history-based (two-level) prediction mode, a branch history buffer maintains the history of prior branch executions.<br />
+
+Modern processors generally choose a hybrid design that uses the one-level prediction to select PHT entry with a predetermined number of bits from the branch address and uses the history-based prediction to index into PHT with the branch address hashed by a **global history register (GHR)**{: style="color: red"}. The GHR is a shift register that keeps track of the most recent history among all branches executed on the core.
+
+The BTB is a simple direct-mapped cache of addresses that stores the last target address of a branch that maps to each of its entry. If a certain branch is predicted to be taken, the target address of the branch is obtained from BTB.
+
+### Textbook Version: Training the BPU to Bypass Bound Checking (Spectre Variant 1)
 
 Consider the case of an attacker trying to steal data from the *same* process using traces of the out-of-order execution left behind by the CPU.
 
@@ -568,6 +580,8 @@ array[83 * 4096 + 1024] is in cache!
 The secret is 83.
 ```
 In most cases, the secret <code>0</code> was not printed, probably because in those cases the element was brought into the cache before our cache flushing took place.
+
+### Indirect Branching
 
 ## References
 
