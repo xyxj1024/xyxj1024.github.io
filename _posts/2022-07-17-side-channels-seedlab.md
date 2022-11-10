@@ -647,7 +647,7 @@ In most cases, the secret <code>0</code> was not printed, probably because in th
 
 Call and return instructions are always executed in pairs. Dedicated to a logical core in case of hyperthreading, the **Return Stack Buffer (RSB)**{: style="color: red"} is a fixed-size buffer that provides predictions for <code>ret</code> instructions. When the CPU executes a call instruction, a new entry (the address of the next instruction) is added to the RSB and the top pointer is incremented; when the CPU executes a return instruction, the value is taken from the RSB, the top pointer is decremented, and the read value is used for return address prediction. Consider a RSB that can hold $16$ entries. It must drop the oldest entries if a call chain goes deeper than that. As this deep call chain returns, it has actually executed more <code>ret</code> instructions than the number of entries in the RSB and the RSB has underflowed[^12].
 
-Here is a simple Proof of Concept implementation of [Koruyeh et al. (2018)](https://dl.acm.org/doi/10.5555/3307423.3307426)[^13]:
+Here is a simple proof-of-concept (PoC) implementation of [Koruyeh et al. (2018)](https://dl.acm.org/doi/10.5555/3307423.3307426)[^13]:
 ```c
 /* spectre-rsb.c */
 #include <stdio.h>
@@ -790,55 +790,55 @@ int main()
 }
 ```
 
-Compile the program and run it on my mac machine:
+Compile the program and run it on my Mac machine:
 ```console
 $ gcc -march=native -O0 spectre-rsb.c -o spectre-rsb
 $ ./spectre-rsb
 CACHE_HIT_THRESHOLD is calculated as 44
 Reading 43 bytes:
-Reading at secret = 0x10aff3ed8... Success: 0x00='?' score=1    
-Reading at secret = 0x10aff3ed9... Unclear: 0x6E='n' score=933  ( second best: 0x00 score=894 )
-Reading at secret = 0x10aff3eda... Success: 0x20=' ' score=1    
-Reading at secret = 0x10aff3edb... Success: 0x00='?' score=1    
-Reading at secret = 0x10aff3edc... Unclear: 0x68='h' score=990  ( second best: 0x00 score=922 )
-Reading at secret = 0x10aff3edd... Unclear: 0x65='e' score=924  ( second best: 0x00 score=844 )
-Reading at secret = 0x10aff3ede... Unclear: 0x00='?' score=939  ( second best: 0x20 score=914 )
-Reading at secret = 0x10aff3edf... Success: 0x62='b' score=1    
-Reading at secret = 0x10aff3ee0... Success: 0x6F='o' score=6    ( second best: 0x2E score=1   )
-Reading at secret = 0x10aff3ee1... Unclear: 0x6E='n' score=962  ( second best: 0x00 score=900 )
-Reading at secret = 0x10aff3ee2... Success: 0x6E='n' score=1    
-Reading at secret = 0x10aff3ee3... Success: 0x69='i' score=18   ( second best: 0x00 score=7   )
-Reading at secret = 0x10aff3ee4... Success: 0x65='e' score=1    
-Reading at secret = 0x10aff3ee5... Success: 0x2C=',' score=1    
-Reading at secret = 0x10aff3ee6... Success: 0x20=' ' score=1    
-Reading at secret = 0x10aff3ee7... Success: 0x62='b' score=1    
-Reading at secret = 0x10aff3ee8... Unclear: 0x6F='o' score=961  ( second best: 0x00 score=932 )
-Reading at secret = 0x10aff3ee9... Unclear: 0x6E='n' score=964  ( second best: 0x00 score=937 )
-Reading at secret = 0x10aff3eea... Unclear: 0x6E='n' score=957  ( second best: 0x00 score=898 )
-Reading at secret = 0x10aff3eeb... Unclear: 0x69='i' score=987  ( second best: 0x00 score=895 )
-Reading at secret = 0x10aff3eec... Success: 0x65='e' score=1    
-Reading at secret = 0x10aff3eed... Unclear: 0x00='?' score=911  ( second best: 0x20 score=906 )
-Reading at secret = 0x10aff3eee... Success: 0x62='b' score=1    
-Reading at secret = 0x10aff3eef... Success: 0x61='a' score=1    
-Reading at secret = 0x10aff3ef0... Success: 0x6E='n' score=1    
-Reading at secret = 0x10aff3ef1... Success: 0x6B='k' score=1    
-Reading at secret = 0x10aff3ef2... Success: 0x00='?' score=1    
-Reading at secret = 0x10aff3ef3... Success: 0x00='?' score=6    ( second best: 0x20 score=1   )
-Reading at secret = 0x10aff3ef4... Unclear: 0x6F='o' score=951  ( second best: 0x00 score=925 )
-Reading at secret = 0x10aff3ef5... Unclear: 0x66='f' score=946  ( second best: 0x00 score=885 )
-Reading at secret = 0x10aff3ef6... Unclear: 0x20=' ' score=881  ( second best: 0x00 score=763 )
-Reading at secret = 0x10aff3ef7... Unclear: 0x4C='L' score=953  ( second best: 0x00 score=839 )
-Reading at secret = 0x10aff3ef8... Success: 0x6F='o' score=1    
-Reading at secret = 0x10aff3ef9... Success: 0x63='c' score=1    
-Reading at secret = 0x10aff3efa... Unclear: 0x68='h' score=995  ( second best: 0x00 score=953 )
-Reading at secret = 0x10aff3efb... Success: 0x00='?' score=1    
-Reading at secret = 0x10aff3efc... Success: 0x00='?' score=1    
-Reading at secret = 0x10aff3efd... Unclear: 0x6F='o' score=964  ( second best: 0x00 score=936 )
-Reading at secret = 0x10aff3efe... Success: 0x6D='m' score=1    
-Reading at secret = 0x10aff3eff... Success: 0x6F='o' score=1    
-Reading at secret = 0x10aff3f00... Success: 0x6E='n' score=1    
-Reading at secret = 0x10aff3f01... Unclear: 0x64='d' score=957  ( second best: 0x00 score=909 )
-Reading at secret = 0x10aff3f02... Success: 0x2E='.' score=1
+Reading at secret = 0x10ce24ed8... Unclear: 0x00='?' score=915  ( second best: 0x4F score=898 )
+Reading at secret = 0x10ce24ed9... Unclear: 0x6E='n' score=919  ( second best: 0x00 score=895 )
+Reading at secret = 0x10ce24eda... Unclear: 0x20=' ' score=971  ( second best: 0x00 score=968 )
+Reading at secret = 0x10ce24edb... Unclear: 0x74='t' score=991  ( second best: 0x00 score=970 )
+Reading at secret = 0x10ce24edc... Unclear: 0x68='h' score=993  ( second best: 0x00 score=969 )
+Reading at secret = 0x10ce24edd... Unclear: 0x65='e' score=959  ( second best: 0x00 score=952 )
+Reading at secret = 0x10ce24ede... Unclear: 0x20=' ' score=973  ( second best: 0x00 score=973 )
+Reading at secret = 0x10ce24edf... Unclear: 0x62='b' score=975  ( second best: 0x00 score=967 )
+Reading at secret = 0x10ce24ee0... Unclear: 0x6F='o' score=975  ( second best: 0x00 score=974 )
+Reading at secret = 0x10ce24ee1... Unclear: 0x6E='n' score=961  ( second best: 0x00 score=956 )
+Reading at secret = 0x10ce24ee2... Unclear: 0x6E='n' score=922  ( second best: 0x00 score=871 )
+Reading at secret = 0x10ce24ee3... Unclear: 0x69='i' score=995  ( second best: 0x00 score=976 )
+Reading at secret = 0x10ce24ee4... Unclear: 0x00='?' score=957  ( second best: 0x65 score=940 )
+Reading at secret = 0x10ce24ee5... Unclear: 0x2C=',' score=959  ( second best: 0x00 score=958 )
+Reading at secret = 0x10ce24ee6... Unclear: 0x20=' ' score=957  ( second best: 0x00 score=957 )
+Reading at secret = 0x10ce24ee7... Unclear: 0x62='b' score=955  ( second best: 0x00 score=934 )
+Reading at secret = 0x10ce24ee8... Unclear: 0x6F='o' score=949  ( second best: 0x00 score=945 )
+Reading at secret = 0x10ce24ee9... Unclear: 0x6E='n' score=937  ( second best: 0x00 score=924 )
+Reading at secret = 0x10ce24eea... Unclear: 0x6E='n' score=938  ( second best: 0x00 score=921 )
+Reading at secret = 0x10ce24eeb... Unclear: 0x69='i' score=980  ( second best: 0x00 score=933 )
+Reading at secret = 0x10ce24eec... Unclear: 0x00='?' score=934  ( second best: 0x65 score=928 )
+Reading at secret = 0x10ce24eed... Unclear: 0x00='?' score=940  ( second best: 0x20 score=930 )
+Reading at secret = 0x10ce24eee... Unclear: 0x62='b' score=925  ( second best: 0x00 score=903 )
+Reading at secret = 0x10ce24eef... Unclear: 0x61='a' score=927  ( second best: 0x00 score=912 )
+Reading at secret = 0x10ce24ef0... Unclear: 0x6E='n' score=921  ( second best: 0x00 score=910 )
+Reading at secret = 0x10ce24ef1... Unclear: 0x6B='k' score=834  ( second best: 0x00 score=566 )
+Reading at secret = 0x10ce24ef2... Unclear: 0x73='s' score=928  ( second best: 0x00 score=615 )
+Reading at secret = 0x10ce24ef3... Unclear: 0x00='?' score=901  ( second best: 0x20 score=898 )
+Reading at secret = 0x10ce24ef4... Unclear: 0x6F='o' score=747  ( second best: 0x00 score=674 )
+Reading at secret = 0x10ce24ef5... Success: 0x00='?' score=1    
+Reading at secret = 0x10ce24ef6... Unclear: 0x20=' ' score=916  ( second best: 0x00 score=901 )
+Reading at secret = 0x10ce24ef7... Unclear: 0x4C='L' score=958  ( second best: 0x00 score=934 )
+Reading at secret = 0x10ce24ef8... Unclear: 0x6F='o' score=941  ( second best: 0x00 score=936 )
+Reading at secret = 0x10ce24ef9... Unclear: 0x63='c' score=886  ( second best: 0x00 score=854 )
+Reading at secret = 0x10ce24efa... Unclear: 0x68='h' score=973  ( second best: 0x00 score=725 )
+Reading at secret = 0x10ce24efb... Unclear: 0x20=' ' score=791  ( second best: 0x00 score=754 )
+Reading at secret = 0x10ce24efc... Unclear: 0x4C='L' score=906  ( second best: 0x00 score=884 )
+Reading at secret = 0x10ce24efd... Unclear: 0x6F='o' score=807  ( second best: 0x00 score=780 )
+Reading at secret = 0x10ce24efe... Unclear: 0x6D='m' score=847  ( second best: 0x00 score=762 )
+Reading at secret = 0x10ce24eff... Unclear: 0x6F='o' score=862  ( second best: 0x00 score=849 )
+Reading at secret = 0x10ce24f00... Unclear: 0x6E='n' score=866  ( second best: 0x00 score=814 )
+Reading at secret = 0x10ce24f01... Unclear: 0x64='d' score=890  ( second best: 0x00 score=866 )
+Reading at secret = 0x10ce24f02... Unclear: 0x2E='.' score=907  ( second best: 0x00 score=900 )
 ```
 
 ## References
