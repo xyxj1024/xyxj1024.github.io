@@ -266,11 +266,11 @@ Another timing method called **Prime+Probe** tries to discover the set of memory
 - For every table $\ell = 0, \dots , 3$, and index $y = 0, \delta, 2\delta, \dots , 256 - \delta$, read memory addresses $A[1024\ell + 4y + tSB]$ for $t = 0, \dots , W - 1$ and time these $W$ memory accesses.
 
 Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^5]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy. Nevertheless, the Prime+Probe side channel attack has some limitations:
-- First, it can only be applied in small caches (typically the L1 cache), since only a few bits of the virtual memory address are known.
+- First, it can only be applied in small caches (typically the L1 cache), since only a few bits of the virtual memory address are known. (More recently, [Liu et al. (2015)](https://ieeexplore.ieee.org/document/7163050)[^6] implements a Prime+Probe attack targeting the LLC.)
 - Second, the employment of such a Spy process in small caches restricts its application to processes co-located on the same core.
-- Finally, modern processors have very similar access times for L1 and L2 caches, only differing in a few cycles, which makes the detection method noisy and challenging[^6].
+- Finally, modern processors have very similar access times for L1 and L2 caches, only differing in a few cycles, which makes the detection method noisy and challenging[^7].
 
-The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416)[^7] targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
+The **Flush+Reload** method proposed by [Yarom and Falkner (2014)](https://www.usenix.org/node/184416)[^8] targets the LLC with the Spy process being independent of memory accesses of the Trojan process. The method first allocates an <code>array</code> with $256 \times 4096$ elements (no two elements <code>array[i * 4096]</code> and <code>array[j * 4096]</code> will be in the same cache block) and proceeds as follows:
 - Flush the array to make sure none of the $256$ elements (<code>array[k * 4096 + DELTA]</code> for <code>k = 0..255</code>) is cached;
 - Access the array element at position $S$ where $S$ is a one-byte secret value we happen to know;
 - Access $256$ elements of the array. The access time for the element at position $S$ should be faster than that for the other elements.
@@ -357,7 +357,9 @@ Note that in the second program run, no secret value was identified. This is the
 
 ### Observing Out-of-Order Execution and Branch Prediction by CPUs
 
-A processor can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the processor can discard the resulting state without architectural effects and continue execution on the correct execution path[^8].
+Both Intel and AMD use micro-ops, which can be seen as a simplified RISC machine that runs inside the CPU. All instructions from the x86 ISA are then dynamically decoded into their corresponding micro-ops, and are then executed on much simpler execution units. This instruction splitting makes it possible to *reorder* the execution of micro-ops to achieve performance gains. x86 architecture maintains a FIFO buffer of micro-ops in their original order while executing them *out of order*, called **reorder buffer (ROB)**{: style="color: red"}.
+
+A processor can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the processor can discard the resulting state without architectural effects and continue execution on the correct execution path[^9]. This feature, orthogonal to out-of-order execution, is called *speculative execution*.
 
 In Section 11.7 of [Intel's Software Developer's Manual: Vol. 3A](https://www.intel.com/content/www/us/en/architecture-and-technology/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.html), *implicit caching*, which occurs on the P6 and more recent processor families due to aggressive prefetching, branch prediction, and TLB miss handling, is defined as the situation "when a memory element is made potentially cacheable, although the element may never have been accessed in the normal von Neumann sequence."
 
@@ -472,7 +474,13 @@ $ ./specexec
 
 ## The Meltdown Attack
 
+If a micro-op is in the ROB, there are four cases:
+- it is waiting for its dependencies to be resolved;
+- it is ready to be executed;
+- it is already being executed; or
+- it is done executing but was not yet retired.
 
+Retiring a micro-op means to reflect its changes back to the architectural state. The ROB retires instructions in order such that the architectural state is updated sequentially. Meltdown uses the fact that out-of-order engines do not handle exceptions until the retirement stage, and leverages it to access memory regions that would otherwise trigger a fault (e.g., kernel memory).
 
 ## The Spectre Attack
 
@@ -630,12 +638,14 @@ In most cases, the secret <code>0</code> was not printed, probably because in th
 
 ### BTB Poisoning
 
-**Indirect branches** are a basic type of processor instruction which enable programs to dynamically change what code is executed by the processor at runtime. To execute an indirect branch, the processor computes a *branch target*, which determines what instruction to execute after the indirect branch. However, the processor cannot fetch the next instruction until the branch target is computed, resulting in pipeline stalls that significantly degrade performance. To eliminate these stalls, processors execute speculatively with the help of BTB[^9]. Since the BTB is shared among multiple processes running on the same core, information leakage from one process to another through BTB side channel is possible. To create a BTB-based side channel, three conditions must be satisfied:
+**Indirect branches** are a basic type of processor instruction which enable programs to dynamically change what code is executed by the processor at runtime. To execute an indirect branch, the processor computes a *branch target*, which determines what instruction to execute after the indirect branch. However, the processor cannot fetch the next instruction until the branch target is computed, resulting in pipeline stalls that significantly degrade performance. To eliminate these stalls, processors execute speculatively with the help of BTB[^10]. Since the BTB is shared among multiple processes running on the same core, information leakage from one process to another through BTB side channel is possible. To create a BTB-based side channel, three conditions must be satisfied:
 - First, the Trojan process has to fill a BTB entry by executing a branch instruction;
 - Second, the execution time of the Spy process running on the same core must be affected by the state of the BTB, which is possible when two processes are using the same BTB entry;
-- Third, the Spy process must be able to detect the impact on its execution by performing time measurements[^10].
+- Third, the Spy process must be able to detect the impact on its execution by performing time measurements[^11].
 
 ### SpectreRSB
+
+The **Return Stack Buffer (RSB)**{: style="color: red"} is a fixed-size buffer that provides predictions for <code>ret</code> instructions. Consider a RSB that can hold $16$ entries. It must drop the oldest entries if a call chain goes deeper than that. As this deep call chain returns, it has actually executed more <code>ret</code> instructions than the number of entries in the RSB and the RSB has underflowed[^12]. 
 
 ## References
 
@@ -649,12 +659,16 @@ In most cases, the secret <code>0</code> was not printed, probably because in th
 
 [^5]: [Eran Tromer](http://www.cs.tau.ac.il/~tromer/cache/), Dag Arne Osvik, and Adi Shamir, "Efficient Cache Attacks on AES, and Countermeasures," *Journal of Cryptology*, Vol. 23, No. 1, 37-71, Springer, 2010.
 
-[^6]: Gorka Irazoqui, Thomas Eisenbarth, and Berk Sunar, "S&dollar;A: A Shared Cache Attack that Works Across Cores and Defies VM Sandboxing&mdash;and its Application to AES," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
+[^6]: Fangfei Liu, Yuval Yarom, Qian Ge, Gernot Heiser, Ruby B. Lee, "Last-Level Cache Side-Channel Attacks are Practical," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
 
-[^7]: Yuval Yarom and Katrina Falkner, "Flush+Reload: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA, USA.
+[^7]: Gorka Irazoqui, Thomas Eisenbarth, and Berk Sunar, "S&dollar;A: A Shared Cache Attack that Works Across Cores and Defies VM Sandboxing&mdash;and its Application to AES," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
 
-[^8]: Jann Horn, Google Project Zero, "Reading Privileged Memory with a Side-Channel," [https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html](https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html).
+[^8]: Yuval Yarom and Katrina Falkner, "Flush+Reload: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA, USA.
 
-[^9]: Nadav Amit, Fred Jacobs, and Michael Wei, "JumpSwitches: Restoring the Performance of Indirect Branches in the Era of Spectre," In *Proceedings of the 2019 USENIX Annual Technical Conference*, July 10-12, 2019, Renton, WA, USA.
+[^9]: Jann Horn, Google Project Zero, "Reading Privileged Memory with a Side-Channel," [https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html](https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html).
 
-[^10]: Dmitry Evtyushkin, Dmitry Ponomarev, and Nael Abu-Ghazaleh, "Jump over ASLR: Attacking Branch Predictors to Bypass ASLR," In *2016 49th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)*, October 15-19, 2016, Taipei, Taiwan, China.
+[^10]: Nadav Amit, Fred Jacobs, and Michael Wei, "JumpSwitches: Restoring the Performance of Indirect Branches in the Era of Spectre," In *Proceedings of the 2019 USENIX Annual Technical Conference*, July 10-12, 2019, Renton, WA, USA.
+
+[^11]: Dmitry Evtyushkin, Dmitry Ponomarev, and Nael Abu-Ghazaleh, "Jump over ASLR: Attacking Branch Predictors to Bypass ASLR," In *2016 49th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)*, October 15-19, 2016, Taipei, Taiwan, China.
+
+[^12]: Return Stack Buffer Underflow / CVE-2022-29901, CVE-2022-28693 / INTEL-SA-00702, [https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html](https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html).
