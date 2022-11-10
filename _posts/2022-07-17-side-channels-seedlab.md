@@ -308,7 +308,7 @@ The secret is 94.
 ```
 Note that in the second program run, no secret value was identified. This is the noisy nature of side channels.
 
-### Observing Out-of-Order Execution and Branch Prediction by Modern CPUs
+### Observing Out-of-Order Execution and Branch Prediction by CPUs
 
 A processor can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the processor can discard the resulting state without architectural effects and continue execution on the correct execution path[^7].
 
@@ -439,7 +439,7 @@ Modern processors generally choose a hybrid design that uses the one-level predi
 
 The BTB is a simple direct-mapped cache of addresses that stores the last target address of a branch that maps to each of its entry. If a certain branch is predicted to be taken, the target address of the branch is obtained from BTB.
 
-### Textbook Version: Training the BPU to Bypass Bound Checking (Spectre Variant 1)
+### Textbook Version: Training the BPU to Bypass Bound Checking
 
 Consider the case of an attacker trying to steal data from the *same* process using traces of the out-of-order execution left behind by the CPU.
 
@@ -581,7 +581,14 @@ The secret is 83.
 ```
 In most cases, the secret <code>0</code> was not printed, probably because in those cases the element was brought into the cache before our cache flushing took place.
 
-### Indirect Branching
+### BTB Poisoning
+
+**Indirect branches** are a basic type of processor instruction which enable programs to dynamically change what code is executed by the processor at runtime. To execute an indirect branch, the processor computes a *branch target*, which determines what instruction to execute after the indirect branch. However, the processor cannot fetch the next instruction until the branch target is computed, resulting in pipeline stalls that significantly degrade performance. To eliminate these stalls, processors execute speculatively with the help of BTB[^8]. Since the BTB is shared among multiple processes running on the same core, information leakage from one process to another through BTB side channel is possible. To create a BTB-based side channel, three conditions must be satisfied:
+- First, the Trojan process has to fill a BTB entry by executing a branch instruction;
+- Second, the execution time of the Spy process running on the same core must be affected by the state of the BTB, which is possible when two processes are using the same BTB entry;
+- Third, the Spy process must be able to detect the impact on its execution by performing time measurements[^9].
+
+### SpectreRSB
 
 ## References
 
@@ -598,3 +605,7 @@ In most cases, the secret <code>0</code> was not printed, probably because in th
 [^6]: Yuval Yarom and Katrina Falkner, "Flush+Reload: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA, USA.
 
 [^7]: Jann Horn, Google Project Zero, "Reading Privileged Memory with a Side-Channel," [https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html](https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html).
+
+[^8]: Nadav Amit, Fred Jacobs, and Michael Wei, "JumpSwitches: Restoring the Performance of Indirect Branches in the Era of Spectre," In *Proceedings of the 2019 USENIX Annual Technical Conference*, July 10-12, 2019, Renton, WA, USA.
+
+[^9]: Dmitry Evtyushkin, Dmitry Ponomarev, and Nael Abu-Ghazaleh, "Jump over ASLR: Attacking Branch Predictors to Bypass ASLR," In *2016 49th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)*, October 15-19, 2016, Taipei, Taiwan, China.
