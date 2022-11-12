@@ -181,7 +181,7 @@ Side channel attacks consist of three phases: the **priming phase** which is use
 
 $$d \equiv e^{-1} \pmod{(p - 1)(q - 1)}.$$
 
-The private key is the triple $(p, q, d)$. In textbook RSA encryption, a message $m$ is encrypted by computing $m^{e} \pmod{N}$ and a ciphertext $c$ is decrypted by computing $c^{d} \pmod{N}$. RSA decryption is often implemented using the Chinese remainder theorem (CRT), which splits the secret key $d$ into two parts:
+The private key is the triple $(p, q, d)$. In textbook RSA encryption, a message $m$ is encrypted by computing $m^{e} \pmod{N}$ and a ciphertext $c$ is decrypted by computing $c^{d} \pmod{N}$ (these are so-called "*modular exponentiation*" calculations). RSA decryption is often implemented using the Chinese remainder theorem (CRT), which splits the secret key $d$ into two parts:
 
 $$d_{p} = d \pmod{(p - 1)},$$
 
@@ -357,7 +357,7 @@ Note that in the second program run, no secret value was identified. This is the
 
 ### Observing Out-of-Order Execution and Branch Prediction by CPUs
 
-Both Intel and AMD use micro-ops, which can be seen as a simplified RISC machine that runs inside the CPU. All instructions from the x86 ISA are then dynamically decoded into their corresponding micro-ops, and are then executed on much simpler execution units. This instruction splitting makes it possible to *reorder* the execution of micro-ops to achieve performance gains. x86 architecture maintains a FIFO buffer of micro-ops in their original order while executing them *out of order*, called **reorder buffer (ROB)**{: style="color: red"}.
+Both Intel and AMD use micro-ops (or "&mu;ops"), which can be seen as a simplified RISC machine that runs inside the CPU. All instructions from the x86 ISA are then dynamically decoded into their corresponding &mu;ops, and are then executed on much simpler execution units. This instruction splitting makes it possible to *reorder* the execution of &mu;ops to achieve performance gains. x86 architecture maintains a FIFO buffer of &mu;ops in their original order while executing them *out of order*, called **reorder buffer (ROB)**{: style="color: red"}.
 
 A processor can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the processor can discard the resulting state without architectural effects and continue execution on the correct execution path[^9]. This feature, orthogonal to out-of-order execution, is called *speculative execution*.
 
@@ -474,13 +474,13 @@ $ ./specexec
 
 ## The Meltdown Attack
 
-If a micro-op is in the ROB, there are four cases:
+If a &mu;ops is in the ROB, there are four cases:
 - it is waiting for its dependencies to be resolved;
 - it is ready to be executed;
 - it is already being executed; or
 - it is done executing but was not yet retired.
 
-Retiring a micro-op means to reflect its changes back to the architectural state. The ROB retires instructions in order such that the architectural state is updated sequentially. Meltdown uses the fact that out-of-order engines do not handle exceptions until the retirement stage, and leverages it to access memory regions that would otherwise trigger a fault (e.g., kernel memory).
+Retiring a &mu;ops means to reflect its changes back to the architectural state. The ROB retires instructions in order such that the architectural state is updated sequentially. Meltdown uses the fact that out-of-order engines do not handle exceptions until the retirement stage, and leverages it to access memory regions that would otherwise trigger a fault (e.g., kernel memory).
 
 ## The Spectre Attack
 
@@ -638,16 +638,20 @@ In most cases, the secret <code>0</code> was not printed, probably because in th
 
 ### BTB Poisoning
 
-**Indirect branches** are a basic type of processor instruction which enable programs to dynamically change what code is executed by the processor at runtime. To execute an indirect branch, the processor computes a *branch target*, which determines what instruction to execute after the indirect branch. However, the processor cannot fetch the next instruction until the branch target is computed, resulting in pipeline stalls that significantly degrade performance. To eliminate these stalls, processors execute speculatively with the help of BTB[^10]. Since the BTB is shared among multiple processes running on the same core, information leakage from one process to another through BTB side channel is possible. To create a BTB-based side channel, three conditions must be satisfied:
+A branch must be unresolved for a number of cycles to allow *transient* instructions from the wrong execution path to access sensitive data and leave traceable instances by initializing cache accesses. The number of instructions executed before the branch is resolved is known as the width of speculative window. There are two distinct scenarios that create dangerous speculative window:
+1. When the data that determines conditional branch direction is not located in CPU caches, and the BPU mispredicts its direction (this is what we saw in the previous section);
+2. When the target of an **indirect branch** is not in CPU cache while BTB contains an incorrect target due to a collision with another branch[10].
+
+Indirect branches are a basic type of processor instruction which enable programs to dynamically change what code is executed by the processor at runtime. To execute an indirect branch, the processor computes a *branch target*, which determines what instruction to execute after the indirect branch. However, the processor cannot fetch the next instruction until the branch target is computed, resulting in pipeline stalls that significantly degrade performance. To eliminate these stalls, processors execute speculatively with the help of BTB[^11]. Since the BTB is shared among multiple processes running on the same core, information leakage from one process to another through BTB side channel is possible. To create a BTB-based side channel, three conditions must be satisfied:
 - First, the Trojan process has to fill a BTB entry by executing a branch instruction;
 - Second, the execution time of the Spy process running on the same core must be affected by the state of the BTB, which is possible when two processes are using the same BTB entry;
-- Third, the Spy process must be able to detect the impact on its execution by performing time measurements[^11].
+- Third, the Spy process must be able to detect the impact on its execution by performing time measurements[^12].
 
 ### SpectreRSB
 
-Call and return instructions are always executed in pairs. Dedicated to a logical core in case of hyperthreading, the **Return Stack Buffer (RSB)**{: style="color: red"} is a fixed-size buffer that provides predictions for <code>ret</code> instructions. When the CPU executes a call instruction, a new entry (the address of the next instruction) is added to the RSB and the top pointer is incremented; when the CPU executes a return instruction, the value is taken from the RSB, the top pointer is decremented, and the read value is used for return address prediction. Consider a RSB that can hold $16$ entries. It must drop the oldest entries if a call chain goes deeper than that. As this deep call chain returns, it has actually executed more <code>ret</code> instructions than the number of entries in the RSB and the RSB has underflowed[^12].
+Call and return instructions are always executed in pairs. Dedicated to a logical core in case of hyperthreading, the **Return Stack Buffer (RSB)**{: style="color: red"} is a fixed-size buffer that provides predictions for <code>ret</code> instructions. When the CPU executes a call instruction, a new entry (the address of the next instruction) is added to the RSB and the top pointer is incremented; when the CPU executes a return instruction, the value is taken from the RSB, the top pointer is decremented, and the read value is used for return address prediction. Consider a RSB that can hold $16$ entries. It must drop the oldest entries if a call chain goes deeper than that. As this deep call chain returns, it has actually executed more <code>ret</code> instructions than the number of entries in the RSB and the RSB has underflowed[^13].
 
-Here is a simple proof-of-concept (PoC) implementation of [Koruyeh et al. (2018)](https://dl.acm.org/doi/10.5555/3307423.3307426)[^13]:
+Here is a simple proof-of-concept (PoC) implementation of [Koruyeh et al. (2018)](https://dl.acm.org/doi/10.5555/3307423.3307426)[^14]:
 ```c
 /* spectre-rsb.c */
 #include <stdio.h>
@@ -861,10 +865,12 @@ Reading at secret = 0x10ce24f02... Unclear: 0x2E='.' score=907  ( second best: 0
 
 [^9]: Jann Horn, Google Project Zero, "Reading Privileged Memory with a Side-Channel," [https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html](https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html).
 
-[^10]: Nadav Amit, Fred Jacobs, and Michael Wei, "JumpSwitches: Restoring the Performance of Indirect Branches in the Era of Spectre," In *Proceedings of the 2019 USENIX Annual Technical Conference*, July 10-12, 2019, Renton, WA, USA.
+[^10]: Tao Zhang, Kenneth Koltermann, and Dmitry Evtyushkin, "Exploring Branch Predictors for Constructing Transient Execution Trojans," In *ASPLOS'20: Proceedings of the Twenty-Fifth International COnference on Architectural Support for Programming Languages and Operating Systems*, March 16-20, 2020, Lausanne, Switzerland.
 
-[^11]: Dmitry Evtyushkin, Dmitry Ponomarev, and Nael Abu-Ghazaleh, "Jump over ASLR: Attacking Branch Predictors to Bypass ASLR," In *2016 49th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)*, October 15-19, 2016, Taipei, Taiwan, China.
+[^11]: Nadav Amit, Fred Jacobs, and Michael Wei, "JumpSwitches: Restoring the Performance of Indirect Branches in the Era of Spectre," In *Proceedings of the 2019 USENIX Annual Technical Conference*, July 10-12, 2019, Renton, WA, USA.
 
-[^12]: Return Stack Buffer Underflow / CVE-2022-29901, CVE-2022-28693 / INTEL-SA-00702, [https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html](https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html).
+[^12]: Dmitry Evtyushkin, Dmitry Ponomarev, and Nael Abu-Ghazaleh, "Jump over ASLR: Attacking Branch Predictors to Bypass ASLR," In *2016 49th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)*, October 15-19, 2016, Taipei, Taiwan, China.
 
-[^13]: Esmaeil Mohammadian Koruyeh, Khaled N. Khasawneh, Chengsu Song, and Nael Abu-Ghazaleh, "Spectre Returns! Speculation Attacks Using the Return Stack Buffer," *WOOT'18: Proceedings of the 12th USENIX Conference on Offensive Technologies*, August 2018.
+[^13]: Return Stack Buffer Underflow / CVE-2022-29901, CVE-2022-28693 / INTEL-SA-00702, [https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html](https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html).
+
+[^14]: Esmaeil Mohammadian Koruyeh, Khaled N. Khasawneh, Chengsu Song, and Nael Abu-Ghazaleh, "Spectre Returns! Speculation Attacks Using the Return Stack Buffer," *WOOT'18: Proceedings of the 12th USENIX Conference on Offensive Technologies*, August 2018.
