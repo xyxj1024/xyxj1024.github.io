@@ -640,14 +640,14 @@ In most cases, the secret <code>0</code> was not printed, probably because in th
 
 A branch must be unresolved for a number of cycles to allow *transient* instructions from the wrong execution path to access sensitive data and leave traceable instances by initializing cache accesses. The number of instructions executed before the branch is resolved is known as the width of speculative window. There are two distinct scenarios that create dangerous speculative window:
 1. When the data that determines conditional branch direction is not located in CPU caches, and the BPU mispredicts its direction (this is what we saw in the previous section);
-2. When the target of an **indirect branch** is not in CPU cache while BTB contains an incorrect target due to a collision with another branch[10].
+2. When the target of an **indirect branch** is not in CPU cache while BTB contains an incorrect target due to a collision with another branch[^10].
 
 Indirect branches are a basic type of processor instruction which enable programs to dynamically change what code is executed by the processor at runtime. To execute an indirect branch, the processor computes a *branch target*, which determines what instruction to execute after the indirect branch. However, the processor cannot fetch the next instruction until the branch target is computed, resulting in pipeline stalls that significantly degrade performance. To eliminate these stalls, processors execute speculatively with the help of BTB[^11]. Since the BTB is shared among multiple processes running on the same core, information leakage from one process to another through BTB side channel is possible. To create a BTB-based side channel, three conditions must be satisfied:
 - First, the Trojan process has to fill a BTB entry by executing a branch instruction;
 - Second, the execution time of the Spy process running on the same core must be affected by the state of the BTB, which is possible when two processes are using the same BTB entry;
 - Third, the Spy process must be able to detect the impact on its execution by performing time measurements[^12].
 
-### SpectreRSB
+### Spectre-RSB
 
 Call and return instructions are always executed in pairs. Dedicated to a logical core in case of hyperthreading, the **Return Stack Buffer (RSB)**{: style="color: red"} is a fixed-size buffer that provides predictions for <code>ret</code> instructions. When the CPU executes a call instruction, a new entry (the address of the next instruction) is added to the RSB and the top pointer is incremented; when the CPU executes a return instruction, the value is taken from the RSB, the top pointer is decremented, and the read value is used for return address prediction. Consider a RSB that can hold $16$ entries. It must drop the oldest entries if a call chain goes deeper than that. As this deep call chain returns, it has actually executed more <code>ret</code> instructions than the number of entries in the RSB and the RSB has underflowed[^13].
 
