@@ -4,7 +4,7 @@ title:              "SEED Labs 2.0: Meltdown and Spectre Attack Labs Preview"
 category:           "Computing Systems"
 tags:               hardware-security microarchitecture cache
 permalink:          /side-channels-seedlab/
-last_modified_at:   "2022-11-07"
+last_modified_at:   "2022-11-11"
 ---
 
 **This post guides through some background knowledge required in the SEED Meltdown and Spectre Attack Labs**.
@@ -357,7 +357,7 @@ Note that in the second program run, no secret value was identified. This is the
 
 ### Observing Out-of-Order Execution and Branch Prediction by CPUs
 
-Both Intel and AMD use micro-ops (or "&mu;ops"), which can be seen as a simplified RISC machine that runs inside the CPU. All instructions from the x86 ISA are then dynamically decoded into their corresponding &mu;ops, and are then executed on much simpler execution units. This instruction splitting makes it possible to *reorder* the execution of &mu;ops to achieve performance gains. x86 architecture maintains a FIFO buffer of &mu;ops in their original order while executing them *out of order*, called **reorder buffer (ROB)**{: style="color: red"}.
+Both Intel and AMD use micro-ops (or "*&mu;*ops"), which can be seen as a simplified RISC machine that runs inside the CPU. All instructions from the x86 ISA are then dynamically decoded into their corresponding *&mu;*ops, and are then executed on much simpler execution units. This instruction splitting makes it possible to *reorder* the execution of *&mu;*ops to achieve performance gains. x86 architecture maintains a FIFO buffer of *&mu;*ops in their original order while executing them *out of order*, called **reorder buffer (ROB)**{: style="color: red"}.
 
 A processor can execute past a branch without knowing whether it will be taken or where its target is, therefore executing instructions before it is known whether they should be executed. If this speculation turns out to have been incorrect, the processor can discard the resulting state without architectural effects and continue execution on the correct execution path[^9]. This feature, orthogonal to out-of-order execution, is called *speculative execution*.
 
@@ -474,13 +474,13 @@ $ ./specexec
 
 ## The Meltdown Attack
 
-If a &mu;ops is in the ROB, there are four cases:
+If a *&mu;*op is in the ROB, there are four cases:
 - it is waiting for its dependencies to be resolved;
 - it is ready to be executed;
 - it is already being executed; or
 - it is done executing but was not yet retired.
 
-Retiring a &mu;ops means to reflect its changes back to the architectural state. The ROB retires instructions in order such that the architectural state is updated sequentially. Meltdown uses the fact that out-of-order engines do not handle exceptions until the retirement stage, and leverages it to access memory regions that would otherwise trigger a fault (e.g., kernel memory).
+Retiring a *&mu;*op means to reflect its changes back to the architectural state. The ROB retires instructions in order such that the architectural state is updated sequentially. Meltdown uses the fact that out-of-order engines do not handle exceptions until the retirement stage, and leverages it to access memory regions that would otherwise trigger a fault (e.g., kernel memory).
 
 ## The Spectre Attack
 
