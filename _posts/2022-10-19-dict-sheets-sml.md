@@ -6,7 +6,7 @@ tags:			        data-structures functional-programming
 permalink:		    /dict-sheets-sml/
 ---
 
-Standard ML exercises of [CSE 425S "Programming Languages" at Washington University in St. Louis](https://classes.engineering.wustl.edu/cse425s).
+Standard ML exercises of [CSE 425S: "Programming Systems and Languages" at Washington University in St. Louis](https://classes.engineering.wustl.edu/cse425s).
 
 <!-- excerpt-end -->
 

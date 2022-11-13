@@ -7,7 +7,7 @@ permalink:		    /streams-racket/
 last_modified_at: "2022-11-06"
 ---
 
-Some code collected from the Homework 4 of [Programming Languages, Part B](https://www.coursera.org/learn/programming-languages/) taught by Professor Dan Grossman from University of Washington and the Warm-Up exercise of [CSE 425S: Programming Systems and Languages](https://classes.engineering.wustl.edu/cse425s/) taught by Professor Dennis Cosgrove from Washington University in St. Louis (also see [Professor Chris Gill's Home Page](https://www.cse.wustl.edu/~cdgill/) for past offerings).
+Some code collected from the Homework 4 of ["Programming Languages, Part B"](https://www.coursera.org/learn/programming-languages/) taught by Professor Dan Grossman from University of Washington and the Warm-Up exercise of [CSE 425S: "Programming Systems and Languages"](https://classes.engineering.wustl.edu/cse425s/) taught by Professor Dennis Cosgrove from Washington University in St. Louis (also see [Professor Chris Gill's Home Page](https://www.cse.wustl.edu/~cdgill/) for past offerings).
 
 <!-- excerpt-end -->
 
