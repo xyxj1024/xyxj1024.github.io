@@ -865,7 +865,7 @@ Reading at secret = 0x10ce24f02... Unclear: 0x2E='.' score=907  ( second best: 0
 
 [^9]: Jann Horn, Google Project Zero, "Reading Privileged Memory with a Side-Channel," [https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html](https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html).
 
-[^10]: Tao Zhang, Kenneth Koltermann, and Dmitry Evtyushkin, "Exploring Branch Predictors for Constructing Transient Execution Trojans," In *ASPLOS'20: Proceedings of the Twenty-Fifth International COnference on Architectural Support for Programming Languages and Operating Systems*, March 16-20, 2020, Lausanne, Switzerland.
+[^10]: Tao Zhang, Kenneth Koltermann, and Dmitry Evtyushkin, "Exploring Branch Predictors for Constructing Transient Execution Trojans," In *ASPLOS'20: Proceedings of the Twenty-Fifth International Conference on Architectural Support for Programming Languages and Operating Systems*, March 16-20, 2020, Lausanne, Switzerland.
 
 [^11]: Nadav Amit, Fred Jacobs, and Michael Wei, "JumpSwitches: Restoring the Performance of Indirect Branches in the Era of Spectre," In *Proceedings of the 2019 USENIX Annual Technical Conference*, July 10-12, 2019, Renton, WA, USA.
 
