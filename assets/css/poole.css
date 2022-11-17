@@ -372,12 +372,17 @@
   
   
   /*
-   * Posts and pages
+   * Quotes, posts and pages
    *
    * Each post is wrapped in `.post` and is used on default and post layouts. Each
    * page is wrapped in `.page` and is only used on the page layout.
    */
   
+  .random-quote {
+    font-size: 110%;
+    font-family: Verdana, "Gill Sans", serif;
+  }
+
   .page,
   .post {
     margin-bottom: 4em;
