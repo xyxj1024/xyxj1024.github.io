@@ -11,11 +11,11 @@ pagination:
   {% for post in site.posts %}
   <div class="post">
     <hr>
-    <h2 class="post-title">
+    <h3 class="post-title">
       <a href="{{ post.url }}">
         {{ post.title }}
       </a>
-    </h2>
+    </h3>
     <span class="post-date">{{ post.date | date_to_string }}</span>
     {{ post.excerpt }}
   </div>
