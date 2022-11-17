@@ -1,5 +1,5 @@
 ---
-layout:     default
+layout:     page
 title:      Home
 permalink:  /home
 nav_order:  1
@@ -31,9 +31,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-
         {{ post.title }}
       </a>
     </h1>
-
     <span class="post-date">{{ post.date | date_to_string }}</span>
-
     {{ post.excerpt }}
   </div>
   {% endfor %}
