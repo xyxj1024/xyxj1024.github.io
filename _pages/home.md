@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 2022
+title: Home
 permalink: /home
 nav_order: 1
 ---
