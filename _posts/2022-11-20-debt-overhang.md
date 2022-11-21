@@ -44,7 +44,7 @@ If for all $s$, $V(s) < I + P$, the firm will not exercise its growth option and
 
 $$V_{D} = \int_{s_{b}}^{\infty} P q(s)\,\mathrm{d}s < V,$$
 
-where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has an upper bound less than $V$, which is, in turn, less than $V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s$ without debt financing. Therefore, $V$ is a monotonically decreasing function of $P$. For those sharesholders aiming to maximize $V$, the optimal strategy is to issue no debt at all. This "debt overhang" effect, first analyzed by Myers (1977)[^2], characterizes a situation when a firm seeking equity value maximization might decline a profitable investment.
+where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has an upper bound less than $V$, which is, in turn, less than $V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s$ without debt financing. Therefore, $V$ is a monotonically decreasing function of $P$. Optimal level of $V$ is reached when $P = V_{D} = 0$. In the case of $V(s) < P$, the gap between $V_{D}$ and $V(s)$ at $t = 1$ is often termed "debt overhang". This debt-overhang effect, first analyzed by Myers (1977)[^2], characterizes the situation when a firm seeking equity value maximization might decline a profitable investment opportunity. A feasible investment must have a net present value (NPV) greater than the debt overhang.
 
 <br />
 ## Table of Contents
@@ -56,3 +56,5 @@ where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has
 ## References
 
 [^1]: Stephen A. Ross, "Comment on the Modigliani-Miller Propositions," *Journal of Economic Perspectives*, Volume 2, Number 4---Fall 1988---Pages 127-133.
+
+[^2]: Stewart C. Myers, "Determinants of Corporate Borrowing," *Journal of Financial Economics* 5 (1977) 147-175.
