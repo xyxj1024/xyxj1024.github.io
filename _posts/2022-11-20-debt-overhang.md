@@ -33,14 +33,14 @@ $$V_{D} = V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s.$$
 
 The firm's balance sheet appears as follows after exercising the investment option with $I$ amount of funds raised:
 
-|--
+|---
 | **Assets** | **Liabilities**
 |-:|:-
-| Value of newly acquired asset $V(s)$ | `!$\min\{V(s),P\}$` Value of debt
-| | `!$\max(0,V(s)-P)$` Value of equity
-| Value of firm $V(s)$               | $V(s)$
+| Value of newly acquired asset $V(s)$ | $$\min\{V(s),P\}$$ Value of debt
+| | $$\max(0,V(s)-P)$$ Value of equity
+| Value of firm $V(s)$ | $V(s)$
 
-If for all $s$, $V(s) < I + P$, the firm will not exercise its growth option and the creditors will receive nothing. Otherwise, `!$\min\{V(s), P\} = P$`,
+If for all $s$, $V(s) < I + P$, the firm will not exercise its growth option and the creditors will receive nothing. Otherwise, $$\min\{V(s), P\} = P$$,
 
 $$V_{D} = \int_{s_{b}}^{\infty} P q(s)\,\mathrm{d}s < V,$$
 
