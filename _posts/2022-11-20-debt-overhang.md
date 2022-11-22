@@ -206,7 +206,7 @@ Let us assume that:
 - the probability distributions of liquidation, investment costs, returns on assets and investments are all common knowledge, and values are revealed at $$t = 1$$,
 - $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
 
-<br />
+<br>
 
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
