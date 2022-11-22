@@ -57,17 +57,43 @@ Later on in this post, I would like to discuss different ways to extend this mod
 
 ## Some Preliminaries
 
-The *sample space* $$\Omega$$ is a set of all possible outcomes $$\omega \in \Omega$$ of some random experiment. The *event space* $$\mathcal{F} \subset 2^{\Omega}$$ represents both the amount of information available as a result of the experiment conducted and the collection of all events of possible interest to us. Probabilities $$\mathbf{P}(A)$$ are assigned to $$A \in \mathcal{F}$$.
+The *sample space* $$\Omega$$ is a set of all possible outcomes $$\omega \in \Omega$$ of some random experiment. The *event space* $$\mathcal{F} \subset 2^{\Omega}$$ represents both the amount of information available as a result of the experiment conducted and the collection of all events of possible interest to us. Probabilities $$\mathbf{P}(A)$$ are assigned to $$A \in \mathcal{F}$$[^3].
 
 **Definition 1.** We say that $$\mathcal{F}$$ is a $$\sigma$$-algebra if
 
 - $$\Omega \in \mathcal{F}$$,
-- If $$A \in \mathcal{F}$$ then $$\Omega \textbackslash A \in \mathcal{F},$$
+- If $$A \in \mathcal{F}$$ then $$\overline{A} \in \mathcal{F}$$, where $$\overline{A} = \Omega \backslash A$$,
 - If $$A_{i} \in \mathcal{F}$$ for $$i = 1,2,3, \dots$$, then $$\bigcup_{i}A_{i} \in \mathcal{F}$$ and $$\overline{\big( \bigcup_{i} \overline{A_{i}} \big)} = \bigcap_{i}A_{i} \in \mathcal{F}$$.
 
-We assume as given a complete probability space $$(\Omega, \mathcal{F}, P)$$
+**Definition 2.** A measure space is a triplet $$(\Omega, \mathcal{F}, \mu)$$, with $$\mu$$ a measure on the measurable space $$(\Omega, \mathcal{F})$$. A probability space is a measure space $$(\Omega, \mathcal{F}, \mathbf{P})$$ with $$\mathbf{P}$$ a probability measure.
 
+**Definition 3.** We say that a measure space $$(\Omega, \mathcal{F}, \mu)$$ is complete if any subset $$N$$ of any $$B \in \mathcal{F}$$ with $$\mu(B) = 0$$ is also in $$\mathcal{F}$$. If $$\mu = \mathbf{P}$$ is a probability measure, we say that the probability space $$(\Omega, \mathcal{F}, \mathbf{P})$$ is a complete probability space.
 
+**Definition 4.** A filtration $$(\mathcal{F}_{t})_{0 \leq t \leq \infty}$$ is a family of $$\sigma$$-algebras such that $$\mathcal{F}_{s} \subset \mathcal{F}_{t}$$ if $$s \leq t$$.
+
+**Definition 5.** A stochastic process $$X$$ on $$(\Omega, \mathcal{F}, \mathbf{P})$$ is a collection of $$\mathbb{R}$$-valued or $$\mathbb{R}^{d}$$-valued random variables $$(X_{t})_{0 \leq t \leq \infty}$$. We say that $$X$$ is adapted if $$X_{t} \in \mathcal{F}_{t}$$ for each $$t$$.
+
+**Definition 6.** The process $$N = (N_{t})_{0 \leq t \leq \infty}$$ defined by
+
+$$N_{t} = \sum\limits_{n \geq 1} \mathbf{1}_{\{t \geq T_{n}\}}$$
+
+with values in $$\mathbb{N} \cup \{\infty\}$$ is called the counting process (associated to the sequence $$(T_{n})_{n \geq 1}$$).
+
+**Definition 7.** An adapted counting process $$N$$ is a Poisson process if
+- for any $$s, t$$ satisfying $$0 \leq s < t < \infty$$, $$N_{t} - N_{s}$$ is independent of $$\mathcal{F}_{s}$$ (*increments independent of the past*);
+- for any $$s, t, u, v$$ satisfying $$0 \leq s < t < \infty, 0 \leq u < v < \infty, t - s = v - u$$, then the distribution of $$N_{t} - N_{s}$$ is the same as that of $$N_{v} - N_{u}$$ (*stationary increments*).
+
+We say that $$N_{t}$$ has the Poisson distribution with parameter $$\lambda t$$ if:
+
+$$\mathbf{P}(N_{t} = n) = \frac{e^{-\lambda t}(\lambda t)^{n}}{n!}, \quad \lambda \geq 0, n = 0, 1, 2, \dots ,$$
+
+where $$\lambda$$ is called the intensity, or arrival rate, of the process. A Poisson process $$N$$ with intensity $$\lambda$$ satisfies
+
+$$\mathbf{E}[N_{t}] = \lambda t, \quad \mathbf{V}[N_{t}] = \lambda t.$$
+
+**Definition 8.** An adapted process $$B = (B_{t})_{0 \leq t < \infty}$$ taking values in $$\mathbb{R}^{n}$$ is called an $$n$$-dimensional Brownian motion if
+- for $$0 \leq s < t < \infty$$, $$B_{t} - B_{s}$$ is independent of $$\mathcal{F}_{s}$$ (*increments independent of the past*);
+- for $$0 < s < t$$, $$B_{t} - B_{s}$$ is a Gaussian random variable with mean zero and variance matrix $$(t - s)C$$, given a non-random matrix $$C$$[^4].
 
 ## References
 
@@ -75,4 +101,6 @@ We assume as given a complete probability space $$(\Omega, \mathcal{F}, P)$$
 
 [^2]: Stewart C. Myers, "Determinants of Corporate Borrowing," *Journal of Financial Economics* 5 (1977) 147-175.
 
-[^3]: Philip E. Protter, "Stochastic Integration and Differential Equations," Second Edition, Springer-Verlag Berlin Heidelberg, 2004.
+[^3]: Amir Dembo, Lecture Notes of "Probability Theory: STAT310/MATH230" at Stanford University, [https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf](https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf).
+
+[^4]: Philip E. Protter, "Stochastic Integration and Differential Equations," Second Edition, Springer-Verlag Berlin Heidelberg, 2004.
