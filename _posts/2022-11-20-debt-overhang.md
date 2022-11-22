@@ -31,20 +31,22 @@ If for all $s$, $P > V(s) - I$,
 
 $$V_{D} = V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s.$$
 
-The firm's balance sheet appears as follows after exercising the investment option with $I$ amount of funds raised:
+The firm's balance sheet appears as follows after exercising the investment option with $I$ amount of debt raised (assume debt matures after the investment opportunity):
 
 |---
 | **Assets** | **Liabilities**
 |-:|:-
 | Value of newly acquired asset $V(s)$ | $$\min\{V(s),P\}$$ Value of debt
-| | $$\max(0,V(s)-P)$$ Value of equity
+| | $$\max\{0,V(s)-P\}$$ Value of equity
 | Value of firm $V(s)$ | $V(s)$
 
 If for all $s$, $V(s) < I + P$, the firm will not exercise its growth option and the creditors will receive nothing. Otherwise, $$\min\{V(s), P\} = P$$,
 
 $$V_{D} = \int_{s_{b}}^{\infty} P q(s)\,\mathrm{d}s < V,$$
 
-where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has an upper bound less than $V$, which is, in turn, less than $V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s$ without debt financing. Therefore, $V$ is a monotonically decreasing function of $P$. Optimal level of $V$ is reached when $P = V_{D} = 0$. In the case of $V(s) < P$, the gap between $V_{D}$ and $V(s)$ at $t = 1$ is often termed "debt overhang". This debt-overhang effect, first analyzed by Myers (1977)[^2], characterizes the situation when a firm seeking equity value maximization might decline a profitable investment opportunity. A feasible investment must have a net present value (NPV) greater than the debt overhang.
+where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has an upper bound less than $V$, which is, in turn, less than $V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s$ without debt financing. Therefore, $V$ is a monotonically decreasing function of $P$. Optimal level of $V$ is reached when $P = V_{D} = 0$. In the case of $V(s) < P$, the gap between $V_{D}$ and $V(s)$ at $t = 1$ is often termed "debt overhang". This debt-overhang effect, first analyzed by Myers (1977)[^2], characterizes the situation when a firm's debt burden grows so large that default risk becomes high, distorting the shareholders' incentives to invest. Even profitable investment projects might be declined because much of the benefit from these projects accrues to creditors rather than shareholders. Therefore, a feasible investment must have a net present value (NPV) greater than the debt overhang.
+
+Later on in this post, I would like to discuss different ways to extend this model.
 
 <br />
 ## Table of Contents
@@ -53,8 +55,24 @@ where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has
 {:toc}
 <br />
 
+## Some Preliminaries
+
+The *sample space* $$\Omega$$ is a set of all possible outcomes $$\omega \in \Omega$$ of some random experiment. The *event space* $$\mathcal{F} \subset 2^{\Omega}$$ represents both the amount of information available as a result of the experiment conducted and the collection of all events of possible interest to us. Probabilities $$\mathbf{P}(A)$$ are assigned to $$A \in \mathcal{F}$$.
+
+**Definition 1.** We say that $$\mathcal{F}$$ is a $$\sigma$$-algebra if
+
+- $$\Omega \in \mathcal{F}$$,
+- If $$A \in \mathcal{F}$$ then $$\Omega \textbackslash A \in \mathcal{F},$$
+- If $$A_{i} \in \mathcal{F}$$ for $$i = 1,2,3, \dots$$, then $$\bigcup_{i}A_{i} \in \mathcal{F}$$ and $$\overline{\big( \bigcup_{i} \overline{A_{i}} \big)} = \bigcap_{i}A_{i} \in \mathcal{F}$$.
+
+We assume as given a complete probability space $$(\Omega, \mathcal{F}, P)$$
+
+
+
 ## References
 
 [^1]: Stephen A. Ross, "Comment on the Modigliani-Miller Propositions," *Journal of Economic Perspectives*, Volume 2, Number 4---Fall 1988---Pages 127-133.
 
 [^2]: Stewart C. Myers, "Determinants of Corporate Borrowing," *Journal of Financial Economics* 5 (1977) 147-175.
+
+[^3]: Philip E. Protter, "Stochastic Integration and Differential Equations," Second Edition, Springer-Verlag Berlin Heidelberg, 2004.
