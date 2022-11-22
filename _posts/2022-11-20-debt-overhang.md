@@ -7,9 +7,9 @@ permalink:        /debt-overhang/
 last_modified_at: "2022-11-22"
 ---
 
-<p class="epigraph">
-    [Critias]: As a matter of fact, I am almost ready to assert that this very thing, to know oneself, is temperance, and I am of the same mind as the person who put up an inscription to that effect at Delphi. (<em>Charmides 164d4</em>)<br />
-</p>
+<p class="epigraph"><em>
+    [Critias]: As a matter of fact, I am almost ready to assert that this very thing, to know oneself, is temperance, and I am of the same mind as the person who put up an inscription to that effect at Delphi.
+</em>(Charmides 164d4)</p><br />
 
 Consider a typical firm's initial balance sheet:
 
@@ -150,6 +150,42 @@ plot(stepfun(Tk, Zk), xlim = c(0, 10), do.points = F, main = "L = 0.5", col = "b
 
 > An intuitive notion of a diffusion is to imagine a pollen grain floating downstream in a river. The grain is subject to two forces: the current of the river (drift), and the aggregate bombardment of the grain by the surrounding water molecules (diffusion).
 
+```r
+# Simulate a discrete version of the diffusion process using random walks
+# (http://www.ub.edu/viscagroup/joan/rcode.html)
+
+random_walk <- function(m = 0.2, sig = 0.75, th = c(5, -5), y0 = 0)
+{
+    #m: consant input to the process
+    #sig: amplitude of Gaussian noise
+    #th: response threshold values for correct responses and errors
+    #y0: initial state
+    y <- y0 + cumsum(m + sig * rnorm(10000))
+    id <- which (y > th[1] | y < th[2])[1]
+    y[1 : id]
+}
+
+diffusion <- function(th = 5, m = 0.2, sig = 0.75, y = 0, N = 1000)
+{
+    require(dplyr)
+    # Simulate N random walks for one of the responses (positive threshold)
+    df <- data.frame(trial = 1 : N)
+    df <- group_by(df, trial) %>% do(data.frame(y = random_walk(m = m, sig = sig, th = c(th, -th), y0 = y)))
+    df <- mutate(df, step = 1 : n())
+    df
+}
+
+require(ggplot2)
+rws <- diffusion(N = 5000)
+ggplot(rws, aes(step, y, color = trial, group = trial)) +
+    geom_point(alpha = 0.02) +
+    geom_line(alpha = 0.2) +
+    geom_hline(yintercept = c(-5, 5)) +
+    theme_classic() +
+    theme(legend.position = "none") +
+    scale_x_log10()
+```
+
 ### Game Theory
 
 Please refer to Maskin (2001)[^7] for more details.
@@ -206,7 +242,6 @@ Let us assume that:
 - the probability distributions of liquidation, investment costs, returns on assets and investments are all common knowledge, and values are revealed at $$t = 1$$,
 - $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
 
-<br>
 
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
