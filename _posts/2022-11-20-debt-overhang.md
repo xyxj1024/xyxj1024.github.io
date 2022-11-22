@@ -16,7 +16,7 @@ Consider a simple, initial balance sheet of a typical firm:
 |  | $V_{E}$ Value of equity
 | Value of firm $V$ | $V$
 
-Let us assume a no-arbitrage environment in which the total value of the firm depends on its total cach flows[^1]. If the firm chooses to make a one-period investment $I$ at $t = 0$, it obtains an asset worth $V(s)$ at $t = 1$, where $s$ is the state of nature. The equilibrium market value of $V_{D}$ can be written as:
+Let us assume a no-arbitrage environment in which the total value of the firm depends on its total cach flows (this is based on Modigliani-Miller irrelevance theorem)[^1]. If the firm chooses to make a one-period investment $I$ at $t = 0$, it obtains an asset worth $V(s)$ at $t = 1$, where $s$ is the state of nature. The equilibrium market value of $V_{D}$ can be written as:
 
 $$V_{D} = \int_{s_{a}}^{\infty} q(s) [\min\{V(s) - I, P\}]\,\mathrm{d}s,$$
 
@@ -93,13 +93,58 @@ where $$\lambda$$ is called the intensity, or arrival rate, of the process. A Po
 
 $$\mathbf{E}[N_{t}] = \lambda t, \quad \mathbf{V}[N_{t}] = \lambda t.$$
 
-**Definition 8.** An adapted process $$B = (B_{t})_{0 \leq t < \infty}$$ taking values in $$\mathbb{R}^{n}$$ is called an $$n$$-dimensional Brownian motion if
+The ratio, $$\frac{\mathbf{V}[N_{t}]}{\mathbf{E}[N_{t}]} = 1$$, is sometimes called the *dispersion index* of the Poisson process. By stationarity of the Poisson process, we may find, for all $$t > 0$$:
+
+$$
+\begin{align*}
+    \mathbf{P}(N_{t + h} - N_{t} = 0) &= e^{-\lambda h} = 1 - \lambda h + o(h), \quad h \rightarrow 0,
+    \mathbf{P}(N_{t + h} - N_{t} = 1) &= \lambda h e^{-\lambda h} \simeq \lambda h, \quad h \rightarrow 0,
+    \mathbf{P}(N_{t + h} - N_{t} = 2) &\simeq h^{2}\frac{\lambda^{2}}{2} = o(h), \quad h \rightarrow 0.
+\end{align*}
+$$
+
+```r
+# Some R code that simulates a standard Poisson process
+lambda = 0.6; T = 10; N = 1000 * lambda; dt = T * 1.0 / N
+t = 0; s = c();
+for (k in 1 : N) {
+    if (runif(1) < lambda *dt) {
+        s = c(s, t);
+        t = t + dt;
+    }
+}
+dev.new(width = T, height = 5)
+plot(stepfun(s, cumsum(c(0, rep(1, length(s))))), 
+             xlim = c(0, T), xlab = "t", ylab = expression('N'[t]),
+             pch = 1, cex = 0.8, col = 'blue', lwd = 2, main = "",
+             las = 1, cex.axis = 1.2, cex.lab = 1.4)
+```
+
+**Definition 8.** Let $$(Z_{k})_{k \geq 1}$$ denote a sequence of i.i.d. square-integrable random variables and be represented as $$Z$$ with probability distribution $$f(\mathrm{d}y)$$ on $$\mathbb{R}$$, independent of the Poisson process $$(N_{t})_{0 \leq t \leq \infty}$$. The process $$(Y_{t})_{0 \leq t \leq \infty}$$ given by the random sum:
+
+$$Y_{t} \equiv Z_{1} + Z_{2} + \cdots + Z_{N_{t}} = \sum\limits_{k = 1}^{N_{t}} Z_{k}$$
+
+is called a *compound Poisson process*. The *jump size* of $$(Y_{t})_{0 \leq t \leq \infty}$$ is written as:
+
+$$\Delta Y_{t} \equiv Y_{t} - Y_{t^{-}} = Z_{N_{t}} \Delta N_{t},$$
+
+where $$Y_{t^{-}}$$ is the left limit and $$\Delta N_{t} \equiv N_{t} - N_{t^{-}} \in \{0, 1\}$$ is the jump size of the standard Poisson process $$(N_{t})_{0 \leq t \leq \infty}$$[^4].
+
+```r
+# R code that simulates a sample path of a compound Poisson process
+N <- 50; Tk <- cumsum(rexp(N, rate = 0.5)); Zk <- cumsum(c(0, rexp(N, rate = 0.5)))
+plot(stepfun(Tk, Zk), xlim = c(0, 10), do.points = F, main = "L = 0.5", col = "blue")
+Zk <- cumsum(c(0, rnorm(N, mean = 0, sd = 1)))
+plot(stepfun(Tk, Zk), xlim = c(0, 10), do.points = F, main = "L = 0.5", col = "blue")
+```
+
+**Definition 9.** An adapted process $$B = (B_{t})_{0 \leq t < \infty}$$ taking values in $$\mathbb{R}^{n}$$ is called an $$n$$-dimensional Brownian motion if
 - for $$0 \leq s < t < \infty$$, $$B_{t} - B_{s}$$ is independent of $$\mathcal{F}_{s}$$ (*increments independent of the past*);
-- for $$0 < s < t$$, $$B_{t} - B_{s}$$ is a Gaussian random variable with mean zero and variance matrix $$(t - s)C$$, given a non-random matrix $$C$$[^4].
+- for $$0 < s < t$$, $$B_{t} - B_{s}$$ is a Gaussian random variable with mean zero and variance matrix $$(t - s)C$$, given a non-random matrix $$C$$[^5].
 
 ### Game Theory
 
-Please refer to Maskin (2001)[^5] for more details.
+Please refer to Maskin (2001)[^6] for more details.
 
 Let $$G$$ be a game with $$n$$ players and $$T$$ periods. In every period $$t \in \{1, \dots , T\}$$, each player $$i \in \{1, \dots , n\}$$ chooses an action $$a_{t}^{i}$$ in his/her finite action space. Let $$\mathbf{a}_{t} \equiv (a_{t}^{1} , \dots , a_{t}^{n})$$ and $$\mathbf{a} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{T})$$. The *history* in period $$t$$ is the sequence of actions chosen before period $$t$$:
 
@@ -109,44 +154,46 @@ $$h_{t} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{t - 1}).$$
 
 $$u^{i}(\mathbf{a}) = u^{i}(h_{t}, f_{t}).$$
 
-Denote the set of all possible period $$t$$ histories by $$H_{t}$$. A (behavior) strategy $$s^{i}$$ for player $$i$$ is a function that, for all $$t$$ and each history $$h_{t} \in H_{t}$$, assigns a probability distribution to the action space $$A_{t}^{i}(h_{t})$$. Also, denote a collection of partitions $$\{H_{t}(\cdot)\}_{t = 1}^{T}$$ by $$H.(\cdot)$$ where $$H_{t}(h_{t}) \subset H_{t}$$. We shall call collection $$H'.(\cdot)$$ weakly coarser (weakly finer) than collection $$H.(\cdot)$$, if, for all $$t$$, either $$H_{t}'(\cdot)$$ is coarser (finer) than $$H_{t}(\cdot)$$ or $$H_{t}(\cdot) = H_{t}'(\cdot)$$.
+Denote the set of all possible period $$t$$ histories by $$H_{t}$$. A (behavior) strategy $$s^{i}$$ for player $$i$$ is a function that, for all $$t$$ and each history $$h_{t} \in H_{t}$$, assigns a probability distribution to the action space $$A_{t}^{i}(h_{t})$$. Also, denote a collection of partitions $$\{H_{t}(\cdot)\}_{t = 1}^{T}$$ by $$H.(\cdot)$$ where $$H_{t}(h_{t}) \subset H_{t}$$. We shall call collection $$H_{.}'(\cdot)$$ weakly coarser (weakly finer) than collection $$H_{.}(\cdot)$$, if, for all $$t$$, either $$H_{t}'(\cdot)$$ is coarser (finer) than $$H_{t}(\cdot)$$ or $$H_{t}(\cdot) = H_{t}'(\cdot)$$.
 
-**Definition 9.** $$\overline{H}.(\cdot)$$ is called the collection of players' action-space-invariant partitions if for all $$i, t, h_{t}$$,
+**Definition 10.** $$\overline{H}_{.}(\cdot)$$ is called the collection of players' action-space-invariant partitions if for all $$i, t, h_{t}$$,
 
 $$h_{t}' \in H_{t}, h_{t}' \in \overline{H}_{t}(h_{t}) \Leftrightarrow S_{t}^{i}(h_{t}) = S_{t}^{i}(h_{t}').$$
 
-If the collection $$H^{i}.(\cdot)$$ is weakly finer than $$\overline{H}.(\cdot)$$, then strategy $$s^{i}$$ is *measurable* with respect to $$H^{i}.(\cdot)$$ if, for all $$t, h_{t}, h_{t}' \in H_{t}^{i}(h_{t})$$:
+If the collection $$H_{.}^{i}(\cdot)$$ is weakly finer than $$\overline{H}_{.}(\cdot)$$, then strategy $$s^{i}$$ is *measurable* with respect to $$H_{.}^{i}(\cdot)$$ if, for all $$t, h_{t}, h_{t}' \in H_{t}^{i}(h_{t})$$:
 
 $$s^{i}(h_{t}') = s^{i}(h_{t}).$$
 
-**Definition 10.** A subgame-perfect equilibrium (SPE) is a strategy vector $$\mathbf{s}$$ that forms a Nash equilibrium after any history; i.e., for all $$t, h_{t} \in H_{t}, i$$, and alternative strategy $$\hat{s}^{i}$$:
+**Definition 11.** A subgame-perfect equilibrium (SPE) is a strategy vector $$\mathbf{s}$$ that forms a Nash equilibrium after any history; i.e., for all $$t, h_{t} \in H_{t}, i$$, and alternative strategy $$\hat{s}^{i}$$:
 
 $$v^{i}(s^{i}, \mathbf{s}^{-i} \mid h_{t}) \geq v^{i}(\hat{s}^{i}, \mathbf{s}^{-i} \mid h_{t}),$$
 
 where $$\mathbf{s}^{-i}$$ denotes the vector of strategies by players other than player $$i$$ and $$v^{i}(\cdot)$$ is player $$i$$'s expected payoff.
 
-We shall call the vector of collections $$\big( H^{1}.(\cdot) , \dots , H^{n}.(\cdot)\big)$$ *consistent* if, for all $$i$$:
-- $$H^{i}.(\cdot)$$ is weakly finer than $$\overline{H}.(\cdot)$$,
-- for all $$s^{-i} \in \prod\limits_{k \not = i} S^{k} (H^{k}.(\cdot))$$, for all $$t$$, for all $$h_{t}, h_{t}' \in H_{t}$$ such that $$h_{t}' \in H_{t}^{i}(h_{t})$$:
+We shall call the vector of collections $$\big( H_{.}^{1}(\cdot) , \dots , H_{.}^{n}(\cdot) \big)$$ *consistent* if, for all $$i$$:
+- $$H_{.}^{i}(\cdot)$$ is weakly finer than $$\overline{H}_{.}(\cdot)$$,
+- for all $$s^{-i} \in \prod\limits_{k \not = i} S^{k} (H_{.}^{k}(\cdot))$$, for all $$t$$, for all $$h_{t}, h_{t}' \in H_{t}$$ such that $$h_{t}' \in H_{t}^{i}(h_{t})$$:
 
 $$v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}) \sim v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}').$$
 
-**Definition 11.** The game $$G$$ is *simultaneous-nondegenerate* if, holding some future sequence of random actions fixed, in any period and given any two histories $$h_{t}$$ and $$h_{t}'$$, and any active player $$i$$, any other active player $$j$$ moving simultaneously can ensure that $$i$$'s decision problem after $$h_{t}$$ differs from that after $$h_{t}'$$.
+**Definition 12.** The game $$G$$ is *simultaneous-nondegenerate* if, holding some future sequence of random actions fixed, in any period and given any two histories $$h_{t}$$ and $$h_{t}'$$, and any active player $$i$$, any other active player $$j$$ moving simultaneously can ensure that $$i$$'s decision problem after $$h_{t}$$ differs from that after $$h_{t}'$$.
 
-If a game is simultaneous-nondegenerate, then there exists a unique maximally coarse consistent collection $$H^{*}.(\cdot)$$ such that $$H^{*}.(h_{t})$$ constitutes the state of the system or the payoff-relevant history. If we do not impose simultaneous-nondegeneracy, there is a unique maximally coarse consistent vector of collections $$H^{i*}.(\cdot), i = 1, \dots , n$$.
+If a game is simultaneous-nondegenerate, then there exists a unique maximally coarse consistent collection $$H_{.}^{*}(\cdot)$$ such that $$H_{.}^{*}(h_{t})$$ constitutes the state of the system or the payoff-relevant history. If we do not impose simultaneous-nondegeneracy, there is a unique maximally coarse consistent vector of collections $$H_{.}^{i*}(\cdot), i = 1, \dots , n$$.
 
-**Definition 12.** A strategy is *Markovian* if it is measurable with respect to $$H^{*}.(\cdot)$$.
+**Definition 13.** A strategy is *Markovian* if it is measurable with respect to $$H_{.}^{*}(\cdot)$$.
 
-**Definition 13.** A *Markov Perfect Equilibrium (MPE)* is a SPE in which all players use Markov strategies.
+**Definition 14.** A *Markov Perfect Equilibrium (MPE)* is a SPE in which all players use Markov strategies.
 
 ## References
 
-[^1]: Stephen A. Ross, "Comment on the Modigliani-Miller Propositions," *Journal of Economic Perspectives* **2**(4), 127-133 (1988).
+[^1]: Stephen A. Ross, Comment on the Modigliani-Miller Propositions, *Journal of Economic Perspectives* **2**(4), 127-133 (1988).
 
-[^2]: Stewart C. Myers, "Determinants of Corporate Borrowing," *Journal of Financial Economics* **5**, 147-175 (1977).
+[^2]: Stewart C. Myers, Determinants of Corporate Borrowing, *Journal of Financial Economics* **5**, 147-175 (1977).
 
-[^3]: Amir Dembo, Lecture Notes of "Probability Theory: STAT310/MATH230" at Stanford University, [https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf](https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf).
+[^3]: Amir Dembo, *Lecture Notes of "Probability Theory: STAT310/MATH230"* at Stanford University, [https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf](https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf).
 
-[^4]: Philip E. Protter, "Stochastic Integration and Differential Equations," Second Edition, Springer-Verlag Berlin Heidelberg, 2004.
+[^4]: Nicolas Privault, *Lecture Notes on Stochastic Finance* at Nanyang Technological University, [https://personal.ntu.edu.sg/nprivault/indext.html](https://personal.ntu.edu.sg/nprivault/indext.html).
 
-[^5]: Eric Maskin, "Markov Perfect Equilibrium," *Journal of Economic Theory* **100**, 191-219 (2001).
+[^5]: Philip E. Protter, *Stochastic Integration and Differential Equations*, Second Edition, Springer-Verlag Berlin Heidelberg, 2004.
+
+[^6]: Eric Maskin, Markov Perfect Equilibrium, *Journal of Economic Theory* **100**, 191-219 (2001).
