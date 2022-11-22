@@ -194,10 +194,33 @@ $$H.^{i*}(\cdot), \quad i = 1, \dots , n.$$
 
 ### Optimal Level of Short-Term vs. Long-Term Debt
 
+Let us assume that
+- investors are risk-neutral,
+- the risk-free interest rate is zero,
+- the financial structure of a typical firm is chosen at $$t = 0$$ so as to maximize the *aggregate* return of the shareholders,
+- the only way to prevent the manager of the firm from investing in a bad project is to make necessary funds unavailable (management has *empire-buidling* motive),
+- the probability distributions of liquidation, investment costs, returns on assets and investments are all common knowledge, and values are revealed at $$t = 1$$,
+- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
+
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
 |:-:|:-:
-| Old assets-in-place | Old assets yield return $$y_{1}$$ <br /> Decision whether to make new investment of size $$i$$ <br /> Decision whether to liquidate and realize $$L$$ | Old assets yield return $$y_{2}$$ <br /> New investment, if taken, yields return $$r$$
+| Old assets-in-place | Old assets yield return $$y_{1}$$; <br /> Decision whether to make new investment of size $$i$$; <br /> Decision whether to liquidate and realize $$L$$ | Old assets yield return $$y_{2}$$; <br /> New investment, if taken, yields return $$r$$
+
+Firm's management will invest at $$t = 1$$ if and only if
+
+$$y_{1} + y_{2} + r - d_{1} - d_{2} \geq i,$$
+
+where $$d_{1}$$ is the amount owed at $$t = 1$$ and $$d_{2}$$ the amount owed at $$t = 2$$, i.e., the face values of short-term and long-term debt, respectively. Without available funds, the firm can still operate as long as
+- Debt at $$t = 1$$ can be paid out of current earnings: $$y_{1} \geq d_{1}$$, or
+- Debt at $$t = 1$$ can be paid out of future earnings: $$y_{1} + y_{2} \geq d_{1} + d_{2}$$,
+In either case, the total return to creditors at $$t = 0$$ is $$R = y_{1} + y_{2}$$; Otherwise, the firm is forced to liquidation at $$t = 1$$ with $$R = y_{1} + L$$. If firm's management chooses to maximize the market value at $$t = 0$$, then the optimal level of $$d_{1}$$ is zero.
+
+Given $$d_{1} = 0$$ and $$L$$ is irrelevant,
+1. If $$r > i$$ with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = 0$$ (this is all-equity financing);
+2. If $$r < i$$ with probability $$1$$, then the first-best outcome can be achieved by setting $$d_{2}$$ large enough;
+3. If the sum of $$y_{1}$$ and $$y_{2}$$ is constant with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + y_{2}$$;
+4. Finally, if $$i$$ and $$y_{1}$$ are deterministic, and $$r \equiv g(y_{2})$$ where $$g(\cdot)$$ is a strictly increasing function, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + g^{-1}(i)$$[^2].
 
 ### Black-Scholes-Merton Setting
 
