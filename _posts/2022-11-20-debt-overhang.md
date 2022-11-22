@@ -7,6 +7,10 @@ permalink:        /debt-overhang/
 last_modified_at: "2022-11-22"
 ---
 
+<p class="epigraph">
+[Critias]: As a matter of fact, I am almost ready to assert that this very thing, to know oneself, is temperance, and I am of the same mind as the person who put up an inscription to that effect at Delphi. &mdash;&mdash; Plato, <em>Charmides</em>, Section 164d4<br />
+</p>
+
 Consider a typical firm's initial balance sheet:
 
 |---
@@ -194,14 +198,15 @@ $$H.^{i*}(\cdot), \quad i = 1, \dots , n.$$
 
 ### Optimal Level of Short-Term vs. Long-Term Debt
 
-Let us assume that
+Let us assume that:
 - investors are risk-neutral,
 - the risk-free interest rate is zero,
 - the financial structure of a typical firm is chosen at $$t = 0$$ so as to maximize the *aggregate* return of the shareholders,
 - the only way to prevent the manager of the firm from investing in a bad project is to make necessary funds unavailable (management has *empire-buidling* motive),
 - the probability distributions of liquidation, investment costs, returns on assets and investments are all common knowledge, and values are revealed at $$t = 1$$,
-- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.<br />
+- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
 
+<br />
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
 |:-:|:-:
