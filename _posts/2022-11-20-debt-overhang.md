@@ -207,6 +207,7 @@ Let us assume that:
 - $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
 
 <br />
+
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
 |:-:|:-:
