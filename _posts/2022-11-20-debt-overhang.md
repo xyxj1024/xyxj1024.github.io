@@ -2,12 +2,12 @@
 layout:           post
 title:            "A Note on Debt Overhang"
 category:         "Money, Finance, Political Economy"
-tags:             macroeconomics corporate-finance asset-pricing
+tags:             financial-economics investment asset-pricing
 permalink:        /debt-overhang/
 last_modified_at: "2022-11-22"
 ---
 
-Consider a simple, initial balance sheet of a typical firm:
+Consider a typical firm's initial balance sheet:
 
 |---
 | **Assets** | **Liabilities**
@@ -31,7 +31,7 @@ If for all $s$, $P > V(s) - I$,
 
 $$V_{D} = V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s.$$
 
-The firm's balance sheet appears as follows after exercising the investment option with $I$ amount of debt raised (assume debt matures after the investment decision; in some literature, this may be seen as senior long-term debt[^2]):
+The firm's balance sheet appears as follows after exercising the investment option with $I$ amount of debt raised (in some literature, this may be seen as senior long-term debt since debt matures after the investment decision[^2]):
 
 |---
 | **Assets** | **Liabilities**
@@ -200,7 +200,7 @@ Let us assume that
 - the financial structure of a typical firm is chosen at $$t = 0$$ so as to maximize the *aggregate* return of the shareholders,
 - the only way to prevent the manager of the firm from investing in a bad project is to make necessary funds unavailable (management has *empire-buidling* motive),
 - the probability distributions of liquidation, investment costs, returns on assets and investments are all common knowledge, and values are revealed at $$t = 1$$,
-- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
+- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.<br />
 
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
@@ -213,14 +213,34 @@ $$y_{1} + y_{2} + r - d_{1} - d_{2} \geq i,$$
 
 where $$d_{1}$$ is the amount owed at $$t = 1$$ and $$d_{2}$$ the amount owed at $$t = 2$$, i.e., the face values of short-term and long-term debt, respectively. Without available funds, the firm can still operate as long as
 - Debt at $$t = 1$$ can be paid out of current earnings: $$y_{1} \geq d_{1}$$, or
-- Debt at $$t = 1$$ can be paid out of future earnings: $$y_{1} + y_{2} \geq d_{1} + d_{2}$$,
+- Debt at $$t = 1$$ can be paid out of future earnings: $$y_{1} + y_{2} \geq d_{1} + d_{2}$$.
+
 In either case, the total return to creditors at $$t = 0$$ is $$R = y_{1} + y_{2}$$; Otherwise, the firm is forced to liquidation at $$t = 1$$ with $$R = y_{1} + L$$. If firm's management chooses to maximize the market value at $$t = 0$$, then the optimal level of $$d_{1}$$ is zero.
 
-Given $$d_{1} = 0$$ and $$L$$ is irrelevant,
+Given $$d_{1} = 0$$ and thus $$L$$ is irrelevant,
 1. If $$r > i$$ with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = 0$$ (this is all-equity financing);
 2. If $$r < i$$ with probability $$1$$, then the first-best outcome can be achieved by setting $$d_{2}$$ large enough;
 3. If the sum of $$y_{1}$$ and $$y_{2}$$ is constant with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + y_{2}$$;
 4. Finally, if $$i$$ and $$y_{1}$$ are deterministic, and $$r \equiv g(y_{2})$$ where $$g(\cdot)$$ is a strictly increasing function, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + g^{-1}(i)$$[^2].
+
+What if the risk-free rate is non-zero? We may assume that the firm issues perpetual callable coupon debt and the face value of the debt $$F$$ is equal to the value of perpetual debt with periodic payment (coupon) $$d$$ discounted at the risk-free rate $$r$$:
+
+$$F = \frac{d}{r}.$$
+
+The firm has to rollover its maturing debt at the current market price:
+
+$$w \cdot D(p, A, d),$$
+
+where
+- $$A$$ is the value of the firm's fixed (tangible) assets,
+- $$p$$ is the unit market price of the product produced and sold by the firm,
+- $$w$$ is the debt repurchase (or retirement) rate.
+
+The net refinancing expenses is given by:
+
+$$w \cdot F - w \cdot D(p, A, d) = w \cdot [F - D(p, A, d)] > 0.$$
+
+The net instantaneous cash payment to the creditors is $$d$$ plus net refinancing expenses[^8].
 
 ### Black-Scholes-Merton Setting
 
@@ -236,19 +256,19 @@ where $$F_{t}$$ is the face value of a zero-coupon debt issue that matures at ti
 
 $$D_{V} \equiv \frac{\partial D(V_{0}; F, m)}{\partial V_{0}}.$$
 
-It can be proved that for a given initial debt market value, long-term debt imposes stronger overhang than short-term debt; that is, $$D_{V}(V_{0}; F_{2}, m_{2}) > D_{V}(V_{0}; F_{1}, m_{1})$$ whenever $$D(V_{0}; F_{2}, m_{2}) = D(V_{0}; F_{1}, m_{1})$$[^8].
+It can be proved that for a given initial debt market value, long-term debt imposes stronger overhang than short-term debt; that is, $$D_{V}(V_{0}; F_{2}, m_{2}) > D_{V}(V_{0}; F_{1}, m_{1})$$ whenever $$D(V_{0}; F_{2}, m_{2}) = D(V_{0}; F_{1}, m_{1})$$[^9].
 
 ## Dynamic Model of Investment
 
 ### The Leverage Ratchet Effect
 
-> Intuitively, by reducing leverage, shareholders transfer wealth to existing creditors. Conversely, if shareholders can raise new debt of equal seniority to fund a payout for themselves, wealth is transferred in the other direction and shareholders benefit at the expense of existing creditors[^9].
+> Intuitively, by reducing leverage, shareholders transfer wealth to existing creditors. Conversely, if shareholders can raise new debt of equal seniority to fund a payout for themselves, wealth is transferred in the other direction and shareholders benefit at the expense of existing creditors[^10].
 
 The leverage ratchet effect states that:
 1. No matter how large the potential gain from leverage reduction to the total value of the firm, shareholders could resist it;
 2. Shareholders could gain from a one-time debt issuance even when new debt must bear junior priority, unless the tax benefit of debt has been fully exhausted.
 
-DeMarzo and He (2021)[^10] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
+DeMarzo and He (2021)[^11] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
 
 $$\mathrm{d}Y_{t} = \mu(Y_{t})\,\mathrm{d}t + \sigma(Y_{t})\,\mathrm{d}Z_{t} + \zeta(Y_{t^{-}})\,\mathrm{d}N_{t},$$
 
@@ -288,8 +308,10 @@ $$p(Y, F) \in -\partial_{F}V(Y, F).$$
 
 [^7]: Eric Maskin, Markov Perfect Equilibrium, *Journal of Economic Theory* **100**, 191-219 (2001).
 
-[^8]: Douglas W. Diamond and Zhiguo He, A Theory of Debt Maturity: The Long and Short of Debt Overhang, *The Journal of Finance* **69**(2), 719-762 (2014).
+[^8]: Sheridan Titman and Sergey Tsyplakov, A Dynamic Model of Optimal Capital Structure, *Review of Finance* **11**(3), 401-451 (2007).
 
-[^9]: Anat R. Admati, Peter M. DeMarzo, Martin F. Hellwig, and Paul Pfleiderer, The Leverage Ratchet Effect, *The Journal of Finance* **73**(1), 145-198 (2018).
+[^9]: Douglas W. Diamond and Zhiguo He, A Theory of Debt Maturity: The Long and Short of Debt Overhang, *The Journal of Finance* **69**(2), 719-762 (2014).
 
-[^10]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
+[^10]: Anat R. Admati, Peter M. DeMarzo, Martin F. Hellwig, and Paul Pfleiderer, The Leverage Ratchet Effect, *The Journal of Finance* **73**(1), 145-198 (2018).
+
+[^11]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
