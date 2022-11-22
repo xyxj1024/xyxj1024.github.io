@@ -142,6 +142,10 @@ plot(stepfun(Tk, Zk), xlim = c(0, 10), do.points = F, main = "L = 0.5", col = "b
 - for $$0 \leq s < t < \infty$$, $$B_{t} - B_{s}$$ is independent of $$\mathcal{F}_{s}$$ (*increments independent of the past*);
 - for $$0 < s < t$$, $$B_{t} - B_{s}$$ is a Gaussian random variable with mean zero and variance matrix $$(t - s)C$$, given a non-random matrix $$C$$[^5].
 
+**Definition 10.** An adapted process $$X$$ with values in $$\mathbb{R}^{n}$$ is a *diffusion* if it has continuous sample paths and if it satisfies the strong Markov property.
+
+> An intuitive notion of a diffusion is to imagine a pollen grain floating downstream in a river. The grain is subject to two forces: the current of the river (drift), and the aggregate bombardment of the grain by the surrounding water molecules (diffusion).
+
 ### Game Theory
 
 Please refer to Maskin (2001)[^6] for more details.
@@ -156,7 +160,7 @@ $$u^{i}(\mathbf{a}) = u^{i}(h_{t}, f_{t}).$$
 
 Denote the set of all possible period $$t$$ histories by $$H_{t}$$. A (behavior) *strategy* $$s^{i}$$ for player $$i$$ is a function that, for all $$t$$ and each history $$h_{t} \in H_{t}$$, assigns a probability distribution to the action space $$A_{t}^{i}(h_{t})$$. Also, denote a *collection of partitions* $$\{H_{t}(\cdot)\}_{t = 1}^{T}$$ by $$H.(\cdot)$$ where $$H_{t}(h_{t}) \subset H_{t}$$. We shall call collection $$H.'(\cdot)$$ *weakly coarser* (*weakly finer*) than collection $$H.(\cdot)$$, if, for all $$t$$, either $$H_{t}'(\cdot)$$ is coarser (finer) than $$H_{t}(\cdot)$$ or $$H_{t}(\cdot) = H_{t}'(\cdot)$$.
 
-**Definition 10.** $$\overline{H}.(\cdot)$$ is called the collection of players' *action-space-invariant partitions* if for all $$i, t, h_{t}$$,
+**Definition 11.** $$\overline{H}.(\cdot)$$ is called the collection of players' *action-space-invariant partitions* if for all $$i, t, h_{t}$$,
 
 $$h_{t}' \in H_{t}, h_{t}' \in \overline{H}_{t}(h_{t}) \Leftrightarrow S_{t}^{i}(h_{t}) = S_{t}^{i}(h_{t}').$$
 
@@ -164,7 +168,7 @@ If the collection $$H.^{i}(\cdot)$$ is weakly finer than $$\overline{H}.(\cdot)$
 
 $$s^{i}(h_{t}') = s^{i}(h_{t}).$$
 
-**Definition 11.** A *subgame-perfect equilibrium (SPE)* is a strategy vector $$\mathbf{s}$$ that forms a Nash equilibrium after any history; i.e., for all $$t, h_{t} \in H_{t}, i$$, and alternative strategy $$\hat{s}^{i}$$:
+**Definition 12.** A *subgame-perfect equilibrium (SPE)* is a strategy vector $$\mathbf{s}$$ that forms a Nash equilibrium after any history; i.e., for all $$t, h_{t} \in H_{t}, i$$, and alternative strategy $$\hat{s}^{i}$$:
 
 $$v^{i}(s^{i}, \mathbf{s}^{-i} \mid h_{t}) \geq v^{i}(\hat{s}^{i}, \mathbf{s}^{-i} \mid h_{t}),$$
 
@@ -176,19 +180,45 @@ We shall call the vector of collections $$\big( H.^{1}(\cdot) , \dots , H.^{n}(\
 
 $$v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}) \sim v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}').$$
 
-**Definition 12.** The game $$G$$ is *simultaneous-nondegenerate* if, holding some future sequence of random actions fixed, in any period and given any two histories $$h_{t}$$ and $$h_{t}'$$, and any active player $$i$$, any other active player $$j$$ moving simultaneously can ensure that $$i$$'s decision problem after $$h_{t}$$ differs from that after $$h_{t}'$$.
+**Definition 13.** The game $$G$$ is *simultaneous-nondegenerate* if, holding some future sequence of random actions fixed, in any period and given any two histories $$h_{t}$$ and $$h_{t}'$$, and any active player $$i$$, any other active player $$j$$ moving simultaneously can ensure that $$i$$'s decision problem after $$h_{t}$$ differs from that after $$h_{t}'$$.
 
 If a game is simultaneous-nondegenerate, then there exists a unique maximally coarse consistent collection $$H.^{*}(\cdot)$$ such that $$H.^{*}(h_{t})$$ constitutes the state of the system or the payoff-relevant history. If we do not impose simultaneous-nondegeneracy, there is a unique maximally coarse consistent vector of collections
 
 $$H.^{i*}(\cdot), \quad i = 1, \dots , n.$$
 
-**Definition 13.** A strategy is *Markovian* if it is measurable with respect to $$H.^{*}(\cdot)$$.
+**Definition 14.** A strategy is *Markovian* if it is measurable with respect to $$H.^{*}(\cdot)$$.
 
-**Definition 14.** A *Markov Perfect Equilibrium (MPE)* is a SPE in which all players use Markov strategies.
+**Definition 15.** A *Markov Perfect Equilibrium (MPE)* is a SPE in which all players use Markov strategies.
 
-## Leverage Ratchet Effect
+## The Effect of Maturity
 
-DeMarzo and He (2021)[^7] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
+### Black-Scholes-Merton Setting
+
+At any future time $$t > 0$$, the value of a typical firm's assets-in-place follows a log-normal diffusion (and thus follows a martingale):
+
+$$V_{t} = V_{0} \cdot e^{-\frac{\sigma^{2}}{2}t + \sigma Z_{t}},$$
+
+where $$V_{0}$$ is the current market value, volatility $$\sigma$$ is a constant, and $$Z_{t} \sim N(0, t)$$. Consider a three-date model. The standard Black-Scholes calculation gives the corresponding debt value at $$t = 0$$ as:
+
+$$D(V_{0}; F_{i}, m_{i}) = V_{0}(1 - N(d_{i})) + F_{i}N(d_{i} - \sigma \sqrt{m_{i}}),$$
+
+where $$F_{t}$$ is the face value of a zero-coupon debt issue that matures at time $$t$$, $$m_{t}$$ is the maturity, $$d_{i} \equiv \frac{\ln (V_{0} / F_{i}) + 0.5 \sigma^{2}m_{i}}{\sigma \sqrt{m_{i}}}$$, $$i = 1, 2$$. Debt overhang is given by:
+
+$$D_{V} \equiv \frac{\partial D(V_{0}; F, m)}{\partial V_{0}}.$$
+
+It can be proved that for a given initial debt market value, long-term debt imposes stringer overhang than short-term debt; that is, $$D_{V}(V_{0}; F_{2}, m_{2}) > D_{V}(V_{0}; F_{1}, m_{1})$$ whenever $$D(V_{0}; F_{2}, m_{2}) = D(V_{0}; F_{1}, m_{1})$$[^7].
+
+## Dynamic Model of Investment
+
+### The Leverage Ratchet Effect
+
+> Intuitively, by reducing leverage, shareholders transfer wealth to existing creditors. Conversely, if shareholders can raise new debt of equal seniority to fund a payout for themselves, wealth is transferred in the other direction and shareholders benefit at the expense of existing creditors[^8].
+
+The leverage ratchet effect states that:
+1. No matter how large the potential gain from leverage reduction to the total value of the firm, shareholders could resist it;
+2. Shareholders can gain from a one-time debt issuance even when new debt must bear junior priority, unless the tax benefit of debt has been fully exhausted.
+
+DeMarzo and He (2021)[^9] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
 
 $$\mathrm{d}Y_{t} = \mu(Y_{t})\,\mathrm{d}t + \sigma(Y_{t})\,\mathrm{d}Z_{t} + \zeta(Y_{t^{-}})\,\mathrm{d}N_{t},$$
 
@@ -226,4 +256,8 @@ $$p(Y, F) \in -\partial_{F}V(Y, F).$$
 
 [^6]: Eric Maskin, Markov Perfect Equilibrium, *Journal of Economic Theory* **100**, 191-219 (2001).
 
-[^7]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
+[^7]: Douglas W. Diamond and Zhiguo He, A Theory of Debt Maturity: The Long and Short of Debt Overhang, *The Journal of Finance* **69**(2), 719-762 (2014).
+
+[^8]: Anat R. Admati, Peter M. DeMarzo, Martin F. Hellwig, and Paul Pfleiderer, The Leverage Ratchet Effect, *The Journal of Finance* **73**(1), 145-198 (2018).
+
+[^9]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
