@@ -59,37 +59,37 @@ In subsequent sections of this post, I would like to discuss different ways to e
 
 ### Probability Theory
 
-The *sample space* $$\Omega$$ is a set of all possible outcomes $$\omega \in \Omega$$ of some random experiment. The *event space* $$\mathcal{F} \subset 2^{\Omega}$$ represents both the amount of information available as a result of the experiment conducted and the collection of all events of possible interest to us. Probabilities $$\mathbf{P}(A)$$ are assigned to $$A \in \mathcal{F}$$[^3].
+The *sample space* $$\Omega$$ is a set of all possible outcomes $$\omega \in \Omega$$ of some random experiment. The *event space* $$\mathcal{F} \subset 2^{\Omega}$$ represents both the amount of information available as a result of the experiment conducted and the collection of all events of possible interest to us. *Probabilities* $$\mathbf{P}(A)$$ are assigned to $$A \in \mathcal{F}$$[^3].
 
-**Definition 1.** We say that $$\mathcal{F}$$ is a $$\sigma$$-algebra if
+**Definition 1.** We say that $$\mathcal{F}$$ is a $$\sigma$$-*algebra* if
 
 - $$\Omega \in \mathcal{F}$$,
 - If $$A \in \mathcal{F}$$ then $$\overline{A} \in \mathcal{F}$$, where $$\overline{A} = \Omega \backslash A$$,
 - If $$A_{i} \in \mathcal{F}$$ for $$i = 1,2,3, \dots$$, then $$\bigcup_{i}A_{i} \in \mathcal{F}$$ and $$\overline{\big( \bigcup_{i} \overline{A_{i}} \big)} = \bigcap_{i}A_{i} \in \mathcal{F}$$.
 
-**Definition 2.** A measure space is a triplet $$(\Omega, \mathcal{F}, \mu)$$, with $$\mu$$ a measure on the measurable space $$(\Omega, \mathcal{F})$$. A probability space is a measure space $$(\Omega, \mathcal{F}, \mathbf{P})$$ with $$\mathbf{P}$$ a probability measure.
+**Definition 2.** A *measure space* is a triplet $$(\Omega, \mathcal{F}, \mu)$$, with $$\mu$$ a measure on the measurable space $$(\Omega, \mathcal{F})$$. A *probability space* is a measure space $$(\Omega, \mathcal{F}, \mathbf{P})$$ with $$\mathbf{P}$$ a probability measure.
 
-**Definition 3.** We say that a measure space $$(\Omega, \mathcal{F}, \mu)$$ is complete if any subset $$N$$ of any $$B \in \mathcal{F}$$ with $$\mu(B) = 0$$ is also in $$\mathcal{F}$$. If $$\mu = \mathbf{P}$$ is a probability measure, we say that the probability space $$(\Omega, \mathcal{F}, \mathbf{P})$$ is a complete probability space.
+**Definition 3.** We say that a measure space $$(\Omega, \mathcal{F}, \mu)$$ is *complete* if any subset $$N$$ of any $$B \in \mathcal{F}$$ with $$\mu(B) = 0$$ is also in $$\mathcal{F}$$. If $$\mu = \mathbf{P}$$ is a probability measure, we say that the probability space $$(\Omega, \mathcal{F}, \mathbf{P})$$ is a *complete probability space*.
 
-**Definition 4.** A filtration $$(\mathcal{F}_{t})_{0 \leq t \leq \infty}$$ is a family of $$\sigma$$-algebras such that $$\mathcal{F}_{s} \subset \mathcal{F}_{t}$$ if $$s \leq t$$.
+**Definition 4.** A *filtration* $$(\mathcal{F}_{t})_{0 \leq t \leq \infty}$$ is a family of $$\sigma$$-algebras such that $$\mathcal{F}_{s} \subset \mathcal{F}_{t}$$ if $$s \leq t$$.
 
-**Definition 5.** A stochastic process $$X$$ on $$(\Omega, \mathcal{F}, \mathbf{P})$$ is a collection of $$\mathbb{R}$$-valued or $$\mathbb{R}^{d}$$-valued random variables $$(X_{t})_{0 \leq t \leq \infty}$$. We say that $$X$$ is adapted if $$X_{t} \in \mathcal{F}_{t}$$ for each $$t$$.
+**Definition 5.** A *stochastic process* $$X$$ on $$(\Omega, \mathcal{F}, \mathbf{P})$$ is a collection of $$\mathbb{R}$$-valued or $$\mathbb{R}^{d}$$-valued random variables $$(X_{t})_{0 \leq t \leq \infty}$$. We say that $$X$$ is *adapted* if $$X_{t} \in \mathcal{F}_{t}$$ for each $$t$$.
 
 **Definition 6.** The process $$N = (N_{t})_{0 \leq t \leq \infty}$$ defined by
 
 $$N_{t} = \sum\limits_{n \geq 1} \mathbf{1}_{\{t \geq T_{n}\}}$$
 
-with values in $$\mathbb{N} \cup \{\infty\}$$ is called the counting process (associated to the sequence $$(T_{n})_{n \geq 1}$$).
+with values in $$\mathbb{N} \cup \{\infty\}$$ is called the *counting process* (associated to the sequence $$(T_{n})_{n \geq 1}$$).
 
-**Definition 7.** An adapted counting process $$N$$ is a Poisson process if
+**Definition 7.** An adapted counting process $$N$$ is a *Poisson process* if
 - for any $$s, t$$ satisfying $$0 \leq s < t < \infty$$, $$N_{t} - N_{s}$$ is independent of $$\mathcal{F}_{s}$$ (*increments independent of the past*);
 - for any $$s, t, u, v$$ satisfying $$0 \leq s < t < \infty, 0 \leq u < v < \infty, t - s = v - u$$, then the distribution of $$N_{t} - N_{s}$$ is the same as that of $$N_{v} - N_{u}$$ (*stationary increments*).
 
-We say that $$N_{t}$$ has the Poisson distribution with parameter $$\lambda t$$ if:
+We say that $$N_{t}$$ has the *Poisson distribution* with parameter $$\lambda t$$ if:
 
 $$\mathbf{P}(N_{t} = n) = \frac{e^{-\lambda t}(\lambda t)^{n}}{n!}, \quad \lambda \geq 0, n = 0, 1, 2, \dots ,$$
 
-where $$\lambda$$ is called the intensity, or arrival rate, of the process. A Poisson process $$N$$ with intensity $$\lambda$$ satisfies
+where $$\lambda$$ is called the *intensity*, or arrival rate, of the process. A Poisson process $$N$$ with intensity $$\lambda$$ satisfies
 
 $$\mathbf{E}[N_{t}] = \lambda t, \quad \mathbf{V}[N_{t}] = \lambda t.$$
 
@@ -138,7 +138,7 @@ Zk <- cumsum(c(0, rnorm(N, mean = 0, sd = 1)))
 plot(stepfun(Tk, Zk), xlim = c(0, 10), do.points = F, main = "L = 0.5", col = "blue")
 ```
 
-**Definition 9.** An adapted process $$B = (B_{t})_{0 \leq t < \infty}$$ taking values in $$\mathbb{R}^{n}$$ is called an $$n$$-dimensional Brownian motion if
+**Definition 9.** An adapted process $$B = (B_{t})_{0 \leq t < \infty}$$ taking values in $$\mathbb{R}^{n}$$ is called an $$n$$-*dimensional Brownian motion* if
 - for $$0 \leq s < t < \infty$$, $$B_{t} - B_{s}$$ is independent of $$\mathcal{F}_{s}$$ (*increments independent of the past*);
 - for $$0 < s < t$$, $$B_{t} - B_{s}$$ is a Gaussian random variable with mean zero and variance matrix $$(t - s)C$$, given a non-random matrix $$C$$[^5].
 
@@ -154,9 +154,9 @@ $$h_{t} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{t - 1}).$$
 
 $$u^{i}(\mathbf{a}) = u^{i}(h_{t}, f_{t}).$$
 
-Denote the set of all possible period $$t$$ histories by $$H_{t}$$. A (behavior) strategy $$s^{i}$$ for player $$i$$ is a function that, for all $$t$$ and each history $$h_{t} \in H_{t}$$, assigns a probability distribution to the action space $$A_{t}^{i}(h_{t})$$. Also, denote a collection of partitions $$\{H_{t}(\cdot)\}_{t = 1}^{T}$$ by $$H\dot(\cdot)$$ where $$H_{t}(h_{t}) \subset H_{t}$$. We shall call collection $$H\dot'(\cdot)$$ weakly coarser (weakly finer) than collection $$H\dot(\cdot)$$, if, for all $$t$$, either $$H_{t}'(\cdot)$$ is coarser (finer) than $$H_{t}(\cdot)$$ or $$H_{t}(\cdot) = H_{t}'(\cdot)$$.
+Denote the set of all possible period $$t$$ histories by $$H_{t}$$. A (behavior) *strategy* $$s^{i}$$ for player $$i$$ is a function that, for all $$t$$ and each history $$h_{t} \in H_{t}$$, assigns a probability distribution to the action space $$A_{t}^{i}(h_{t})$$. Also, denote a *collection of partitions* $$\{H_{t}(\cdot)\}_{t = 1}^{T}$$ by $$H\dot(\cdot)$$ where $$H_{t}(h_{t}) \subset H_{t}$$. We shall call collection $$H\dot'(\cdot)$$ *weakly coarser* (*weakly finer*) than collection $$H\dot(\cdot)$$, if, for all $$t$$, either $$H_{t}'(\cdot)$$ is coarser (finer) than $$H_{t}(\cdot)$$ or $$H_{t}(\cdot) = H_{t}'(\cdot)$$.
 
-**Definition 10.** $$\overline{H}\dot(\cdot)$$ is called the collection of players' action-space-invariant partitions if for all $$i, t, h_{t}$$,
+**Definition 10.** $$\overline{H}\dot(\cdot)$$ is called the collection of players' *action-space-invariant partitions* if for all $$i, t, h_{t}$$,
 
 $$h_{t}' \in H_{t}, h_{t}' \in \overline{H}_{t}(h_{t}) \Leftrightarrow S_{t}^{i}(h_{t}) = S_{t}^{i}(h_{t}').$$
 
@@ -164,7 +164,7 @@ If the collection $$H^{i}\dot(\cdot)$$ is weakly finer than $$\overline{H}\dot(\
 
 $$s^{i}(h_{t}') = s^{i}(h_{t}).$$
 
-**Definition 11.** A subgame-perfect equilibrium (SPE) is a strategy vector $$\mathbf{s}$$ that forms a Nash equilibrium after any history; i.e., for all $$t, h_{t} \in H_{t}, i$$, and alternative strategy $$\hat{s}^{i}$$:
+**Definition 11.** A *subgame-perfect equilibrium (SPE)* is a strategy vector $$\mathbf{s}$$ that forms a Nash equilibrium after any history; i.e., for all $$t, h_{t} \in H_{t}, i$$, and alternative strategy $$\hat{s}^{i}$$:
 
 $$v^{i}(s^{i}, \mathbf{s}^{-i} \mid h_{t}) \geq v^{i}(\hat{s}^{i}, \mathbf{s}^{-i} \mid h_{t}),$$
 
