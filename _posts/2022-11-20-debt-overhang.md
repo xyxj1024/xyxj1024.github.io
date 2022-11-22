@@ -97,8 +97,8 @@ The ratio, $$\frac{\mathbf{V}[N_{t}]}{\mathbf{E}[N_{t}]} = 1$$, is sometimes cal
 
 $$
 \begin{align*}
-    \mathbf{P}(N_{t + h} - N_{t} = 0) &= e^{-\lambda h} = 1 - \lambda h + o(h), \quad h \rightarrow 0,
-    \mathbf{P}(N_{t + h} - N_{t} = 1) &= \lambda h e^{-\lambda h} \simeq \lambda h, \quad h \rightarrow 0,
+    \mathbf{P}(N_{t + h} - N_{t} = 0) &= e^{-\lambda h} = 1 - \lambda h + o(h), \quad h \rightarrow 0,\\
+    \mathbf{P}(N_{t + h} - N_{t} = 1) &= \lambda h e^{-\lambda h} \simeq \lambda h, \quad h \rightarrow 0,\\
     \mathbf{P}(N_{t + h} - N_{t} = 2) &\simeq h^{2}\frac{\lambda^{2}}{2} = o(h), \quad h \rightarrow 0.
 \end{align*}
 $$
@@ -178,7 +178,7 @@ $$v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}) \sim v^{i}(\cdot, \mathbf{s}^{-i} \mi
 
 **Definition 12.** The game $$G$$ is *simultaneous-nondegenerate* if, holding some future sequence of random actions fixed, in any period and given any two histories $$h_{t}$$ and $$h_{t}'$$, and any active player $$i$$, any other active player $$j$$ moving simultaneously can ensure that $$i$$'s decision problem after $$h_{t}$$ differs from that after $$h_{t}'$$.
 
-If a game is simultaneous-nondegenerate, then there exists a unique maximally coarse consistent collection $$H_{.}^{*}(\cdot)$$ such that $$H_{.}^{*}(h_{t})$$ constitutes the state of the system or the payoff-relevant history. If we do not impose simultaneous-nondegeneracy, there is a unique maximally coarse consistent vector of collections $$H_{.}^{i*}(\cdot), i = 1, \dots , n$$.
+If a game is simultaneous-nondegenerate, then there exists a unique maximally coarse consistent collection $$H^{*}_{.}(\cdot)$$ such that $$H^{*}_{.}(h_{t})$$ constitutes the state of the system or the payoff-relevant history. If we do not impose simultaneous-nondegeneracy, there is a unique maximally coarse consistent vector of collections $$H_{.}^{i*}(\cdot), i = 1, \dots , n$$.
 
 **Definition 13.** A strategy is *Markovian* if it is measurable with respect to $$H_{.}^{*}(\cdot)$$.
 
