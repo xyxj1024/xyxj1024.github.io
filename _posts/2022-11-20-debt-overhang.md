@@ -2,12 +2,12 @@
 layout:           post
 title:            "A Note on Debt Overhang"
 category:         "Money, Finance, Political Economy"
-tags:             macroeconomics corporate-finance
+tags:             macroeconomics corporate-finance asset-pricing
 permalink:        /debt-overhang/
 last_modified_at: "2022-11-22"
 ---
 
-Consider a simple, initial balance sheet of a firm:
+Consider a simple, initial balance sheet of a typical firm:
 
 |---
 | **Assets** | **Liabilities**
@@ -16,7 +16,7 @@ Consider a simple, initial balance sheet of a firm:
 |  | $V_{E}$ Value of equity
 | Value of firm $V$ | $V$
 
-Let us assume a no-arbitrage environment in which the total value of a typical firm depends on its total cach flows[^1]. If the firm chooses to make a one-period investment $I$ at $t = 0$, it obtains an asset worth $V(s)$ at $t = 1$, where $s$ is the state of nature. The equilibrium market value of $V_{D}$ can be written as:
+Let us assume a no-arbitrage environment in which the total value of the firm depends on its total cach flows[^1]. If the firm chooses to make a one-period investment $I$ at $t = 0$, it obtains an asset worth $V(s)$ at $t = 1$, where $s$ is the state of nature. The equilibrium market value of $V_{D}$ can be written as:
 
 $$V_{D} = \int_{s_{a}}^{\infty} q(s) [\min\{V(s) - I, P\}]\,\mathrm{d}s,$$
 
@@ -57,6 +57,8 @@ Later on in this post, I would like to discuss different ways to extend this mod
 
 ## Some Preliminaries
 
+### Probability Theory
+
 The *sample space* $$\Omega$$ is a set of all possible outcomes $$\omega \in \Omega$$ of some random experiment. The *event space* $$\mathcal{F} \subset 2^{\Omega}$$ represents both the amount of information available as a result of the experiment conducted and the collection of all events of possible interest to us. Probabilities $$\mathbf{P}(A)$$ are assigned to $$A \in \mathcal{F}$$[^3].
 
 **Definition 1.** We say that $$\mathcal{F}$$ is a $$\sigma$$-algebra if
@@ -94,6 +96,38 @@ $$\mathbf{E}[N_{t}] = \lambda t, \quad \mathbf{V}[N_{t}] = \lambda t.$$
 **Definition 8.** An adapted process $$B = (B_{t})_{0 \leq t < \infty}$$ taking values in $$\mathbb{R}^{n}$$ is called an $$n$$-dimensional Brownian motion if
 - for $$0 \leq s < t < \infty$$, $$B_{t} - B_{s}$$ is independent of $$\mathcal{F}_{s}$$ (*increments independent of the past*);
 - for $$0 < s < t$$, $$B_{t} - B_{s}$$ is a Gaussian random variable with mean zero and variance matrix $$(t - s)C$$, given a non-random matrix $$C$$[^4].
+
+### Game Theory
+
+Let $$G$$ be a game with $$n$$ players and $$T$$ periods. In every period $$t \in \{1, \dots , T\}$$, each player $$i \in \{1, \dots , n\}$$ chooses an action $$a_{t}^{i}$$ in his/her finite action space. Let $$\mathbf{a}_{t} \equiv (a_{t}^{1} , \dots , a_{t}^{n})$$ and $$\mathbf{a} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{T})$$. The *history& in period $$t$$ is the sequence of actions chosen before period $$t$$:
+
+$$h_{t} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{t - 1}).$$
+
+(*future* $$f_{t}$$ can be similarly defined.) Player $$i$$ has von Neumann-Morgenstern preferences represented by the utility function:
+
+$$u^{i}(\mathbf{a}) = u^{i}(h_{t}, f_{t}).$$
+
+Denote the set of all possible period $$t$$ histories by $$H_{t}$$. A (behavior) strategy $$s^{i}$$ for player $$i$$ is a function that, for all $$t$$ and each history $$h_{t} \in H_{t}$$, assigns a probability distribution to the action space $$A_{t}^{i}(h_{t})$$. Also, denote a collection of partitions $$\{H_{t}(\cdot)\}_{t = 1}^{T}$$ by $$H.(\cdot)$$ where $$H_{t}(h_{t}) \subset H_{t}$$. We shall call collection $$H'.(\cdot)$$ weakly coarser (weakly finer) than collection $$H.(\cdot)$$, if, for all $$t$$, either $$H_{t}'(\cdot)$$ is coarser (finer) than $$H_{t}(\cdot)$$ or $$H_{t}(\cdot) = H_{t}'(\cdot)$$.
+
+**Definition 9.** $$\overline{H}.(\cdot)$$ is called the collection of players' action-space-invariant partitions if for all $$i, t, h_{t}$$,
+
+$$h_{t}' \in H_{t}, h_{t}' \in \overline{H}_{t}(h_{t}) \Leftrightarrow S_{t}^{i}(h_{t}) = S_{t}^{i}(h_{t}').$$
+
+If the collection $$H^{i}.(\cdot)$$ is weakly finer than $$\overline{H}.(\cdot)$$, then strategy $$s^{i}$$ is *measurable* with respect to $$H^{i}.(\cdot)$$ if, for all $$t, h_{t}, h_{t}' \in H_{t}^{i}(h_{t})$$:
+
+$$s^{i}(h_{t}') = s^{i}(h_{t}).$$
+
+**Definition 10.** A subgame-perfect equilibrium (SPE) is a strategy vector $$\mathbf{s}$$ that forms a Nash equilibrium after any history; i.e., for all $$t, h_{t} \in H_{t}, i$$, and alternative strategy $$\hat{s}^{i}$$:
+
+$$v^{i}(s^{i}, \mathbf{s}^{-i} \mid h_{t}) \geq v^{i}(\hat{s}^{i}, \mathbf{s}^{-i} \mid h_{t}),$$
+
+where $$\mathbf{s}^{-i}$$ denotes the vector of strategies by players other than player $$i$$ and $$v^{i}(\cdot)$$ is player $$i$$'s expected payoff.
+
+We shall call the vector of collections $$\big( H^{1}.(\cdot) , \dots , H^{n}.(\cdot)\big)$$ *consistent* if, for all $$i$$:
+- $$H^{i}.(\cdot)$$ is weakly finer than $$\overline{H}.(\cdot)$$,
+- for all $$s^{-i} \in \prod\limits_{k \not = i} S^{k} (H^{k}.(\cdot))$$, for all $$t$$, for all $$h_{t}, h_{t}' \in H_{t}$$ such that $$h_{t}' \in H_{t}^{i}(h_{t}),$$
+
+$$v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}) \sim v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}').$$
 
 ## References
 
