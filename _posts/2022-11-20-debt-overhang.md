@@ -99,7 +99,9 @@ $$\mathbf{E}[N_{t}] = \lambda t, \quad \mathbf{V}[N_{t}] = \lambda t.$$
 
 ### Game Theory
 
-Let $$G$$ be a game with $$n$$ players and $$T$$ periods. In every period $$t \in \{1, \dots , T\}$$, each player $$i \in \{1, \dots , n\}$$ chooses an action $$a_{t}^{i}$$ in his/her finite action space. Let $$\mathbf{a}_{t} \equiv (a_{t}^{1} , \dots , a_{t}^{n})$$ and $$\mathbf{a} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{T})$$. The *history& in period $$t$$ is the sequence of actions chosen before period $$t$$:
+Please refer to Maskin (2001)[^5] for more details.
+
+Let $$G$$ be a game with $$n$$ players and $$T$$ periods. In every period $$t \in \{1, \dots , T\}$$, each player $$i \in \{1, \dots , n\}$$ chooses an action $$a_{t}^{i}$$ in his/her finite action space. Let $$\mathbf{a}_{t} \equiv (a_{t}^{1} , \dots , a_{t}^{n})$$ and $$\mathbf{a} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{T})$$. The *history* in period $$t$$ is the sequence of actions chosen before period $$t$$:
 
 $$h_{t} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{t - 1}).$$
 
@@ -125,16 +127,26 @@ where $$\mathbf{s}^{-i}$$ denotes the vector of strategies by players other than
 
 We shall call the vector of collections $$\big( H^{1}.(\cdot) , \dots , H^{n}.(\cdot)\big)$$ *consistent* if, for all $$i$$:
 - $$H^{i}.(\cdot)$$ is weakly finer than $$\overline{H}.(\cdot)$$,
-- for all $$s^{-i} \in \prod\limits_{k \not = i} S^{k} (H^{k}.(\cdot))$$, for all $$t$$, for all $$h_{t}, h_{t}' \in H_{t}$$ such that $$h_{t}' \in H_{t}^{i}(h_{t}),$$
+- for all $$s^{-i} \in \prod\limits_{k \not = i} S^{k} (H^{k}.(\cdot))$$, for all $$t$$, for all $$h_{t}, h_{t}' \in H_{t}$$ such that $$h_{t}' \in H_{t}^{i}(h_{t})$$:
 
 $$v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}) \sim v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}').$$
 
+**Definition 11.** The game $$G$$ is *simultaneous-nondegenerate* if, holding some future sequence of random actions fixed, in any period and given any two histories $$h_{t}$$ and $$h_{t}'$$, and any active player $$i$$, any other active player $$j$$ moving simultaneously can ensure that $$i$$'s decision problem after $$h_{t}$$ differs from that after $$h_{t}'$$.
+
+If a game is simultaneous-nondegenerate, then there exists a unique maximally coarse consistent collection $$H^{*}.(\cdot)$$ such that $$H^{*}.(h_{t})$$ constitutes the state of the system or the payoff-relevant history. If we do not impose simultaneous-nondegeneracy, there is a unique maximally coarse consistent vector of collections $$H^{i*}.(\cdot), i = 1, \dots , n$$.
+
+**Definition 12.** A strategy is *Markovian* if it is measurable with respect to $$H^{*}.(\cdot)$$.
+
+**Definition 13.** A *Markov Perfect Equilibrium (MPE)* is a SPE in which all players use Markov strategies.
+
 ## References
 
-[^1]: Stephen A. Ross, "Comment on the Modigliani-Miller Propositions," *Journal of Economic Perspectives*, Volume 2, Number 4---Fall 1988---Pages 127-133.
+[^1]: Stephen A. Ross, "Comment on the Modigliani-Miller Propositions," *Journal of Economic Perspectives* **2**(4), 127-133 (1988).
 
-[^2]: Stewart C. Myers, "Determinants of Corporate Borrowing," *Journal of Financial Economics* 5 (1977) 147-175.
+[^2]: Stewart C. Myers, "Determinants of Corporate Borrowing," *Journal of Financial Economics* **5**, 147-175 (1977).
 
 [^3]: Amir Dembo, Lecture Notes of "Probability Theory: STAT310/MATH230" at Stanford University, [https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf](https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf).
 
 [^4]: Philip E. Protter, "Stochastic Integration and Differential Equations," Second Edition, Springer-Verlag Berlin Heidelberg, 2004.
+
+[^5]: Eric Maskin, "Markov Perfect Equilibrium," *Journal of Economic Theory* **100**, 191-219 (2001).
