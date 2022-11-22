@@ -154,13 +154,13 @@ $$h_{t} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{t - 1}).$$
 
 $$u^{i}(\mathbf{a}) = u^{i}(h_{t}, f_{t}).$$
 
-Denote the set of all possible period $$t$$ histories by $$H_{t}$$. A (behavior) *strategy* $$s^{i}$$ for player $$i$$ is a function that, for all $$t$$ and each history $$h_{t} \in H_{t}$$, assigns a probability distribution to the action space $$A_{t}^{i}(h_{t})$$. Also, denote a *collection of partitions* $$\{H_{t}(\cdot)\}_{t = 1}^{T}$$ by $$H\dot(\cdot)$$ where $$H_{t}(h_{t}) \subset H_{t}$$. We shall call collection $$H\dot'(\cdot)$$ *weakly coarser* (*weakly finer*) than collection $$H\dot(\cdot)$$, if, for all $$t$$, either $$H_{t}'(\cdot)$$ is coarser (finer) than $$H_{t}(\cdot)$$ or $$H_{t}(\cdot) = H_{t}'(\cdot)$$.
+Denote the set of all possible period $$t$$ histories by $$H_{t}$$. A (behavior) *strategy* $$s^{i}$$ for player $$i$$ is a function that, for all $$t$$ and each history $$h_{t} \in H_{t}$$, assigns a probability distribution to the action space $$A_{t}^{i}(h_{t})$$. Also, denote a *collection of partitions* $$\{H_{t}(\cdot)\}_{t = 1}^{T}$$ by $$H.(\cdot)$$ where $$H_{t}(h_{t}) \subset H_{t}$$. We shall call collection $$H.'(\cdot)$$ *weakly coarser* (*weakly finer*) than collection $$H.(\cdot)$$, if, for all $$t$$, either $$H_{t}'(\cdot)$$ is coarser (finer) than $$H_{t}(\cdot)$$ or $$H_{t}(\cdot) = H_{t}'(\cdot)$$.
 
-**Definition 10.** $$\overline{H}\dot(\cdot)$$ is called the collection of players' *action-space-invariant partitions* if for all $$i, t, h_{t}$$,
+**Definition 10.** $$\overline{H}.(\cdot)$$ is called the collection of players' *action-space-invariant partitions* if for all $$i, t, h_{t}$$,
 
 $$h_{t}' \in H_{t}, h_{t}' \in \overline{H}_{t}(h_{t}) \Leftrightarrow S_{t}^{i}(h_{t}) = S_{t}^{i}(h_{t}').$$
 
-If the collection $$H^{i}\dot(\cdot)$$ is weakly finer than $$\overline{H}\dot(\cdot)$$, then strategy $$s^{i}$$ is *measurable* with respect to $$H^{i}\dot(\cdot)$$ if, for all $$t, h_{t}, h_{t}' \in H_{t}^{i}(h_{t})$$:
+If the collection $$H.^{i}(\cdot)$$ is weakly finer than $$\overline{H}.(\cdot)$$, then strategy $$s^{i}$$ is *measurable* with respect to $$H.^{i}(\cdot)$$ if, for all $$t, h_{t}, h_{t}' \in H_{t}^{i}(h_{t})$$:
 
 $$s^{i}(h_{t}') = s^{i}(h_{t}).$$
 
@@ -170,17 +170,19 @@ $$v^{i}(s^{i}, \mathbf{s}^{-i} \mid h_{t}) \geq v^{i}(\hat{s}^{i}, \mathbf{s}^{-
 
 where $$\mathbf{s}^{-i}$$ denotes the vector of strategies by players other than player $$i$$ and $$v^{i}(\cdot)$$ is player $$i$$'s expected payoff.
 
-We shall call the vector of collections $$\big( H^{1}\dot(\cdot) , \dots , H^{n}\dot(\cdot) \big)$$ *consistent* if, for all $$i$$:
-- $$H^{i}\dot(\cdot)$$ is weakly finer than $$\overline{H}\dot(\cdot)$$,
-- for all $$s^{-i} \in \prod\limits_{k \not = i} S^{k} (H^{k}\dot(\cdot))$$, for all $$t$$, for all $$h_{t}, h_{t}' \in H_{t}$$ such that $$h_{t}' \in H_{t}^{i}(h_{t})$$:
+We shall call the vector of collections $$\big( H.^{1}(\cdot) , \dots , H.^{n}(\cdot) \big)$$ *consistent* if, for all $$i$$:
+- $$H.^{i}(\cdot)$$ is weakly finer than $$\overline{H}.(\cdot)$$,
+- for all $$s^{-i} \in \prod\limits_{k \not = i} S^{k} (H.^{k}(\cdot))$$, for all $$t$$, for all $$h_{t}, h_{t}' \in H_{t}$$ such that $$h_{t}' \in H_{t}^{i}(h_{t})$$:
 
 $$v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}) \sim v^{i}(\cdot, \mathbf{s}^{-i} \mid h_{t}').$$
 
 **Definition 12.** The game $$G$$ is *simultaneous-nondegenerate* if, holding some future sequence of random actions fixed, in any period and given any two histories $$h_{t}$$ and $$h_{t}'$$, and any active player $$i$$, any other active player $$j$$ moving simultaneously can ensure that $$i$$'s decision problem after $$h_{t}$$ differs from that after $$h_{t}'$$.
 
-If a game is simultaneous-nondegenerate, then there exists a unique maximally coarse consistent collection $$H^{*}\dot(\cdot)$$ such that $$H^{*}\dot(h_{t})$$ constitutes the state of the system or the payoff-relevant history. If we do not impose simultaneous-nondegeneracy, there is a unique maximally coarse consistent vector of collections $$H\dot^{i*}(\cdot), i = 1, \dots , n$$.
+If a game is simultaneous-nondegenerate, then there exists a unique maximally coarse consistent collection $$H.^{*}(\cdot)$$ such that $$H.^{*}(h_{t})$$ constitutes the state of the system or the payoff-relevant history. If we do not impose simultaneous-nondegeneracy, there is a unique maximally coarse consistent vector of collections
 
-**Definition 13.** A strategy is *Markovian* if it is measurable with respect to $$H^{*}\dot(\cdot)$$.
+$$H.^{i*}(\cdot), \quad i = 1, \dots , n.$$
+
+**Definition 13.** A strategy is *Markovian* if it is measurable with respect to $$H.^{*}(\cdot)$$.
 
 **Definition 14.** A *Markov Perfect Equilibrium (MPE)* is a SPE in which all players use Markov strategies.
 
