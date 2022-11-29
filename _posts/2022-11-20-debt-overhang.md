@@ -240,8 +240,7 @@ Let us assume that:
 - the financial structure of a typical firm is chosen at $$t = 0$$ so as to maximize the *aggregate* return of the shareholders,
 - the only way to prevent the manager of the firm from investing in a bad project is to make necessary funds unavailable (management has *empire-buidling* motive),
 - the probability distributions of liquidation, investment costs, returns on assets and investments are all common knowledge, and values are revealed at $$t = 1$$,
-- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
-
+- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.<br />
 
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
