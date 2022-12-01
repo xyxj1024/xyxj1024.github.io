@@ -72,7 +72,7 @@ The above code illustrates how a Spy process can monitor the L1 data cache ($128
 
 ### Comparing Data Access Time of CPU Cache with Main Memory
 
-In the following code (<code>CacheTime.c</code>), we have an array of size <code>10 * 4096</code> initialized to ones. Since a typical cache block size is 64 bytes, no two elemnets used in the program fall into the same cache block.
+In the following code (<code>CacheTime.c</code>), we have an array of size <code>10 * 4096</code> with elements at the multiples of $$4096$$ initialized to ones. Since a typical cache block size is 64 bytes, no two elements used in the program fall into the same cache block.
 
 ```c
 /* CacheTime.c */
@@ -498,7 +498,7 @@ The BTB is a simple direct-mapped cache of addresses that stores the last target
 
 Consider the case of an attacker trying to steal data from the *same* process using traces of the out-of-order execution left behind by the CPU.
 
-In the following program, assume the attacker already knows the address of the secret. The training procedure done in the <code>spectreAttack()</code> is also called *branch direction mistraining* by some of the security researchers.
+In the following program, assume the attacker already knows the address of the secret. The training procedure done in the <code>spectreAttack()</code> function is also called *branch direction mistraining* by some of the security researchers.
 ```c
 /* SpectreAttack.c */
 /* Spectre Variant 1 (CVE-2017-5753): Bounds Check Bypass */
