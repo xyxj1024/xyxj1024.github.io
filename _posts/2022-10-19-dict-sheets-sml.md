@@ -10,12 +10,10 @@ Standard ML exercises of [CSE 425S: "Programming Systems and Languages" at Washi
 
 <!-- excerpt-end -->
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Singly Chained Dictionary
 

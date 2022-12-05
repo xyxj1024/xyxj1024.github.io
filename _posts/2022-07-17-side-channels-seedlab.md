@@ -15,12 +15,10 @@ In 2017, it was discovered that many modern processors are vulnerable to attacks
 
 <!-- excerpt-end -->
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## An Introduction to Cache Attacks
 

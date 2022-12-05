@@ -10,12 +10,10 @@ For general overview and the setup package for this lab, please go to [SEED Labs
 
 <!-- excerpt-end -->
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ```console
      Non-Executable Stack

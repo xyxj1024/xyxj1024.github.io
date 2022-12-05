@@ -182,12 +182,10 @@ structure Stream :> STREAM =
   end
 ```
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Racket <code>cons</code> vs. <code>values</code>
 

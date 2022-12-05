@@ -9,12 +9,10 @@ last_modified_at: "2022-10-10"
 
 <!-- excerpt-end -->
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Radix Tree
 

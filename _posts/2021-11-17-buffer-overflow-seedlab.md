@@ -26,12 +26,10 @@ Traditionally, UNIX systems associate with each process some *credentials*, whic
 
 A UID of 0 specifiers the superuser (root), while a user group ID of 0 specifies the root group. If a process credential stores a value of 0, the kernel bypasses the permission checks and allows the privileged process to perform various actions, such as those referring to system administration or hardware manipulation, that are not possible to unprivileged processes. When the process executes a *set-uid* program&mdash;that is, an executable file whose <code>setuid</code> flag is on&mdash;the <code>euid</code> and <code>fsuid</code> fields are set to the identifier of the file's owner. UNIX's long history teaches the lession that setuid programs are quite dangerous: malicious users could triggers some programming errors (bugs) in the code to force setuid programs to perform operations that were never planned by the program's original designers.
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Environment Setup
 

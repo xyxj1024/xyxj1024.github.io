@@ -13,12 +13,10 @@ Please refer to [this post](https://xingjianxuanyuan.github.io/side-channels-see
 
 <!-- excerpt-end -->
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Preparation for the Meltdown Attack
 

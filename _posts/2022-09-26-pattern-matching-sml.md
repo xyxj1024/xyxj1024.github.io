@@ -13,12 +13,10 @@ Homework 3 of the [programming language course](https://www.coursera.org/learn/p
 
 <!-- excerpt-end -->
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## String Functions
 

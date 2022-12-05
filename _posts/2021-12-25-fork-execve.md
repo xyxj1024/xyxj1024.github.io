@@ -24,12 +24,10 @@ Note that the number enclosed in parentheses after the object name indicates the
 
 The Linux **system calls**{: style="color: red"} (or *syscalls*) are the only means user applications have of interfacing with the kernel; they are the only legal entry point into the kernel other than exceptions and traps. In other words, the Linux kernel is concerned only with the system calls; it is important for the kernel to keep track of the potential use of a system call and keep the system call as general and flexible as possible. System calls are typically accessed via function calls defined in the **C library**{: style="color: red"}. The C library is used by all C programs and, because of C's nature, is easily wrapped by other programming languages for use in their programs.
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## The Concept of a Process
 

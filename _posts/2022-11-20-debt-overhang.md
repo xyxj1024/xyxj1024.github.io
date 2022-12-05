@@ -8,8 +8,8 @@ last_modified_at: "2022-11-22"
 ---
 
 <p class="message"><em>
-    [Critias]: As a matter of fact, I am almost ready to assert that this very thing, to know oneself, is temperance, and I am of the same mind as the person who put up an inscription to that effect at Delphi.
-</em>(Charmides 164d4)</p><br />
+    Critias: "As a matter of fact, I am almost ready to assert that this very thing, to know oneself, is temperance, and I am of the same mind as the person who put up an inscription to that effect at Delphi."
+</em>(Charmides 164d4)</p>
 
 Consider a typical firm's initial balance sheet:
 

@@ -43,12 +43,10 @@ Below is our starter code:
 
 Our main tasks in this assignment have to do with a Racket function <code>eval-exp</code>, which is an interpreter of our Made Up Programming Language (hereinafter "MUPL") that takes a MUPL expression <code>e</code> and either returns the MUPL value that <code>e</code> evaluates to under the empty environment or calls Racket's <code>error</code> if evaluation encounters a run-time MUPL type error or unbound MUPL variable. A MUPL *value* is a MUPL integer constant, a MUPL closure, a MUPL aunit, or a MUPL pair of MUPL values. An *environment* is represented by a Racket list of [Racket pairs](https://docs.racket-lang.org/reference/pairs.html) <code>'(name . value)</code> where each <code>name</code> is a Racket string and each <code>value</code> is a MUPL value.
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Problem 1: Warm-Up
 

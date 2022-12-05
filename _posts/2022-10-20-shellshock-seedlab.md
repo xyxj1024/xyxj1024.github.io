@@ -32,12 +32,10 @@ void initialize_shell_variables (char **env, int privmode)
 ```
 <code>bash</code> checks if there is an exported function by checking whether the value of an environment variable starts with "<code>() { </code>" or not. Once a match is found, <code>bash</code> changes the environment variable string to a function definition string by replacing the "<code>=</code>" character with a space, the calls the function <code>parse_and_execute()</code> to parse the function definition. If the string contains a shell command, the parsing function will execute it; if the string contains two commands, separated by a semicolon ("<code>;</code>"), the <code>parse_and_execute()</code> function will process both commands. The attack consequence is the following: if attackers add some extra commands at the end of a function declaration, and if they can find a way to pass this function declaration via an environment variable to a target process running <code>bash</code>, they can get the target process to run their commands. If the target process is a server process or runs with a privilege, security breaches can occur.
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Environment Setup
 

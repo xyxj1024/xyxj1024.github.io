@@ -10,12 +10,10 @@ In "[Defeating ASLR: The Return-to-pop Method](https://xingjianxuanyuan.github.i
 
 <!-- excerpt-end -->
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Part I
 
