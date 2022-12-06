@@ -8,7 +8,7 @@ last_modified_at: "2022-12-13"
 ---
 
 <p class="message"><em>
-     
+
 </em></p>
 
 > For the past few decades, international macroeconomics has postulated the "trilemma": with free capital mobility, independent monetary policies are feasible if and only if exchange rates are floating. The global financial cycle transforms the trilemma into a "dilemma" or an "irreconcilable duo": independent monetary policies are possible if and only if the capital account is managed[^1].
@@ -20,14 +20,14 @@ last_modified_at: "2022-12-13"
 * TOC 
 {:toc}
 
-## International Capital Flow
+## Global Financial Cycle
 
-### Global Financial Cycle
+### International Capital Flow
 
 ### China's Limited Integration in the Global Financial System
 
 
-<b>Total labor rents = union rents + industry rents + firm size rents</b>
+<center><b>Total labor rents = union rents + industry rents + firm size rents</b></center>
 
 - "Labor rents": measured as a share of net value added in the nonfinancial corporate business sector,
 - "Union rents": rents arising from union wage premia for unionized workers,

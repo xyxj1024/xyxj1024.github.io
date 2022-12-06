@@ -2,7 +2,7 @@
 layout:           post
 title:            "A Note on Debt Overhang"
 category:         "Money, Finance, Political Economy"
-tags:             probability-theory financial-economics asset-pricing
+tags:             stochastic-mathematics financial-economics asset-pricing
 permalink:        /debt-overhang/
 last_modified_at: "2022-11-25"
 ---
@@ -48,7 +48,7 @@ If for all $s$, $V(s) < I + P$, the firm will not exercise its growth option and
 
 $$V_{D} = \int_{s_{b}}^{\infty} P q(s)\,\mathrm{d}s < V,$$
 
-where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has an upper bound less than $V$, which is, in turn, less than $V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s$ without debt financing. Therefore, $V$ is a monotonically decreasing function of $P$. Optimal level of $V$ is reached when $P = V_{D} = 0$. In the case of $V(s) < P$, the gap between $V_{D}$ and $V(s)$ at $t = 1$ is often termed "**debt overhang**{: style="color: red"}". This debt-overhang effect, first analyzed by Myers (1977)[^3], characterizes the situation when a firm's debt burden grows so large that default risk becomes high, distorting the shareholders' incentives to invest. Even profitable investment projects might be declined because much of the benefit from these projects accrues to creditors rather than shareholders. A feasible investment must have a net present value (NPV) greater than the debt overhang.
+where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has an upper bound less than $V$, which is, in turn, less than $V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s$ without debt financing. Therefore, $V$ is a monotonically decreasing function of $P$. Optimal level of $V$ is reached when $P = V_{D} = 0$. In the case of $V(s) < P$, the gap between $V_{D}$ and $V(s)$ at $t = 1$ is often termed "**debt overhang**{: style="color: red"}". This debt-overhang effect, first analyzed by Myers (1977)[^2], characterizes the situation when a firm's debt burden grows so large that default risk becomes high, distorting the shareholders' incentives to invest. Even profitable investment projects might be declined because much of the benefit from these projects accrues to creditors rather than shareholders. A feasible investment must have a net present value (NPV) greater than the debt overhang.
 
 In subsequent sections of this post, I would like to discuss different ways to extend this model.
 
@@ -61,7 +61,7 @@ In subsequent sections of this post, I would like to discuss different ways to e
 
 ### Probability Theory
 
-The *sample space* $$\Omega$$ is a set of all possible outcomes $$\omega \in \Omega$$ of some random experiment. The *event space* $$\mathcal{F} \subset 2^{\Omega}$$ represents both the amount of information available as a result of the experiment conducted and the collection of all events of possible interest to us. *Probabilities* $$\mathbf{P}(A)$$ are assigned to $$A \in \mathcal{F}$$[^4].
+The *sample space* $$\Omega$$ is a set of all possible outcomes $$\omega \in \Omega$$ of some random experiment. The *event space* $$\mathcal{F} \subset 2^{\Omega}$$ represents both the amount of information available as a result of the experiment conducted and the collection of all events of possible interest to us. *Probabilities* $$\mathbf{P}(A)$$ are assigned to $$A \in \mathcal{F}$$[^3].
 
 **Definition 1.** We say that $$\mathcal{F}$$ is a $$\sigma$$-*algebra* if
 
@@ -91,7 +91,7 @@ We say that $$N_{t}$$ has the *Poisson distribution* with parameter $$\lambda t$
 
 $$\mathbf{P}(N_{t} = n) = \frac{e^{-\lambda t}(\lambda t)^{n}}{n!}, \quad \lambda \geq 0, n = 0, 1, 2, \dots ,$$
 
-where $$\lambda$$ is called the *intensity*, or arrival rate, of the process. A Poisson process $$N$$ with intensity $$\lambda$$ satisfies
+where $$\lambda$$ is called the *intensity*, or arrival rate, of the process. A Poisson process $$N$$ with intensity $$\lambda$$ satisfies:
 
 $$\mathbf{E}[N_{t}] = \lambda t, \quad \mathbf{V}[N_{t}] = \lambda t.$$
 
@@ -130,7 +130,7 @@ is called a *compound Poisson process*. The *jump size* of $$(Y_{t})_{0 \leq t \
 
 $$\Delta Y_{t} \equiv Y_{t} - Y_{t^{-}} = Z_{N_{t}} \Delta N_{t},$$
 
-where $$Y_{t^{-}}$$ is the left limit and $$\Delta N_{t} \equiv N_{t} - N_{t^{-}} \in \{0, 1\}$$ is the jump size of the standard Poisson process $$(N_{t})_{0 \leq t \leq \infty}$$[^5].
+where $$Y_{t^{-}}$$ is the left limit and $$\Delta N_{t} \equiv N_{t} - N_{t^{-}} \in \{0, 1\}$$ is the jump size of the standard Poisson process $$(N_{t})_{0 \leq t \leq \infty}$$[^4].
 
 ```r
 # R code that simulates a sample path of a compound Poisson process
@@ -142,7 +142,7 @@ plot(stepfun(Tk, Zk), xlim = c(0, 10), do.points = F, main = "L = 0.5", col = "b
 
 **Definition 9.** An adapted process $$B = (B_{t})_{0 \leq t < \infty}$$ taking values in $$\mathbb{R}^{n}$$ is called an $$n$$-*dimensional Brownian motion* if
 - for $$0 \leq s < t < \infty$$, $$B_{t} - B_{s}$$ is independent of $$\mathcal{F}_{s}$$ (*increments independent of the past*);
-- for $$0 < s < t$$, $$B_{t} - B_{s}$$ is a Gaussian random variable with mean zero and variance matrix $$(t - s)C$$, given a non-random matrix $$C$$[^6].
+- for $$0 < s < t$$, $$B_{t} - B_{s}$$ is a Gaussian random variable with mean zero and variance matrix $$(t - s)C$$, given a non-random matrix $$C$$[^5].
 
 **Definition 10.** An adapted process $$X$$ with values in $$\mathbb{R}^{n}$$ is a *diffusion* if it has continuous sample paths and if it satisfies the strong Markov property.
 
@@ -186,7 +186,7 @@ ggplot(rws, aes(step, y, color = trial, group = trial)) +
 
 ### Game Theory
 
-Please refer to Maskin (2001)[^7] for more details.
+Please refer to Maskin (2001)[^6] for more details.
 
 Let $$G$$ be a game with $$n$$ players and $$T$$ periods. In every period $$t \in \{1, \dots , T\}$$, each player $$i \in \{1, \dots , n\}$$ chooses an action $$a_{t}^{i}$$ in his/her finite action space. Let $$\mathbf{a}_{t} \equiv (a_{t}^{1} , \dots , a_{t}^{n})$$ and $$\mathbf{a} \equiv (\mathbf{a}_{1}, \dots , \mathbf{a}_{T})$$. The *history* in period $$t$$ is the sequence of actions chosen before period $$t$$:
 
@@ -228,9 +228,57 @@ $$H.^{i*}(\cdot), \quad i = 1, \dots , n.$$
 
 **Definition 15.** A *Markov Perfect Equilibrium (MPE)* is a SPE in which all players use Markov strategies.
 
-## The Effect of Maturity
+### Black-Scholes-Merton (BSM) Model
 
-### Optimal Level of Short-Term vs. Long-Term Debt
+A summary of the Black-Scholes-Merton (BSM) model is presented here for convenience.
+
+The assumptions of the BSM model include:
+
+* The BSM model is a model with a single interest rate;
+* This interest rate is the risk-free rate $$r$$;
+* Equity prices follow geometric Brownian motion;
+* Short selling is permitted;
+* There are no taxes and transaction costs;
+* No dividends on the underlying securities;
+* No arbitrage opportunities exist;
+* Continuous trading of securities.
+
+**Definition 16.** *Geometric Brownian motion*, a non-negative variant of Brownian motion, is defined by
+
+$$S(t) = S_{0} e^{X(t)},$$
+
+where $$X(t) = \sigma B(t) + \mu t$$ is Brownian motion with drift and $$S(0) = S_{0} > 0$$ is the initial value. For each $$t$$, $$S(t)$$ has a lognormal distribution because if we take logarithms on both sides of the above equation, we have $$X(t) = \ln \big( S(t) \big) - \ln \big( S_{0} \big)$$. Hence, $$\ln \big( S(t) \big) = X(t) + \ln \big( S_{0} \big)$$ is normal with mean $$\mu t + \ln \big( S_{0} \big)$$ and variance $$\sigma^{2} t$$. From
+
+$$
+\begin{align}
+S(t + h) = S_{0} e^{X(t + h)} \\
+         = S_{0} e^{X(t) + X(t + h) - X(t)} \\
+         = S_{0} e^{X(t)} e^{X(t + h) - X(t)} \\
+         = S(t) e^{X(t + h) - X(t)}
+\end{align}
+$$
+
+we know that given $$S(t)$$, the future $$S(t + h)$$ only depends on the future increment of the Brownian motion $$X(t + h) - X(t)$$. Since Brownian motion has independent increments, this future is independent of the past. Consequently, geometric Brownian motion is a Markov process.
+
+Now, let $$T$$ denote the fixed time of maturity of a derivative contract and $$\sigma$$ as the volatility of the underlying security (in this case an equity price). The BSM partial differential equation (PDE) is given by:
+
+$$\frac{\partial f}{\partial t} + rS\frac{\partial f}{\partial S} + \frac{1}{2}\sigma^{2}S^{2}\frac{\partial^{2} f}{\partial^{2} S} = rf,$$
+
+where $$f$$ is the price of a derivative which is contingent on the equity price $$S_{t}$$ and time $$t \in [0, T]$$. For a European call and put option with strike $$K$$, the BSM PDE has solution:
+
+$$V_{t} = \alpha \Big( S_{0}N(\alpha d_{1}) - Ke^{-r(T - t)}N(\alpha d_{2}) \Big),$$
+
+where 
+
+$$d_{1} = \frac{\ln\big(\frac{S_{0}}{K}\big) + (r + \frac{1}{2}\sigma^{2})(T - t)}{\sigma \sqrt{T - t}},$$
+
+and
+
+$$d_{2} = d_{1} - \sigma \sqrt{T - t},$$
+
+$$\alpha = 1$$ for a call option and $$\alpha = -1$$ for a put option, $$N(\cdot)$$ is the cumulative distribution function of the standard normal distribution.
+
+## Managerial Agency Problem
 
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
@@ -259,7 +307,23 @@ Given $$d_{1} = 0$$ and thus $$L$$ is irrelevant,
 1. If $$r > i$$ with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = 0$$ (this is all-equity financing);
 2. If $$r < i$$ with probability $$1$$, then the first-best outcome can be achieved by setting $$d_{2}$$ large enough;
 3. If the sum of $$y_{1}$$ and $$y_{2}$$ is constant with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + y_{2}$$;
-4. Finally, if $$i$$ and $$y_{1}$$ are deterministic, and $$r \equiv g(y_{2})$$ where $$g(\cdot)$$ is a strictly increasing function, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + g^{-1}(i)$$[^2].
+4. Finally, if $$i$$ and $$y_{1}$$ are deterministic, and $$r \equiv g(y_{2})$$ where $$g(\cdot)$$ is a strictly increasing function, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + g^{-1}(i)$$[^7].
+
+## Dynamic Investments and Financing
+
+At any future time $$t > 0$$, the value of a typical firm's assets-in-place follows a log-normal diffusion (and thus follows a martingale):
+
+$$V_{t} = V_{0} \cdot e^{-\frac{\sigma^{2}}{2}t + \sigma Z_{t}},$$
+
+where $$V_{0}$$ is the current market value, volatility $$\sigma$$ is a constant, and $$Z_{t} \sim N(0, t)$$. Consider a three-date model. The standard Black-Scholes calculation gives the corresponding debt value at $$t = 0$$ as:
+
+$$D(V_{0}; F_{i}, m_{i}) = V_{0}(1 - N(d_{i})) + F_{i}N(d_{i} - \sigma \sqrt{m_{i}}),$$
+
+where $$F_{t}$$ is the face value of a zero-coupon debt issue that matures at time $$t$$, $$m_{t}$$ is the maturity, $$d_{i} \equiv \frac{\ln (V_{0} / F_{i}) + 0.5 \sigma^{2}m_{i}}{\sigma \sqrt{m_{i}}}$$, $$i = 1, 2$$. Debt overhang is given by:
+
+$$D_{V} \equiv \frac{\partial D(V_{0}; F, m)}{\partial V_{0}}.$$
+
+It can be proved that for a given initial debt market value, long-term debt imposes stronger overhang than short-term debt; that is, $$D_{V}(V_{0}; F_{2}, m_{2}) > D_{V}(V_{0}; F_{1}, m_{1})$$ whenever $$D(V_{0}; F_{2}, m_{2}) = D(V_{0}; F_{1}, m_{1})$$[^8].
 
 What if the risk-free rate is non-zero? We may assume that the firm issues perpetual callable coupon debt and the face value of the debt $$F$$ is equal to the value of perpetual debt with periodic payment (coupon) $$d$$ discounted at the risk-free rate $$r$$:
 
@@ -278,66 +342,19 @@ The net refinancing expenses is given by:
 
 $$w \cdot F - w \cdot D(p, A, d) = w \cdot [F - D(p, A, d)] > 0.$$
 
-The net instantaneous cash payment to the creditors is $$d$$ plus net refinancing expenses[^8].
+The net instantaneous cash payment to the creditors is $$d$$ plus net refinancing expenses[^9].
 
-### Black-Scholes-Merton Setting
-
-A summary of the Black-Scholes-Merton (BSM) model is presented here for convenience.
-
-The assumptions of the BSM model include:
-
-* The BSM model is a model with a single interest rate;
-* This interest rate is the risk-free rate $$r$$;
-* Equity prices follow geometric Brownian motion;
-* Short selling is permitted;
-* There are no taxes and transaction costs;
-* No dividends on the underlying securities;
-* No arbitrage opportunities exist;
-* Continuous trading of securities.
-
-Let $$T$$ denote the fixed time of maturity of a derivative contract and $$\sigma$$ as the volatility of the underlying security (in this case an equity price). The BSM partial differential equation (PDE) is given by:
-
-$$\frac{\partial f}{\partial t} + rS\frac{\partial f}{\partial S} + \frac{1}{2}\sigma^{2}S^{2}\frac{\partial^{2} f}{\partial^{2} S} = rf,$$
-
-where $$f$$ is the price of a derivative which is contingent on the equity price $$S_{t}$$ and time $$t \in [0, T]$$. For a European call and put option with strike $$K$$, the BSM PDE has solution:
-
-$$V_{t} = \alpha \Big( S_{0}N(\alpha d_{1}) - Ke^{-r(T - t)}N(\alpha d_{2}) \Big),$$
-
-where 
-
-$$d_{1} = \frac{\ln\big(\frac{S_{0}}{K}\big) + (r + \frac{1}{2}\sigma^{2})(T - t)}{\sigma \sqrt{T - t}},$$
-
-and
-
-$$d_{2} = d_{1} - \sigma \sqrt{T - t},$$
-
-$$\alpha = 1$$ for a call option and $$\alpha = -1$$ for a put option, $$N(\cdot)$$ is the cumulative distribution function of the standard normal distribution.
-
-At any future time $$t > 0$$, the value of a typical firm's assets-in-place follows a log-normal diffusion (and thus follows a martingale):
-
-$$V_{t} = V_{0} \cdot e^{-\frac{\sigma^{2}}{2}t + \sigma Z_{t}},$$
-
-where $$V_{0}$$ is the current market value, volatility $$\sigma$$ is a constant, and $$Z_{t} \sim N(0, t)$$. Consider a three-date model. The standard Black-Scholes calculation gives the corresponding debt value at $$t = 0$$ as:
-
-$$D(V_{0}; F_{i}, m_{i}) = V_{0}(1 - N(d_{i})) + F_{i}N(d_{i} - \sigma \sqrt{m_{i}}),$$
-
-where $$F_{t}$$ is the face value of a zero-coupon debt issue that matures at time $$t$$, $$m_{t}$$ is the maturity, $$d_{i} \equiv \frac{\ln (V_{0} / F_{i}) + 0.5 \sigma^{2}m_{i}}{\sigma \sqrt{m_{i}}}$$, $$i = 1, 2$$. Debt overhang is given by:
-
-$$D_{V} \equiv \frac{\partial D(V_{0}; F, m)}{\partial V_{0}}.$$
-
-It can be proved that for a given initial debt market value, long-term debt imposes stronger overhang than short-term debt; that is, $$D_{V}(V_{0}; F_{2}, m_{2}) > D_{V}(V_{0}; F_{1}, m_{1})$$ whenever $$D(V_{0}; F_{2}, m_{2}) = D(V_{0}; F_{1}, m_{1})$$[^9].
-
-## Dynamic Model of Investment
+[^10]
 
 ### The Leverage Ratchet Effect
 
-> Intuitively, by reducing leverage, shareholders transfer wealth to existing creditors. Conversely, if shareholders can raise new debt of equal seniority to fund a payout for themselves, wealth is transferred in the other direction and shareholders benefit at the expense of existing creditors[^10].
+> Intuitively, by reducing leverage, shareholders transfer wealth to existing creditors. Conversely, if shareholders can raise new debt of equal seniority to fund a payout for themselves, wealth is transferred in the other direction and shareholders benefit at the expense of existing creditors[^11].
 
 The leverage ratchet effect states that:
 1. No matter how large the potential gain from leverage reduction to the total value of the firm, shareholders could resist it;
 2. Shareholders could gain from a one-time debt issuance even when new debt must bear junior priority, unless the tax benefit of debt has been fully exhausted.
 
-DeMarzo and He (2021)[^11] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
+DeMarzo and He (2021)[^12] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
 
 $$\mathrm{d}Y_{t} = \mu(Y_{t})\,\mathrm{d}t + \sigma(Y_{t})\,\mathrm{d}Z_{t} + \zeta(Y_{t^{-}})\,\mathrm{d}N_{t},$$
 
@@ -361,6 +378,12 @@ over the period $$[t, t + \mathrm{d}t]$$, Proposition 1 of the paper can be conc
 
 $$p(Y, F) \in -\partial_{F}V(Y, F).$$
 
+## Macroeconomic Implications
+
+[^13]
+
+[^14]
+
 ## Funding Value Adjustment (FVA)
 
 Prior to the 2008 Global Financial Crisis (GFC), pricing the value of a derivative was relatively straightforward. The method was universally agreed upon by practitioners and many academics: discount future expected cash flows under the *risk-neutral* measure to the present date using the *risk-free* rate. The risk-free rate is the theoretical rate of return on an investment with no risk of financial loss. This method was derived from the fundamental theory laid down by Black, Scholes, and Merton in the 1970s. The 2008 GFC revealed the fact that what was used in popular practice as an approximation (also called a proxy) for the theoretical notion of a risk-free interest rate, as required by the BSM model, is inadequate to yield realistic results.
@@ -378,22 +401,28 @@ An FVA is an adjustment to the value of a derivative/derivatives portfolio that 
 
 [^1]: Stephen A. Ross, Comment on the Modigliani-Miller Propositions, *Journal of Economic Perspectives* **2**(4), 127-133 (1988).
 
-[^2]: Oliver Hart and John Moore, Debt and Seniority: An Analysis of the Role of Hard Claims in Constraining Management, *The American Economic Review* **85**(3), 567-585 (1995).
+[^2]: Stewart C. Myers, Determinants of Corporate Borrowing, *Journal of Financial Economics* **5**, 147-175 (1977).
 
-[^3]: Stewart C. Myers, Determinants of Corporate Borrowing, *Journal of Financial Economics* **5**, 147-175 (1977).
+[^3]: Amir Dembo, *Lecture Notes of "Probability Theory: STAT310/MATH230"* at Stanford University, [https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf](https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf).
 
-[^4]: Amir Dembo, *Lecture Notes of "Probability Theory: STAT310/MATH230"* at Stanford University, [https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf](https://web.stanford.edu/~montanar/TEACHING/Stat310A/lnotes.pdf).
+[^4]: Nicolas Privault, *Lecture Notes on Stochastic Finance* at Nanyang Technological University, [https://personal.ntu.edu.sg/nprivault/indext.html](https://personal.ntu.edu.sg/nprivault/indext.html).
 
-[^5]: Nicolas Privault, *Lecture Notes on Stochastic Finance* at Nanyang Technological University, [https://personal.ntu.edu.sg/nprivault/indext.html](https://personal.ntu.edu.sg/nprivault/indext.html).
+[^5]: Philip E. Protter, *Stochastic Integration and Differential Equations*, Second Edition, Springer-Verlag Berlin Heidelberg, 2004.
 
-[^6]: Philip E. Protter, *Stochastic Integration and Differential Equations*, Second Edition, Springer-Verlag Berlin Heidelberg, 2004.
+[^6]: Eric Maskin, Markov Perfect Equilibrium, *Journal of Economic Theory* **100**, 191-219 (2001).
 
-[^7]: Eric Maskin, Markov Perfect Equilibrium, *Journal of Economic Theory* **100**, 191-219 (2001).
+[^7]: Oliver Hart and John Moore, Debt and Seniority: An Analysis of the Role of Hard Claims in Constraining Management, *The American Economic Review* **85**(3), 567-585 (1995).
 
-[^8]: Sheridan Titman and Sergey Tsyplakov, A Dynamic Model of Optimal Capital Structure, *Review of Finance* **11**(3), 401-451 (2007).
+[^8]: Douglas W. Diamond and Zhiguo He, A Theory of Debt Maturity: The Long and Short of Debt Overhang, *The Journal of Finance* **69**(2), 719-762 (2014).
 
-[^9]: Douglas W. Diamond and Zhiguo He, A Theory of Debt Maturity: The Long and Short of Debt Overhang, *The Journal of Finance* **69**(2), 719-762 (2014).
+[^9]: Sheridan Titman and Sergey Tsyplakov, A Dynamic Model of Optimal Capital Structure, *Review of Finance* **11**(3), 401-451 (2007).
 
-[^10]: Anat R. Admati, Peter M. DeMarzo, Martin F. Hellwig, and Paul Pfleiderer, The Leverage Ratchet Effect, *The Journal of Finance* **73**(1), 145-198 (2018).
+[^10]: Suresh Sundaresan, Neng Wang, and Jinqiang Yang, Dynamic Investment, Capital Structure, and Debt Overhang, *The Review of Corporate Finance Studies* **4**(1), 1-42 (2015).
 
-[^11]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
+[^11]: Anat R. Admati, Peter M. DeMarzo, Martin F. Hellwig, and Paul Pfleiderer, The Leverage Ratchet Effect, *The Journal of Finance* **73**(1), 145-198 (2018).
+
+[^12]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
+
+[^13]: Owen Lamont, Corporate-Debt Overhang and Macroeconomic Expectations, *The American Economic Review* **85**(5), 1106-1117 (1995).
+
+[^14]: &Ograve;scar Jord&agrave;, Martin Kornejew, Moritz Schularick, and Alan M. Taylor, Zombies at Large? Corporate Debt Overhang and the Macroeconomy, *The Review of Financial Studies* **35**(10), 4561-4586 (2022).
