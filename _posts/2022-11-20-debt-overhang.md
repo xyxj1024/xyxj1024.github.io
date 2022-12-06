@@ -4,7 +4,7 @@ title:            "A Note on Debt Overhang"
 category:         "Money, Finance, Political Economy"
 tags:             financial-economics investment asset-pricing
 permalink:        /debt-overhang/
-last_modified_at: "2022-11-22"
+last_modified_at: "2022-11-25"
 ---
 
 <p class="message"><em>
@@ -52,12 +52,10 @@ where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has
 
 In subsequent sections of this post, I would like to discuss different ways to extend this model.
 
-<br />
 ## Table of Contents
 {:.no_toc}
 * TOC 
 {:toc}
-<br />
 
 ## Some Preliminaries
 
@@ -331,6 +329,19 @@ $$\pi(Y_{t} - cF_{t})\,\mathrm{d}t$$
 over the period $$[t, t + \mathrm{d}t]$$, Proposition 1 of the paper can be concluded as: In any MPE given the state variable pair $$(Y, F)$$, $$\Gamma_{t}$$ is a monotonically increasing process, i.e., the firm will never repurchase debt. The equity value function $$V(Y, F)$$ is convex and decreasing in $$F$$, with the debt price as a subgradient also decreasing in $$F$$:
 
 $$p(Y, F) \in -\partial_{F}V(Y, F).$$
+
+## Funding Value Adjustment (FVA)
+
+Prior to the 2008 Global Financial Crisis (GFC), pricing the value of a derivative was relatively straightforward. The method was universally agreed upon by practitioners and many academics: discount future expected cash flows under the *risk-neutral* measure to the present date using the *risk-free* rate. The risk-free rate is the theoretical rate of return on an investment with no risk of financial loss. This method was derived from the fundamental theory laid down by Black, Scholes, and Merton in the 1970s. The 2008 GFC revealed the fact that what was used in popular practice as an approximation (also called a proxy) for the theoretical notion of a risk-free interest rate, as required by the Black-Scholes-Merton (BSM) model, is inadequate to yield realistic results.
+
+FVA arises because of two factors:
+
+1. Banks cannot borrow at the risk-free rate any more;
+2. Collateralized trades are more and more common.
+
+An FVA is an adjustment to the value of a derivative/derivatives portfolio that is designed to ensure that a dealer recovers its average funding costs when it trades and hedges derivatives. Banks started to charge a FVA on transactions after the GFC to mitigate counterparty credit risk. When managing a trading position, one needs cash to conduct operations such as hedging or posting collateral. This shortfall of cash can be obtained from the treasury of the bank. The *funding cost adjustment (FCA)* is the cost of lending money at a funding rate which is higher than the risk-free rate. The firm may also receive cash in the form of collateral or a premium. The *funding benefit adjustment (FBA)* is the benefit earned when excess cash is invested at a higher rate than the risk-free rate, which has an opposite sign to the FCA. Therefore, the funding value adjustment has two components:
+
+<b>FVA = FBA + FCA</b>
 
 ## References
 

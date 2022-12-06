@@ -4,7 +4,7 @@ title: 			      "Tetris Game in Ruby"
 category:		      "Programming Languages"
 tags:			        object-oriented-programming game
 permalink:		    /tetris-ruby/
-last_modified_at: "2022-12-05"
+last_modified_at: "2022-12-08"
 ---
 
 Homework 6 of the [programming language course](https://www.coursera.org/learn/programming-languages/) taught by Professor Dan Grossman from University of Washington. Please refer to [this link](https://www.coursera.org/learn/programming-languages-part-c/supplement/8lyk9/homework-6-instructions) for instructions and provided code.
@@ -61,7 +61,7 @@ $ sudo gem install opengl-bindings
 $ sudo gem install opener
 ```
 
-We are ready to go! Do not use the OpenGL library directly in any way in this assignment.
+We are ready to go! Please note that do not use the OpenGL library directly in any way in this assignment.
 
 ## Enhancements
 

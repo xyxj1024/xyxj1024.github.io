@@ -1,17 +1,17 @@
 ---
 layout:           post
-title:            "What did Larry Summers say about the current economic conditions in the U.S.?"
+title:            "A Note on China Shock"
 category:         "Money, Finance, Political Economy"
-tags:             macroeconomics inflation unemployment
-permalink:        /larry-summers-recent/
-last_modified_at: "2022-12-03"
+tags:             macroeconomics international-economics monetary-policy China
+permalink:        /China-shock/
+last_modified_at: "2022-12-13"
 ---
 
 <p class="message"><em>
      There are two kinds of forecasters: those who don't know, and those who don't know they don't know.
 </em></p>
 
-Summers' recent research papers may be quite informative if we look forward to some technical judgments towards the U.S. macro-economic conditions as well as the Fed's goals during an abnormal time.
+> For the past few decades, international macroeconomics has postulated the "trilemma": with free capital mobility, independent monetary policies are feasible if and only if exchange rates are floating. The global financial cycle transforms the trilemma into a "dilemma" or an "irreconcilable duo": independent monetary policies are possible if and only if the capital account is managed[^1].
 
 <!-- excerpt-end -->
 
@@ -142,22 +142,4 @@ BCS argued that the peak of the Volcker-era inflation (March 1980), currently un
 
 ## References
 
-[^1]: Anna Stansbury and Lawrence H. Summers, Productivity and Pay: Is the Link Broken? *PIIE Working Paper* 18-5, June 2018.
-
-[^2]: Anna Stansbury and Lawrence H. Summers, The Declining Worker Power Hypothesis: An Explanation for the Recent Evolution of the American Economy, *Brookings Papers on Economic Activity*, Spring 2020.
-
-[^3]: David G. Blanchflower and Andrew T. Levin, Labor Market Slack and Monetary Policy, *NBER Working Paper* 21094, April 2015.
-
-[^4]: Alex Domash and Lawrence H. Summers, How Tight Are U.S. Labor Markets? *NBER Working Paper* 29739, February 2022.
-
-[^5]: Pascal Michaillat and Emmanuel Saez, Optimal Public Expenditure with Inefficient Unemployment, *Review of Economics Studies* (2019) **86**, 1301-1331.
-
-[^6]: Olivier Blanchard, Alex Domash, and Lawrence Summers, Bad News for the Fed from the Beveridge Space, *PIIE Working Paper* 22-7, July 2022.
-
-[^7]: Sebastian Heise, Fatih Karahan, and Aysegul Sahin, The Missing Inflation Puzzle: The Role of the Wage-Price Pass-Through, *Journal of Money, Credit and Banking*, Volume 54, Issue S1, February 2022.
-
-[^8]: Alex Domash and Lawrence H. Summers, A Labor Market View on the Risks of a U.S. Hard Landing, *NBER Working Paper* 29910, April 2022.
-
-[^9]: Marijn A. Bolhuis, Judd N. L. Cramer, and Lawrence H. Summers, The Coming Rise in Residential Inflation, *NBER Working Paper* 29795, February 2022.
-
-[^10]: Marijn A. Bolhuis, Judd N. L. Cramer, and Lawrence H. Summers, Comparing Past and Present Inflation, *NBER Working Paper* 30116, June 2022.
+[^1]: H&eacute;l&egrave;ne Rey, Dilemma not Trilemma: The Global Cycle and Monetary Policy Independence, *NBER Working Paper* 21162, May 2015, Revised February 2018.
