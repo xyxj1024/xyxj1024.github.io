@@ -232,18 +232,18 @@ $$H.^{i*}(\cdot), \quad i = 1, \dots , n.$$
 
 ### Optimal Level of Short-Term vs. Long-Term Debt
 
+|---
+| $$t = 0$$ | $$t = 1$$ | $$t = 2$$
+|:-:|:-:
+| Old assets-in-place | Old assets yield return $$y_{1}$$; <br /> Decision whether to make new investment of size $$i$$; <br /> Decision whether to liquidate and realize $$L$$ | Old assets yield return $$y_{2}$$; <br /> New investment, if taken, yields return $$r$$
+
 Let us assume that:
 - investors are risk-neutral,
 - the risk-free interest rate is zero,
 - the financial structure of a typical firm is chosen at $$t = 0$$ so as to maximize the *aggregate* return of the shareholders,
 - the only way to prevent the manager of the firm from investing in a bad project is to make necessary funds unavailable (management has *empire-buidling* motive),
 - the probability distributions of liquidation, investment costs, returns on assets and investments are all common knowledge, and values are revealed at $$t = 1$$,
-- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.<br />
-
-|---
-| $$t = 0$$ | $$t = 1$$ | $$t = 2$$
-|:-:|:-:
-| Old assets-in-place | Old assets yield return $$y_{1}$$; <br /> Decision whether to make new investment of size $$i$$; <br /> Decision whether to liquidate and realize $$L$$ | Old assets yield return $$y_{2}$$; <br /> New investment, if taken, yields return $$r$$
+- $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
 
 Firm's management will invest at $$t = 1$$ if and only if
 
@@ -281,6 +281,37 @@ $$w \cdot F - w \cdot D(p, A, d) = w \cdot [F - D(p, A, d)] > 0.$$
 The net instantaneous cash payment to the creditors is $$d$$ plus net refinancing expenses[^8].
 
 ### Black-Scholes-Merton Setting
+
+A summary of the Black-Scholes-Merton (BSM) model is presented here for convenience.
+
+The assumptions of the BSM model include:
+
+* The BSM model is a model with a single interest rate;
+* This interest rate is the risk-free rate $$r$$;
+* Equity prices follow geometric Brownian motion;
+* Short selling is permitted;
+* There are no taxes and transaction costs;
+* No dividends on the underlying securities;
+* No arbitrage opportunities exist;
+* Continuous trading of securities.
+
+Let $$T$$ denote the fixed time of maturity of a derivative contract and $$\sigma$$ as the volatility of the underlying security (in this case an equity price). The BSM partial differential equation (PDE) is given by:
+
+$$\frac{\partial f}{\partial t} + rS\frac{\partial f}{\partial S} + \frac{1}{2}\sigma^{2}S^{2}\frac{\partial^{2} f}{\partial^{2} S} = rf,$$
+
+where $$f$$ is the price of a derivative which is contingent on the equity price $$S_{t}$$ and time $$t \in [0, T]$$. For a European call and put option with strike $$K$$, the BSM PDE has solution:
+
+$$V_{t} = \alpha \Big( S_{0}N(\alpha d_{1}) - Ke^{-r(T - t)}N(\alpha d_{2}) \Big),$$
+
+where 
+
+$$d_{1} = \frac{\ln\big(\frac{S_{0}}{K}\big) + (r + \frac{1}{2}\sigma^{2})(T - t)}{\sigma \sqrt{T - t}},$$
+
+and
+
+$$d_{2} = d_{1} - \sigma \sqrt{T - t},$$
+
+$$\alpha = 1$$ for a call option and $$\alpha = -1$$ for a put option, $$N(\cdot)$$ is the cumulative distribution function of the standard normal distribution.
 
 At any future time $$t > 0$$, the value of a typical firm's assets-in-place follows a log-normal diffusion (and thus follows a martingale):
 
@@ -332,16 +363,16 @@ $$p(Y, F) \in -\partial_{F}V(Y, F).$$
 
 ## Funding Value Adjustment (FVA)
 
-Prior to the 2008 Global Financial Crisis (GFC), pricing the value of a derivative was relatively straightforward. The method was universally agreed upon by practitioners and many academics: discount future expected cash flows under the *risk-neutral* measure to the present date using the *risk-free* rate. The risk-free rate is the theoretical rate of return on an investment with no risk of financial loss. This method was derived from the fundamental theory laid down by Black, Scholes, and Merton in the 1970s. The 2008 GFC revealed the fact that what was used in popular practice as an approximation (also called a proxy) for the theoretical notion of a risk-free interest rate, as required by the Black-Scholes-Merton (BSM) model, is inadequate to yield realistic results.
+Prior to the 2008 Global Financial Crisis (GFC), pricing the value of a derivative was relatively straightforward. The method was universally agreed upon by practitioners and many academics: discount future expected cash flows under the *risk-neutral* measure to the present date using the *risk-free* rate. The risk-free rate is the theoretical rate of return on an investment with no risk of financial loss. This method was derived from the fundamental theory laid down by Black, Scholes, and Merton in the 1970s. The 2008 GFC revealed the fact that what was used in popular practice as an approximation (also called a proxy) for the theoretical notion of a risk-free interest rate, as required by the BSM model, is inadequate to yield realistic results.
 
 FVA arises because of two factors:
 
 1. Banks cannot borrow at the risk-free rate any more;
 2. Collateralized trades are more and more common.
 
-An FVA is an adjustment to the value of a derivative/derivatives portfolio that is designed to ensure that a dealer recovers its average funding costs when it trades and hedges derivatives. Banks started to charge a FVA on transactions after the GFC to mitigate counterparty credit risk. When managing a trading position, one needs cash to conduct operations such as hedging or posting collateral. This shortfall of cash can be obtained from the treasury of the bank. The *funding cost adjustment (FCA)* is the cost of lending money at a funding rate which is higher than the risk-free rate. The firm may also receive cash in the form of collateral or a premium. The *funding benefit adjustment (FBA)* is the benefit earned when excess cash is invested at a higher rate than the risk-free rate, which has an opposite sign to the FCA. Therefore, the funding value adjustment has two components:
+An FVA is an adjustment to the value of a derivative/derivatives portfolio that is designed to ensure that a dealer recovers its average funding costs when it trades and hedges derivatives. Banks started to charge a FVA on transactions after the GFC to mitigate counterparty credit risk. When managing a trading position, one needs cash to conduct operations such as hedging or posting collateral. This shortfall of cash can be obtained from the treasury of the bank. The *funding cost adjustment (FCA)* is the cost of lending money at a funding rate which is higher than the risk-free rate. The firm may also receive cash in the form of collateral or a premium. The *funding benefit adjustment (FBA)* is the benefit earned when excess cash is invested at a higher rate than the risk-free rate, which has an opposite sign to the FCA. Therefore, the FVA has two components:
 
-<b>FVA = FBA + FCA</b>
+<center><b>FVA = FBA + FCA</b></center>
 
 ## References
 
