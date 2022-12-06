@@ -251,10 +251,10 @@ where $$X(t) = \sigma B(t) + \mu t$$ is Brownian motion with drift and $$S(0) = 
 
 $$
 \begin{align}
-S(t + h) = S_{0} e^{X(t + h)} \\
-         = S_{0} e^{X(t) + X(t + h) - X(t)} \\
-         = S_{0} e^{X(t)} e^{X(t + h) - X(t)} \\
-         = S(t) e^{X(t + h) - X(t)}
+S(t + h) &= S_{0} e^{X(t + h)} \\
+         &= S_{0} e^{X(t) + X(t + h) - X(t)} \\
+         &= S_{0} e^{X(t)} e^{X(t + h) - X(t)} \\
+         &= S(t) e^{X(t + h) - X(t)}
 \end{align}
 $$
 
@@ -280,6 +280,34 @@ $$\alpha = 1$$ for a call option and $$\alpha = -1$$ for a put option, $$N(\cdot
 
 ## Managerial Agency Problem
 
+**Definition 17.** *Free cash flow* is cash flow in excess of that required to fund all projects that have positive net present values when discounted at the relevant cost of capital.
+
+Things will be more complicated if we take into account the principal-agent problem. Corporate managers are the agents of shareholders. The payout of cash to shareholders reduces the resources under managers' control, and thus reducing managers' power. Managers with substantial free cash flow can increase dividends or repurchase stock and thereby pay out current cash that would otherwise be invested in low-return projects or wasted. By issuing debt in exchange for stock, corporate managers are bonding their promise to pay out future cash flows in a way such that they give shareholder recipients of the debt the right to take the firm into bankruptcy court if they do not maintain their promise to make the interest and principle payments[^7].
+
+Consider a firm that owns a mine with a commodity inventory $$Q$$. When the mine is open, the commodity is extracted at a constant annual rate $$q$$, and at a constant real average annual cost $$a$$. When the mine is closed, a constant real annual maintenance cost $$m$$ is incurred. At any point in time, the mine can be closed at a real cost $$k_{1}$$ and reopened at a real cost $$k_{2}$$. The real spot price of the commodity $$s$$ is determined in a competitive market and follows the exogenous process:
+
+$$\mathrm{d}s = \mu s\,\mathrm{d}t + \sigma s \,\mathrm{d}z,$$
+
+where $$\mathrm{d}z$$ is the increment to a standard Gauss-Wiener process; $$\sigma$$, the instantaneous standard deviation of the spot price, is assumed to be known and constant; and $$\mu$$ is the instantaneous drift in the real price. The market value of the mine is a function of the current commodity price $$s$$, of the inventory $$Q$$, of whether the mine is currently open or closed $$j = 1, 2$$, and of the optimal operating strategy $$\phi$$:
+
+$$v \equiv v(s, Q; j, \phi).$$
+
+Assume that corporate taxes are paid at rate $$\tau$$ on net income and full offsets are allowed. The cash flow from the mine is:
+
+$$[q(s - a)(j - 1) - m(2 - j)](1 - \tau).$$
+
+Applying Ito's lemma, the instantaneous change in the value of the mine is given by:
+
+$$\mathrm{d}v = \frac{\partial v}{\partial s}\,\mathrm{d}s + \frac{\partial v}{\partial Q}\,\mathrm{d}Q + \frac{1}{2} \frac{\partial^{2} v}{\partial^{2} s}\,(\mathrm{d}s)^{2}.$$
+
+We can solve for the first-best value of the mine $$v^{FB}$$ and the first-best operating policy $$\phi^{FB}$$ under the BSM setting[^8].
+
+**Definition 18.** The difference in maximal firm values between the results from ex ante and ex post risk choices (that is, before and after debt is in place) serves as a measure of *agency costs*, because it reflects the loss in value that follows from the risk strategy maximizing equity value rather than firm value[^9].
+
+Without any agency costs of debt, the value of the levered firm would be the first-best value of the firm plus the interest tax shield of debt. Each added unit of debt increases the value of the firm by the value of its associated interest tax shield. With agency costs, as the size of debt increases, the total agency costs may far outweigh the total tax shields, making the value of the levered firm less than the first-best.
+
+How about a corporate manager with *empire-buidling* motive?
+
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
 |:-:|:-:
@@ -289,7 +317,7 @@ Let us assume that:
 - investors are risk-neutral,
 - the risk-free interest rate is zero,
 - the financial structure of a typical firm is chosen at $$t = 0$$ so as to maximize the *aggregate* return of the shareholders,
-- the only way to prevent the manager of the firm from investing in a bad project is to make necessary funds unavailable (management has *empire-buidling* motive),
+- the only way to prevent the manager of the firm from investing in a bad project is to make necessary funds unavailable,
 - the probability distributions of liquidation, investment costs, returns on assets and investments are all common knowledge, and values are revealed at $$t = 1$$,
 - $$y_{1} < i$$ and $$y_{2} \geq L$$ with probability $$1$$.
 
@@ -307,7 +335,7 @@ Given $$d_{1} = 0$$ and thus $$L$$ is irrelevant,
 1. If $$r > i$$ with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = 0$$ (this is all-equity financing);
 2. If $$r < i$$ with probability $$1$$, then the first-best outcome can be achieved by setting $$d_{2}$$ large enough;
 3. If the sum of $$y_{1}$$ and $$y_{2}$$ is constant with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + y_{2}$$;
-4. Finally, if $$i$$ and $$y_{1}$$ are deterministic, and $$r \equiv g(y_{2})$$ where $$g(\cdot)$$ is a strictly increasing function, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + g^{-1}(i)$$[^7].
+4. Finally, if $$i$$ and $$y_{1}$$ are deterministic, and $$r \equiv g(y_{2})$$ where $$g(\cdot)$$ is a strictly increasing function, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + g^{-1}(i)$$[^10].
 
 ## Dynamic Investments and Financing
 
@@ -323,7 +351,7 @@ where $$F_{t}$$ is the face value of a zero-coupon debt issue that matures at ti
 
 $$D_{V} \equiv \frac{\partial D(V_{0}; F, m)}{\partial V_{0}}.$$
 
-It can be proved that for a given initial debt market value, long-term debt imposes stronger overhang than short-term debt; that is, $$D_{V}(V_{0}; F_{2}, m_{2}) > D_{V}(V_{0}; F_{1}, m_{1})$$ whenever $$D(V_{0}; F_{2}, m_{2}) = D(V_{0}; F_{1}, m_{1})$$[^8].
+It can be proved that for a given initial debt market value, long-term debt imposes stronger overhang than short-term debt; that is, $$D_{V}(V_{0}; F_{2}, m_{2}) > D_{V}(V_{0}; F_{1}, m_{1})$$ whenever $$D(V_{0}; F_{2}, m_{2}) = D(V_{0}; F_{1}, m_{1})$$[^11].
 
 What if the risk-free rate is non-zero? We may assume that the firm issues perpetual callable coupon debt and the face value of the debt $$F$$ is equal to the value of perpetual debt with periodic payment (coupon) $$d$$ discounted at the risk-free rate $$r$$:
 
@@ -342,19 +370,19 @@ The net refinancing expenses is given by:
 
 $$w \cdot F - w \cdot D(p, A, d) = w \cdot [F - D(p, A, d)] > 0.$$
 
-The net instantaneous cash payment to the creditors is $$d$$ plus net refinancing expenses[^9].
+The net instantaneous cash payment to the creditors is $$d$$ plus net refinancing expenses[^12].
 
-[^10]
+[^13]
 
 ### The Leverage Ratchet Effect
 
-> Intuitively, by reducing leverage, shareholders transfer wealth to existing creditors. Conversely, if shareholders can raise new debt of equal seniority to fund a payout for themselves, wealth is transferred in the other direction and shareholders benefit at the expense of existing creditors[^11].
+> Intuitively, by reducing leverage, shareholders transfer wealth to existing creditors. Conversely, if shareholders can raise new debt of equal seniority to fund a payout for themselves, wealth is transferred in the other direction and shareholders benefit at the expense of existing creditors[^14].
 
 The leverage ratchet effect states that:
 1. No matter how large the potential gain from leverage reduction to the total value of the firm, shareholders could resist it;
 2. Shareholders could gain from a one-time debt issuance even when new debt must bear junior priority, unless the tax benefit of debt has been fully exhausted.
 
-DeMarzo and He (2021)[^12] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
+DeMarzo and He (2021)[^15] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
 
 $$\mathrm{d}Y_{t} = \mu(Y_{t})\,\mathrm{d}t + \sigma(Y_{t})\,\mathrm{d}Z_{t} + \zeta(Y_{t^{-}})\,\mathrm{d}N_{t},$$
 
@@ -380,9 +408,9 @@ $$p(Y, F) \in -\partial_{F}V(Y, F).$$
 
 ## Macroeconomic Implications
 
-[^13]
+[^16]
 
-[^14]
+[^17]
 
 ## Funding Value Adjustment (FVA)
 
@@ -411,18 +439,24 @@ An FVA is an adjustment to the value of a derivative/derivatives portfolio that 
 
 [^6]: Eric Maskin, Markov Perfect Equilibrium, *Journal of Economic Theory* **100**, 191-219 (2001).
 
-[^7]: Oliver Hart and John Moore, Debt and Seniority: An Analysis of the Role of Hard Claims in Constraining Management, *The American Economic Review* **85**(3), 567-585 (1995).
+[^7]: Michael C. Jenson, Agency Costs of Free Cash Flow, *The American Economic Review* **76**(2), 323-329 (1986).
 
-[^8]: Douglas W. Diamond and Zhiguo He, A Theory of Debt Maturity: The Long and Short of Debt Overhang, *The Journal of Finance* **69**(2), 719-762 (2014).
+[^8]: Antonio S. Mello and John E. Parsons, Measuring the Agency Costs of Debt, *The Journal of Finance* **47**(5), 1887-1904 (1992).
 
-[^9]: Sheridan Titman and Sergey Tsyplakov, A Dynamic Model of Optimal Capital Structure, *Review of Finance* **11**(3), 401-451 (2007).
+[^9]: Hayne E. Leland, Agency Costs, Risk Management, and Capital Structure, *The Journal of Finance* **53**(4), 1213-1243 (1998).
 
-[^10]: Suresh Sundaresan, Neng Wang, and Jinqiang Yang, Dynamic Investment, Capital Structure, and Debt Overhang, *The Review of Corporate Finance Studies* **4**(1), 1-42 (2015).
+[^10]: Oliver Hart and John Moore, Debt and Seniority: An Analysis of the Role of Hard Claims in Constraining Management, *The American Economic Review* **85**(3), 567-585 (1995).
 
-[^11]: Anat R. Admati, Peter M. DeMarzo, Martin F. Hellwig, and Paul Pfleiderer, The Leverage Ratchet Effect, *The Journal of Finance* **73**(1), 145-198 (2018).
+[^11]: Douglas W. Diamond and Zhiguo He, A Theory of Debt Maturity: The Long and Short of Debt Overhang, *The Journal of Finance* **69**(2), 719-762 (2014).
 
-[^12]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
+[^12]: Sheridan Titman and Sergey Tsyplakov, A Dynamic Model of Optimal Capital Structure, *Review of Finance* **11**(3), 401-451 (2007).
 
-[^13]: Owen Lamont, Corporate-Debt Overhang and Macroeconomic Expectations, *The American Economic Review* **85**(5), 1106-1117 (1995).
+[^13]: Suresh Sundaresan, Neng Wang, and Jinqiang Yang, Dynamic Investment, Capital Structure, and Debt Overhang, *The Review of Corporate Finance Studies* **4**(1), 1-42 (2015).
 
-[^14]: &Ograve;scar Jord&agrave;, Martin Kornejew, Moritz Schularick, and Alan M. Taylor, Zombies at Large? Corporate Debt Overhang and the Macroeconomy, *The Review of Financial Studies* **35**(10), 4561-4586 (2022).
+[^14]: Anat R. Admati, Peter M. DeMarzo, Martin F. Hellwig, and Paul Pfleiderer, The Leverage Ratchet Effect, *The Journal of Finance* **73**(1), 145-198 (2018).
+
+[^15]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
+
+[^16]: Owen Lamont, Corporate-Debt Overhang and Macroeconomic Expectations, *The American Economic Review* **85**(5), 1106-1117 (1995).
+
+[^17]: &Ograve;scar Jord&agrave;, Martin Kornejew, Moritz Schularick, and Alan M. Taylor, Zombies at Large? Corporate Debt Overhang and the Macroeconomy, *The Review of Financial Studies* **35**(10), 4561-4586 (2022).
