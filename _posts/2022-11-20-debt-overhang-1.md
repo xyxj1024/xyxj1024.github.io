@@ -2,7 +2,7 @@
 layout:           post
 title:            "Notes on Debt Overhang - Part I"
 category:         "Money, Finance, Political Economy"
-tags:             stochastic-mathematics financial-economics asset-pricing
+tags:             stochastic-mathematics corporate-finance debt-overhang
 permalink:        /debt-overhang-1/
 last_modified_at: "2022-11-25"
 ---
@@ -316,7 +316,7 @@ $$v^{P} < v^{FB} + \eta^{P},$$
 
 where the total value of the mine $$v^{P}$$ is the sum of the value of the equity $$e^{P}$$ and the value for the outstanding bond $$b^{P}$$, $$\eta^{P}$$ is the value of the interest tax shield with respect to $$P(t)$$. The agency cost can by given by:
 
-$$\psi(s, Q, t; j) \equiv v^{FB}(s, Q; j) - [v(s, Q, t; j) - \eta(s, Q, t; j)].$$
+$$\psi^{P}(s, Q, t; j) \equiv v^{FB}(s, Q; j) - [v^{P}(s, Q, t; j) - \eta^{P}(s, Q, t; j)].$$
 
 ### Empire-Building Managers
 
