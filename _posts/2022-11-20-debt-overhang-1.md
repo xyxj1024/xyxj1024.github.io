@@ -1,9 +1,9 @@
 ---
 layout:           post
-title:            "A Note on Debt Overhang"
+title:            "A Note on Debt Overhang - Part I"
 category:         "Money, Finance, Political Economy"
 tags:             stochastic-mathematics financial-economics asset-pricing
-permalink:        /debt-overhang/
+permalink:        /debt-overhang-1/
 last_modified_at: "2022-11-25"
 ---
 
@@ -50,7 +50,7 @@ $$V_{D} = \int_{s_{b}}^{\infty} P q(s)\,\mathrm{d}s < V,$$
 
 where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has an upper bound less than $V$, which is, in turn, less than $V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s$ without debt financing. Therefore, $V$ is a monotonically decreasing function of $P$. Optimal level of $V$ is reached when $P = V_{D} = 0$. In the case of $V(s) < P$, the gap between $V_{D}$ and $V(s)$ at $t = 1$ is often termed "**debt overhang**{: style="color: red"}". This debt-overhang effect, first analyzed by Myers (1977)[^2], characterizes the situation when a firm's debt burden grows so large that default risk becomes high, distorting the shareholders' incentives to invest. Even profitable investment projects might be declined because much of the benefit from these projects accrues to creditors rather than shareholders. A feasible investment must have a net present value (NPV) greater than the debt overhang.
 
-In subsequent sections of this post, I would like to discuss different ways to extend this model.
+This is the first post of a series about the debt-overhang effect, which, I believe, poses fundamental threat to our modern economy. Classic academic literature from intellectual fields such as corporate finance, financial economics, and macroeconomics, etc. will be revisited and discussed. In subsequent sections of this post, I would like to summarize some advanced mathematics required to understand the literature and take a brief look at the principal-agent problem associated with debt overhang.
 
 ## Table of Contents
 {:.no_toc}
@@ -286,7 +286,7 @@ Things will be more complicated if we take into account the principal-agent prob
 
 $$M_{t} \equiv \max \mathbf{E}_{t} \Big( \sum\limits_{j = 0}^{\infty} \omega^{j} u(r_{t + jh}^{v})h \Big),$$
 
-where $$u(\cdot)$$ is a concave utility function, $$r_{t}^{v}$$ is the monetary value of managerial rents extracted in period $$t$$ ($$v \leq 1$$), the time interval $$h$$ is the time between payouts to shareholders, $$\omega \equiv e^{-\delta h}$$ and $$\delta$$ is managers' subjective discount rate[^10].
+where $$u(\cdot)$$ is a concave utility function, $$r_{t}^{v}$$ is the monetary value of managerial rents extracted in period $$t$$ with $$v \leq 1$$, the time interval $$h$$ is the time between payouts to shareholders, $$\omega \equiv e^{-\delta h}$$ and $$\delta$$ is managers' subjective discount rate[^10].
 
 Let's consider a firm that owns a mine with a commodity inventory $$Q$$. When the mine is open, the commodity is extracted at a constant annual rate $$q$$, and at a constant real average annual cost $$a$$. When the mine is closed, a constant real annual maintenance cost $$m$$ is incurred. At any point in time, the mine can be closed at a real cost $$k_{1}$$ and reopened at a real cost $$k_{2}$$. The real spot price of the commodity $$s$$ is determined in a competitive market and follows the exogenous process:
 
@@ -310,7 +310,7 @@ We can solve for the first-best value of the mine $$v^{FB}$$ and the first-best 
 
 Without any agency costs of debt, the value of the levered firm would be the first-best value of the firm plus the interest tax shield of debt. Each added unit of debt increases the value of the firm by the value of its associated interest tax shield. With agency costs, as the size of debt increases, the total agency costs may far outweigh the total tax shields, making the value of the levered firm less than the first-best.
 
-How about a corporate manager with *empire-buidling* motive?
+How about a corporate manager with *empire-building* motive?
 
 |---
 | $$t = 0$$ | $$t = 1$$ | $$t = 2$$
@@ -341,94 +341,6 @@ Given $$d_{1} = 0$$ and thus $$L$$ is irrelevant,
 3. If the sum of $$y_{1}$$ and $$y_{2}$$ is constant with probability $$1$$, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + y_{2}$$;
 4. Finally, if $$i$$ and $$y_{1}$$ are deterministic, and $$r \equiv g(y_{2})$$ where $$g(\cdot)$$ is a strictly increasing function, then the first-best outcome can be achieved by letting $$d_{2} = y_{1} + g^{-1}(i)$$[^13].
 
-## Dynamic Investments and Financing
-
-At any future time $$t > 0$$, the value of a typical firm's assets-in-place follows a log-normal diffusion (and thus follows a martingale):
-
-$$V_{t} = V_{0} \cdot e^{-\frac{\sigma^{2}}{2}t + \sigma Z_{t}},$$
-
-where $$V_{0}$$ is the current market value, volatility $$\sigma$$ is a constant, and $$Z_{t} \sim N(0, t)$$. Consider a three-date model. The standard Black-Scholes calculation gives the corresponding debt value at $$t = 0$$ as:
-
-$$D(V_{0}; F_{i}, m_{i}) = V_{0}(1 - N(d_{i})) + F_{i}N(d_{i} - \sigma \sqrt{m_{i}}),$$
-
-where $$F_{t}$$ is the face value of a zero-coupon debt issue that matures at time $$t$$, $$m_{t}$$ is the maturity, $$d_{i} \equiv \frac{\ln (V_{0} / F_{i}) + 0.5 \sigma^{2}m_{i}}{\sigma \sqrt{m_{i}}}$$, $$i = 1, 2$$. Debt overhang is given by:
-
-$$D_{V} \equiv \frac{\partial D(V_{0}; F, m)}{\partial V_{0}}.$$
-
-It can be proved that for a given initial debt market value, long-term debt imposes stronger overhang than short-term debt; that is, $$D_{V}(V_{0}; F_{2}, m_{2}) > D_{V}(V_{0}; F_{1}, m_{1})$$ whenever $$D(V_{0}; F_{2}, m_{2}) = D(V_{0}; F_{1}, m_{1})$$[^14].
-
-What if the risk-free rate is non-zero? We may assume that the firm issues perpetual callable coupon debt and the face value of the debt $$F$$ is equal to the value of perpetual debt with periodic payment (coupon) $$d$$ discounted at the risk-free rate $$r$$:
-
-$$F = \frac{d}{r}.$$
-
-The firm has to rollover its maturing debt at the current market price:
-
-$$w \cdot D(p, A, d),$$
-
-where
-- $$A$$ is the value of the firm's fixed (tangible) assets,
-- $$p$$ is the unit market price of the product produced and sold by the firm,
-- $$w$$ is the debt repurchase (or retirement) rate.
-
-The net refinancing expenses is given by:
-
-$$w \cdot F - w \cdot D(p, A, d) = w \cdot [F - D(p, A, d)] > 0.$$
-
-The net instantaneous cash payment to the creditors is $$d$$ plus net refinancing expenses[^15].
-
-[^16]
-
-### The Leverage Ratchet Effect
-
-> Intuitively, by reducing leverage, shareholders transfer wealth to existing creditors. Conversely, if shareholders can raise new debt of equal seniority to fund a payout for themselves, wealth is transferred in the other direction and shareholders benefit at the expense of existing creditors[^17].
-
-The leverage ratchet effect states that:
-1. No matter how large the potential gain from leverage reduction to the total value of the firm, shareholders could resist it;
-2. Shareholders could gain from a one-time debt issuance even when new debt must bear junior priority, unless the tax benefit of debt has been fully exhausted.
-
-DeMarzo and He (2021)[^18] considered a typical firm with (*exogenous*) EBIT rate of $$Y_{t}$$ generated from its assets-in-place, which evolves according to:
-
-$$\mathrm{d}Y_{t} = \mu(Y_{t})\,\mathrm{d}t + \sigma(Y_{t})\,\mathrm{d}Z_{t} + \zeta(Y_{t^{-}})\,\mathrm{d}N_{t},$$
-
-where the drift $$\mu(Y_{t})$$ and the volatility $$\sigma(Y_{t})$$ satisfy standard regularity conditions, $$\mathrm{d}Z_{t}$$ is the increment of a standard Brownian motion, $$\mathrm{d}N_{t}$$ is an independent Poisson increment with intensity $$\lambda(Y_{t}) > 0$$, and $$\xi(Y_{t^{-}})$$ is the jump size.
-
-Let the cumulative debt issuance process $$\Gamma_{t}$$ be right-continuous, left-limit, and measurable with respect to the filtration generated by the operating cash flow $$Y_{t}$$: $$(Y_{s})_{0 \leq s \leq t}$$. Denote the aggregate face value of outstanding debt by $$F_{t}$$, which has a constant coupon rate of $$c > 0$$. Assume debt takes the form of exponentially maturing coupon bonds with a constant amortization rate $$\xi > 0$$. Combining interest and principal, equity holders are required to pay creditors a total flow payment of $$(c + \xi)F_{t}\,\mathrm{d}t$$ to avoid default. Assuming zero transaction costs in issuing (or repurchasing) debt, the evolution of the outstanding face value of $$F_{t}$$ is given by:
-
-$$\mathrm{d}F_{t} = \mathrm{d}\Gamma_{t} - \xi F_{t}\,\mathrm{d}t.$$
-
-Over the time interval $$\mathrm{d}t$$, without tax payment, the net cash flows to equity holders are
-
-$$\big( Y_{t} - (c + \xi)F_{t} \big)\,\mathrm{d}t + p_{t}\,\mathrm{d}\Gamma_{t},$$
-
-where $$p_{t}$$ is the (*endogenous*) debt price per unit of the promised face value.
-
-Adding a corporate tax regime that strictly increases with the firm's profit net of interest such that the firm pays
-
-$$\pi(Y_{t} - cF_{t})\,\mathrm{d}t$$
-
-over the period $$[t, t + \mathrm{d}t]$$, Proposition 1 of the paper can be concluded as: In any MPE given the state variable pair $$(Y, F)$$, $$\Gamma_{t}$$ is a monotonically increasing process, i.e., the firm will never repurchase debt. The equity value function $$V(Y, F)$$ is convex and decreasing in $$F$$, with the debt price as a subgradient also decreasing in $$F$$:
-
-$$p(Y, F) \in -\partial_{F}V(Y, F).$$
-
-## Macroeconomic Implications
-
-[^19]
-
-[^20]
-
-## Funding Value Adjustment (FVA)
-
-Prior to the 2008 Global Financial Crisis (GFC), pricing the value of a derivative was relatively straightforward. The method was universally agreed upon by practitioners and many academics: discount future expected cash flows under the *risk-neutral* measure to the present date using the *risk-free* rate. The risk-free rate is the theoretical rate of return on an investment with no risk of financial loss. This method was derived from the fundamental theory laid down by Black, Scholes, and Merton in the 1970s. The 2008 GFC revealed the fact that what was used in popular practice as an approximation (also called a proxy) for the theoretical notion of a risk-free interest rate, as required by the BSM model, is inadequate to yield realistic results.
-
-FVA arises because of two factors:
-
-1. Banks cannot borrow at the risk-free rate any more;
-2. Collateralized trades are more and more common.
-
-An FVA is an adjustment to the value of a derivative/derivatives portfolio that is designed to ensure that a dealer recovers its average funding costs when it trades and hedges derivatives. Banks started to charge a FVA on transactions after the GFC to mitigate counterparty credit risk. When managing a trading position, one needs cash to conduct operations such as hedging or posting collateral. This shortfall of cash can be obtained from the treasury of the bank. The *funding cost adjustment (FCA)* is the cost of lending money at a funding rate which is higher than the risk-free rate. The firm may also receive cash in the form of collateral or a premium. The *funding benefit adjustment (FBA)* is the benefit earned when excess cash is invested at a higher rate than the risk-free rate, which has an opposite sign to the FCA. Therefore, the FVA has two components:
-
-<center><b>FVA = FBA + FCA</b></center>
-
 ## References
 
 [^1]: Stephen A. Ross, Comment on the Modigliani-Miller Propositions, *Journal of Economic Perspectives* **2**(4), 127-133 (1988).
@@ -456,17 +368,3 @@ An FVA is an adjustment to the value of a derivative/derivatives portfolio that 
 [^12]: Hayne E. Leland, Agency Costs, Risk Management, and Capital Structure, *The Journal of Finance* **53**(4), 1213-1243 (1998).
 
 [^13]: Oliver Hart and John Moore, Debt and Seniority: An Analysis of the Role of Hard Claims in Constraining Management, *The American Economic Review* **85**(3), 567-585 (1995).
-
-[^14]: Douglas W. Diamond and Zhiguo He, A Theory of Debt Maturity: The Long and Short of Debt Overhang, *The Journal of Finance* **69**(2), 719-762 (2014).
-
-[^15]: Sheridan Titman and Sergey Tsyplakov, A Dynamic Model of Optimal Capital Structure, *Review of Finance* **11**(3), 401-451 (2007).
-
-[^16]: Suresh Sundaresan, Neng Wang, and Jinqiang Yang, Dynamic Investment, Capital Structure, and Debt Overhang, *The Review of Corporate Finance Studies* **4**(1), 1-42 (2015).
-
-[^17]: Anat R. Admati, Peter M. DeMarzo, Martin F. Hellwig, and Paul Pfleiderer, The Leverage Ratchet Effect, *The Journal of Finance* **73**(1), 145-198 (2018).
-
-[^18]: Peter M. DeMarzo and Zhiguo He, Leverage Dynamics without Commitment, *The Journal of Finance* **76**(3), 1195-1250 (2021).
-
-[^19]: Owen Lamont, Corporate-Debt Overhang and Macroeconomic Expectations, *The American Economic Review* **85**(5), 1106-1117 (1995).
-
-[^20]: &Ograve;scar Jord&agrave;, Martin Kornejew, Moritz Schularick, and Alan M. Taylor, Zombies at Large? Corporate Debt Overhang and the Macroeconomy, *The Review of Financial Studies* **35**(10), 4561-4586 (2022).
