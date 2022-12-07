@@ -1,6 +1,6 @@
 ---
 layout:           post
-title:            "A Note on Debt Overhang - Part I"
+title:            "Notes on Debt Overhang - Part I"
 category:         "Money, Finance, Political Economy"
 tags:             stochastic-mathematics financial-economics asset-pricing
 permalink:        /debt-overhang-1/
@@ -50,7 +50,7 @@ $$V_{D} = \int_{s_{b}}^{\infty} P q(s)\,\mathrm{d}s < V,$$
 
 where $s_{b}$ is the "breakeven" state such that $V(s_{b}) = I + P$. $V_{D}$ has an upper bound less than $V$, which is, in turn, less than $V = \int_{s_{a}}^{\infty} q(s) [V(s) - I]\,\mathrm{d}s$ without debt financing. Therefore, $V$ is a monotonically decreasing function of $P$. Optimal level of $V$ is reached when $P = V_{D} = 0$. In the case of $V(s) < P$, the gap between $V_{D}$ and $V(s)$ at $t = 1$ is often termed "**debt overhang**{: style="color: red"}". This debt-overhang effect, first analyzed by Myers (1977)[^2], characterizes the situation when a firm's debt burden grows so large that default risk becomes high, distorting the shareholders' incentives to invest. Even profitable investment projects might be declined because much of the benefit from these projects accrues to creditors rather than shareholders. A feasible investment must have a net present value (NPV) greater than the debt overhang.
 
-This is the first post of a series about the debt-overhang effect, which, I believe, poses fundamental threat to our modern economy. Classic academic literature from intellectual fields such as corporate finance, financial economics, and macroeconomics, etc. will be revisited and discussed. In subsequent sections of this post, I would like to summarize some advanced mathematics required to understand the literature and take a brief look at the principal-agent problem associated with debt overhang.
+This is the first post of a series about the debt-overhang effect, which, I believe, poses fundamental challenge to our modern economy. Classic academic literature from intellectual fields such as corporate finance, financial economics, and macroeconomics, etc. will be revisited and discussed. In subsequent sections of this post, I would like to summarize some advanced mathematics required to understand the literature and take a brief look at the principal-agent problem associated with debt overhang.
 
 ## Table of Contents
 {:.no_toc}
@@ -282,11 +282,13 @@ $$\alpha = 1$$ for a call option and $$\alpha = -1$$ for a put option, $$N(\cdot
 
 **Definition 17.** *Free cash flow* is cash flow in excess of that required to fund all projects that have positive net present values when discounted at the relevant cost of capital.
 
-Things will be more complicated if we take into account the principal-agent problem (stated in some cases as "the separation of ownership and control"). Corporate managers are the agents of shareholders. The payout of cash to shareholders reduces the resources under managers' control, and thus reducing managers' power. Managers with substantial free cash flow can increase dividends or repurchase stock and thereby pay out current cash that would otherwise be invested in low-return projects or wasted. By issuing debt in exchange for stock, corporate managers are bonding their promise to pay out future cash flows in a way such that they give shareholder recipients of the debt the right to take the firm into bankruptcy court if they do not maintain their promise to make the interest and principle payments[^7]. The agency problem can be formulated as in DeMarzo and Fishman (2007)[^8], where a risk-neutral agent operating a firm observes the firm's cash flow privately and can divert some or all of the cash flow for private benefit. In Lambrecht and Myers (2008)[^9], a self-interested coalition of managers that makes investment, financing, and payout decisions maximizes the present value of the expected cash flows taken from the firm's operations, which is the managerial rents, yet subject to the threat of collective action by the shareholders who can either close the firm or manage it privately if they decide to take over. An expected utility function of long-lived managers at each time $$t$$ may be written as:
+Things will be more complicated if we take into account the principal-agent problem (stated in some cases as "the separation of ownership and control"). Corporate managers are the agents of shareholders. The payout of cash to shareholders reduces the resources under managers' control, and thus reducing managers' power. Managers with substantial free cash flow can increase dividends or repurchase stock and thereby pay out current cash that would otherwise be invested in low-return projects or wasted. By issuing debt in exchange for stock, corporate managers are bonding their promise to pay out future cash flows in a way such that they give shareholder recipients of the debt the right to take the firm into bankruptcy court if they do not maintain their promise to make the interest and principle payments[^7]. The agency problem can be formulated as in DeMarzo and Fishman (2007)[^8], where a risk-neutral agent operating a firm observes the firm's cash flow privately and can divert some or all of the cash flow for private benefit. In Lambrecht and Myers (2008)[^9], a self-interested coalition of managers that makes investment, financing, and payout decisions maximizes the present value of the expected cash flows taken from the firm's operations, which is the managerial rents, while subject to the threat of collective action by the shareholders who can either close the firm or manage it privately if they decide to take over. An expected utility optimized by infinitely-lived managers at each time $$t$$ may be written as:
 
 $$M_{t} \equiv \max \mathbf{E}_{t} \Big( \sum\limits_{j = 0}^{\infty} \omega^{j} u(r_{t + jh}^{v})h \Big),$$
 
 where $$u(\cdot)$$ is a concave utility function, $$r_{t}^{v}$$ is the monetary value of managerial rents extracted in period $$t$$ with $$v \leq 1$$, the time interval $$h$$ is the time between payouts to shareholders, $$\omega \equiv e^{-\delta h}$$ and $$\delta$$ is managers' subjective discount rate[^10].
+
+### The Agency Cost of Debt
 
 Let's consider a firm that owns a mine with a commodity inventory $$Q$$. When the mine is open, the commodity is extracted at a constant annual rate $$q$$, and at a constant real average annual cost $$a$$. When the mine is closed, a constant real annual maintenance cost $$m$$ is incurred. At any point in time, the mine can be closed at a real cost $$k_{1}$$ and reopened at a real cost $$k_{2}$$. The real spot price of the commodity $$s$$ is determined in a competitive market and follows the exogenous process:
 
@@ -308,7 +310,15 @@ We can solve for the first-best value of the mine $$v^{FB}$$ and the first-best 
 
 **Definition 18.** The difference in maximal firm values between the results from ex ante and ex post risk choices (that is, before and after debt is in place) serves as a measure of *agency costs*, because it reflects the loss in value that follows from the risk strategy maximizing equity value rather than firm value[^12].
 
-Without any agency costs of debt, the value of the levered firm would be the first-best value of the firm plus the interest tax shield of debt. Each added unit of debt increases the value of the firm by the value of its associated interest tax shield. With agency costs, as the size of debt increases, the total agency costs may far outweigh the total tax shields, making the value of the levered firm less than the first-best.
+Without any agency costs of debt, the value of the levered firm would be the first-best value of the firm plus the interest tax shield of debt $$P(t)$$, which has a final maturity date $$T$$ such that $$\forall t \geq T, P(t) = 0$$. Each added unit of debt increases the value of the firm by the value of its associated interest tax shield. With agency costs, as the size of debt increases, the total agency costs may far outweigh the total tax shields, making the value of the levered firm less than the first-best, that is:
+
+$$v^{P} < v^{FB} + \eta^{P},$$
+
+where the total value of the mine $$v^{P}$$ is the sum of the value of the equity $$e^{P}$$ and the value for the outstanding bond $$b^{P}$$, $$\eta^{P}$$ is the value of the interest tax shield with respect to $$P(t)$$. The agency cost can by given by:
+
+$$\psi(s, Q, t; j) \equiv v^{FB}(s, Q; j) - [v(s, Q, t; j) - \eta(s, Q, t; j)].$$
+
+### Empire-Building Managers
 
 How about a corporate manager with *empire-building* motive?
 

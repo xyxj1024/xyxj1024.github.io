@@ -1,6 +1,6 @@
 ---
 layout:           post
-title:            "A Note on Debt Overhang - Part II"
+title:            "Notes on Debt Overhang - Part II"
 category:         "Money, Finance, Political Economy"
 tags:             stochastic-mathematics financial-economics asset-pricing
 permalink:        /debt-overhang-2/
