@@ -1,7 +1,7 @@
 ---
 layout: 		post
 title:          "Python Weather Data Scraping"
-category:       "Programming Languages"
+category:       "Data Structures, Algorithms, Programming Languages"
 tags:           web-scraping python
 permalink:      /weather-py/
 ---

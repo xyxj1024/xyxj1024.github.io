@@ -1,7 +1,7 @@
 ---
 layout: 		      post
 title: 			      "Thunks and Streams in Racket"
-category:		      "Programming Languages"
+category:		      "Data Structures, Algorithms, Programming Languages"
 tags:			        functional-programming lazy-evaluation
 permalink:		    /streams-racket/
 last_modified_at: "2022-11-06"

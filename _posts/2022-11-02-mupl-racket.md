@@ -1,7 +1,7 @@
 ---
 layout: 		      post
 title: 			      "A Made Up Programming Language in Racket"
-category:		      "Programming Languages"
+category:		      "Data Structures, Algorithms, Programming Languages"
 tags:			        interpreter functional-programming
 permalink:		    /mupl-racket/
 last_modified_at: "2022-11-04"

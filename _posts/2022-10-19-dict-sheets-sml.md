@@ -1,7 +1,7 @@
 ---
 layout: 		      post
 title: 			      "Dictionaries and Spreadsheets in Standard ML"
-category:		      "Programming Languages"
+category:		      "Data Structures, Algorithms, Programming Languages"
 tags:			        data-structures functional-programming
 permalink:		    /dict-sheets-sml/
 ---
