@@ -9,7 +9,9 @@ last_modified_at: "2022-12-08"
 
 Homework 6 of the [programming language course](https://www.coursera.org/learn/programming-languages/) taught by Professor Dan Grossman from University of Washington. Please refer to [this link](https://www.coursera.org/learn/programming-languages-part-c/supplement/8lyk9/homework-6-instructions) for instructions and provided code.
 
-This assignment is about a Tetris game written in Ruby. Ruby is a dynamically-typed, pure object-oriented programming language. The Ruby code in `uw6provided.rb` implements a simple but fully functioning Tetris game. We will be editing `uw6assignment.rb` to make some enhancements. The Ruby code in `uw6graphics.rb` provides a simple graphics library, tailored to Tetris. Run and play the original game with:
+<!-- excerpt-end -->
+
+This assignment is about a Tetris game written in Ruby. Ruby is a dynamically-typed, pure **object-oriented**{: style="color: red"}[^1] programming language. The Ruby code in `uw6provided.rb` implements a simple but fully functioning Tetris game. We will be editing `uw6assignment.rb` to make some enhancements. The Ruby code in `uw6graphics.rb` provides a simple graphics library, tailored to Tetris. Run and play the original game with:
 ```bash
 $ ruby uw6runner.rb original
 ```
@@ -17,8 +19,6 @@ and the enhanced game with
 ```bash
 $ ruby uw6runner.rb enhanced
 ```
-
-<!-- excerpt-end -->
 
 ## Table of Contents
 {:.no_toc}
@@ -219,3 +219,7 @@ def next_piece
   @current_pos = nil
 end
 ```
+
+## Notes
+
+[^1]: Here I would like to cite Robin Milner's thesis that brilliantly traces the history of object-oriented programming: "In the 1960s there was a great vogue in simulation languages. New ones kept emerging. They all gave you ways of making queues of things (in the process which you wished to simulate), giving objects attributes which would determine how long it took to process them, giving agents attributes to determine what things they could process, tossing coins to make it random, and recording what happened in a histogram... One of them highlighted a new metaphor: the notion of a community of agents all *doing* things to each other, each persisting in time but changing state. This is the notion known to programmers as an *object*, processing its own state and its repertoire of activities, or so-called *methods*; it is now so famous that even non-programmers have heard of it. It originated in the simulation language known as Simula, invented by Ole-Johann Dahl and Kristen Nygaard. *Object-oriented programming* is now a widely accepted metaphor used in applications which have nothing to do with simulation. So the abstract notion of agent or active object, from being a convenient metaphor, is graduating to the status of a concept in computer science." In Dina Goldin, Scott A. Smolka, and Peter Wegner (eds.), *Interactive Computation*, Springer-Verlag Berlin, Heidelberg, 2006, page 3-4.
