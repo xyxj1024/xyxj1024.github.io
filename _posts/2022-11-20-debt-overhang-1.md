@@ -1,7 +1,7 @@
 ---
 layout:           post
 title:            "Notes on Debt Overhang - Part I"
-category:         "Money, Finance, Political Economy"
+category:         "Economics, Finance, Political Economy"
 tags:             stochastic-mathematics corporate-finance debt-overhang
 permalink:        /debt-overhang-1/
 last_modified_at: "2022-11-25"

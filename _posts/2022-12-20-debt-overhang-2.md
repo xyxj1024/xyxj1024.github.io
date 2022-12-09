@@ -1,7 +1,7 @@
 ---
 layout:           post
 title:            "Notes on Debt Overhang - Part II"
-category:         "Money, Finance, Political Economy"
+category:         "Economics, Finance, Political Economy"
 tags:             debt-overhang financial-economics macroeconomics
 permalink:        /debt-overhang-2/
 last_modified_at: "2022-12-20"

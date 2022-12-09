@@ -1,7 +1,7 @@
 ---
 layout:           post
 title:            "A Note on China Shock"
-category:         "Money, Finance, Political Economy"
+category:         "Economics, Finance, Political Economy"
 tags:             macroeconomics international-economics monetary-policy China
 permalink:        /China-shock/
 last_modified_at: "2022-12-13"
