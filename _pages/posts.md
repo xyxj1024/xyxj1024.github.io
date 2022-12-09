@@ -5,7 +5,8 @@ permalink:  /posts
 nav_order:  3
 ---
 
-{% for category in site.categories %}
+{% assign sorted_categories = site.categories | sort %}
+{% for category in sorted_categories %}
   <h3>{{ category[0] }}</h3>
   <ul>
     {% assign sorted_posts = category[1] | sort: 'title' %}
