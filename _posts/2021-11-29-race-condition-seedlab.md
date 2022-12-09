@@ -11,7 +11,7 @@ For general overview and the setup package for this lab, please go to [SEED Labs
 A race condition occurs when multiple processes access and manipulate the same data concurrently, and the outcome of the execution depends on the particular order in which the access takes place. If a privileged program has a race condition vulnerability, attackers can run a parallel process to "race" against the privileged program, with an intention to change the behaviors of the program. This lab covers the following topics:
 
 * Race condition vulnerability
-* Sticky symlink[^1] protection
+* Sticky symlink protection
 * Principle of least privilege
 
 <!-- excerpt-end -->
