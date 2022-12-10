@@ -156,6 +156,44 @@ Accessor functions:
       (stream-eager (make-stream-pair (stream-delay obj) (stream-lazy strm))))))
 ```
 
+And also, an Racket implementation of basic stream operations that matches list operations by [David Liu](https://www.cs.toronto.edu/~lczhang/324/files/csc324_notes.pdf):
+
+```racket
+; Empty stream value, and check for empty stream
+(define s-null 's-null)
+(define (s-null? stream) (equal? stream s-null))
+
+#|
+(s-cons <first> <rest>)
+  <first>: A Racket expression
+  <rest>: A stream (e.g., s-null or another s-cons expression)
+  Returns a new stream whose first item is <first>, and whose other items are <rest>. Unlike a regular list, both <first> and <rest> are wrapped in a thunk, thereby not evaluated until called.
+|#
+(define-syntax s-cons
+  (syntax-rules ()
+    [(s-cons <first> <rest>)
+     (cons (thunk <first>) (thunk <rest>))]))
+
+(define (s-first stream) ((car stream)))
+(define (s-rest stream) ((cdr stream)))
+
+(define-syntax make-stream
+  (syntax-rules ()
+    [(make-stream) s-null]
+    [(make-stream <first> <rest> ...)
+     (s-cons <first> (make-stream <rest> ...))]))
+
+(define-syntax next!
+  (syntax-rules ()
+    [(next! <g>)
+     (if (s-null? <g>)
+        'DONE
+        (let* ([tmp <g>])
+          (begin
+            (set! <g> (s-rest <g>))
+            (s-first tmp))))]))
+```
+
 Below is a stream ADT implemented in Standard ML:
 
 ```sml

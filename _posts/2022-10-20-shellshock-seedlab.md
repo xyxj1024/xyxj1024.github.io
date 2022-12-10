@@ -198,7 +198,7 @@ bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  roo
 
 ### Web Server and CGI
 
-In this lab, we will launch a Shellshock attack on the web server container. Many web servers enable CGI ("Common Gateway Interface"), which is a standard method used to generate dynamic content on web pages and for web applications. Many CGI programs are shell scripts, so before the actual CGI program runs, a shell program will be invoked first, and such an invocation is triggered by users from remote computers. If the shell program is a vulnerable bash program, we can exploit the Shellshock vulnerable to gain privileges on the server.
+In this lab, we will launch a Shellshock attack on the web server container. Many web servers enable [CGI ("Common Gateway Interface")](https://datatracker.ietf.org/doc/html/rfc3875), which is a standard method used to generate dynamic content on web pages and for web applications. Many CGI programs are shell scripts, so before the actual CGI program runs, a shell program will be invoked first, and such an invocation is triggered by users from remote computers. If the shell program is a vulnerable bash program, we can exploit the Shellshock vulnerable to gain privileges on the server.
 
 In our web server container, we have already set up a very simple CGI program (called "<code>vul.cgi</code>"):
 ```bash
@@ -462,7 +462,7 @@ The Shellshock vulnerability allows attacks to run arbitrary commands on the tar
 root@adb5168e1e79:/# apt-get update && apt-get install -y netcat
 ```
 However, after I ran <code>nc -lv 9090</code>, I received the error message: "<code>getnameinfo: Temporary failure in name resolution</code>". I then tried the following command:
-```bash
+```console
 root@54b33eb364c0:/# nc -lvn 9090 &
 [3] 141
 root@54b33eb364c0:/# Listening on 0.0.0.0 9090
