@@ -1,9 +1,10 @@
 ---
-layout: 		post
-title: 			"Linux Processes: fork and execve Under the Hood"
-category:		"Computing Systems"
-tags:			unix operating-system process-thread
-permalink:		/linux-fork-execve/
+layout: 		    post
+title: 			    "Linux Processes: fork and execve Under the Hood"
+category:		    "Computing Systems"
+tags:			    unix operating-system process-thread
+permalink:		    /linux-fork-execve/
+last_modified_at:   "2022-12-13"
 ---
 
 In this post, I would like to give a brief account of two Linux system calls---[<code>fork(2)</code>](https://man7.org/linux/man-pages/man2/fork.2.html) and [<code>execve(2)</code>](https://man7.org/linux/man-pages/man2/execve.2.html)---with operating system kernel implementation details (not glibc wrappers) presented and two code examples explained. <code>fork(2)</code> and <code>execve(2)</code> are commonly used by Linux processes from both user and kernel spaces. In particular, as you can see below, they are involved in the Linux kernel initialization process (the GitBook ["Linux Insides"](https://0xax.gitbooks.io/linux-insides/content/) provides a comprehensive discussion on this topic).
@@ -126,6 +127,8 @@ Here, <code>SYSCALL_DEFINE0()</code> is simply a macro that defines a system cal
 The <code>clone()</code> system call is similar to <code>fork()</code> except that more arguments are specified by the user to gain more control over what pieces of execution context are shared between the calling process and the child process.
 </p>
 
+In the bad old days a `fork()` would require making a complete copy of the caller's data space, often needlessly, since usually immediately afterwards an `exec()` is done. The `vfork()` system call that appeared in 3.0BSD differs from `fork()` in that the child borrows the parent process's address space and the calling thread's stack until a call to `execve()` or an exit (either by a call to `_exit()` or abnormally). The calling thread is suspended while the child is using its resources. Other threads continue to run. In addition, when a multithreaded program calls `vfork()`, fork handlers established using `pthread_atfork()` are not called. The use of `vfork()` was tricky - for example, not modifying data in the parent process depended on knowing which variables are held in a register.
+
 ### execve()
 
 We can find the definition of the <code>execve()</code> function inside [<code>/fs/exec.c</code>](https://elixir.bootlin.com/linux/latest/source/fs/exec.c):
@@ -214,6 +217,51 @@ out_ret:
 ```
 
 Declared in <code>/include/linux/binfmts.h</code>, the <code>linux_binprm</code> structure is used to hold the arguments that are used when loading binaries.
+
+### Fork Bomb
+
+A fork bomb attack can be thought of as a DoS (Denial of Service) attack that tries to create as many processes as possible until the targted system does not have anymore resources left, like this:
+
+```c
+for (; ;)
+    fork();
+```
+
+or in Bash:
+
+```bash
+# 1. ":()" defines the function that accepts no arguments, named as ":".
+# 2. The function loads itself in memory, pipe its own output to another
+#    copy of itself, which is also loaded in memory as well.
+# 3. "&" will execute the whole function in the background so that no
+#    child process is killed.
+# 4. ";" separates each child function from the chain of multiple
+#    executions, and ":" runs recently created function, hence the chain
+#    reaction begins.
+:(){ :|:& };:
+```
+
+According to Dan Cross's recount of his experience with a Sun2 computer with a SPARC processor running SunOS (Sun's BSD-based version of Unix) in the late 90's:
+
+> This would drag the poor Sun machine to its knees; even setting up per-user process limits, it was nearly impossible to clean up unless you rebooted the system, which often had upwards of 70 people logged in: an issue here was that, in this version of Unix, you could not send a `SIGKILL` to a process that was `fork`'ing.
+
+Someone came up with an in-kernel fork bomb killer that took advantage of SunOS's support for loadable kernel modules and was implemented as a device driver. The `sysadmin` allocated a major number, and created a device node under `/dev` for the thing. When the driver module was loaded, it caused initialization code to run that overwrote the system call table's entry for `fork()` with a pointer to a wrapper function (unloading the module copied the real `fork()` back into the table). The wrapper function would try to invoke `fork()` normally; if it failed, it would increment a per-user counter. If the user had more than 50 `fork()` failures in 2 seconds, a function would walk the `proc` table and send `SIGKILL` to anything owned by the user, side-stepping the problem that a `fork`'ing child could not be killed. A callout ran every few milliseconds that would decay the per-user failure counter, so a small number of legit `fork` failures under load would not accumulate until the user booted off.
+
+But the writer of this fork bomb killer did not understand the semantics of `vfork()`, and mistakenly believed that the system call prevented the parent from running at all while the child was running, and did not consider the case where an attacker would simply execute the fork bomb killer in the child, like this:
+
+```c
+for (; ;)
+    if (vfork() == 0)
+        execl(argv[0], argv[0], 0);
+```
+
+To protect a session from fork bomb, the user might want to lower the maximum number of runnable processes:
+
+```bash
+# Set the soft limit on the number of processes in the current
+# shell session to 400.
+ulimit -S -u 400
+```
 
 ## A Simple User-Space Program: <code>execve_cat.c</code>
 
