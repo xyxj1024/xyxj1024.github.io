@@ -1,13 +1,13 @@
 ---
 layout:             post
-title:              "Cache Attacks on a Raspberry Pi"
+title:              "Transient-Execution Attacks on a Raspberry Pi"
 category:           "Computing Systems"
 tags:               hardware-security cache embedded raspberry-pi
-permalink:          /cache-attacks-raspberry-pi/
+permalink:          /transient-execution-raspberry-pi/
 last_modified_at:   "2022-12-16"
 ---
 
-I have discussed whys and hows regarding the [Spectre](https://xingjianxuanyuan.github.io/side-channels-seedlab/) and [Meltdown](https://xingjianxuanyuan.github.io/meltdown-seedlab/) attacks with the help of [SEED Labs](https://seedsecuritylabs.org) materials. A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
+I have discussed whys and hows regarding the [Spectre](https://xingjianxuanyuan.github.io/side-channels-seedlab/) and [Meltdown](https://xingjianxuanyuan.github.io/meltdown-seedlab/) attacks with the help of [SEED Labs](https://seedsecuritylabs.org) materials. A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching transient-execution attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
 
 The officially released CPU information of Raspberry Pi 3 Model B+:
 
@@ -156,7 +156,7 @@ and I tried to call my `get_timing()` function with this memory barrier function
 
 ### Replacing `_mm_clflush()`
 
-A cache flush instruction, which serves the legitimate purpose of manually maintaining cache coherency (e.g., for memory-mapped input/output or self-modifying code) is used by attacks such as $$\textsc{Flush+Reload}$$ and $$\textsc{Flush+Flush}$$. On any x86 processor implementing the SSE2 instruction set extension, this flush instruction is available from all privilege levels as `clflush`. For example:
+A cache flush instruction, which serves the legitimate purpose of manually maintaining cache coherency (e.g., for memory-mapped input/output or self-modifying code) is used by attacks such as Flush+Reload and Flush+Flush. On any x86 processor implementing the SSE2 instruction set extension, this flush instruction is available from all privilege levels as `clflush`. For example:
 
 ```c
 #include <x86intrin.h>
@@ -179,7 +179,7 @@ void flushSideChannel()
 }
 ```
 
-A similar instruction was introduced for ARM processors only in the most recent architecture version, ARMv8. In contrast to `clflush`, it must be specifically enabled to be accessible from user-space. For all processors with a disabled flush instruction or an earlier architecture version, e.g., ARMv7, only eviction-based cache attacks can be deployed (e.g., $$\textsc{Evict+Time}$$, $$\textsc{Prime+Probe}$$, $$\textsc{Evict+Reload}$$ attacks). I conducted an experiment with the following C program that makes use of the built-in cache clearing system call:
+A similar instruction was introduced for ARM processors only in the most recent architecture version, ARMv8. In contrast to `clflush`, it must be specifically enabled to be accessible from user-space. For all processors with a disabled flush instruction or an earlier architecture version, e.g., ARMv7, only eviction-based cache attacks can be deployed (e.g., Evict+Time, Prime+Probe, Evict+Reload attacks). I conducted an experiment with the following C program that makes use of the built-in cache clearing system call:
 
 ```c
 #define _GNU_SOURCE
