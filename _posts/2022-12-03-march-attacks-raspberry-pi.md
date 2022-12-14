@@ -1,13 +1,13 @@
 ---
 layout:             post
-title:              "Transient-Execution Attacks on a Raspberry Pi"
+title:              "Microarchitectural Attacks on a Raspberry Pi"
 category:           "Computing Systems"
 tags:               hardware-security cache embedded raspberry-pi
-permalink:          /transient-execution-raspberry-pi/
+permalink:          /march-attacks-raspberry-pi/
 last_modified_at:   "2022-12-16"
 ---
 
-I have discussed whys and hows regarding the [Spectre](https://xingjianxuanyuan.github.io/side-channels-seedlab/) and [Meltdown](https://xingjianxuanyuan.github.io/meltdown-seedlab/) attacks with the help of [SEED Labs](https://seedsecuritylabs.org) materials. A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching transient-execution attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
+I have discussed whys and hows regarding the [Spectre](https://xingjianxuanyuan.github.io/side-channels-seedlab/) and [Meltdown](https://xingjianxuanyuan.github.io/meltdown-seedlab/) attacks with the help of [SEED Labs](https://seedsecuritylabs.org) materials. A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
 
 The officially released CPU information of Raspberry Pi 3 Model B+:
 
@@ -268,7 +268,7 @@ Access time for array[8 * 4096]:   365
 Access time for array[9 * 4096]:   364
 ```
 
-There are no difference between the memory access time of two array elements we accessed after flushing and the other selected elements.
+There is no difference between the memory access time of two array elements we accessed after flushing and the other selected elements.
 
 ## Notes
 
