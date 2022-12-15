@@ -4,7 +4,7 @@ title:              "SEED Labs 2.0: Meltdown Attack Lab Writeup"
 category:           "Computing Systems"
 tags:               hardware-security microarchitecture cache
 permalink:          /meltdown-seedlab/
-last_modified_at:   "2022-11-27"
+last_modified_at:   "2022-11-11"
 ---
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org). The lab assignment was conducted using SEED virtual machine configured on a AWS EC2 instance. On the SEED Ubuntu 20.04 VM, Tasks 1 to 6 still work as expected, but Tasks 7 and 8 will not work due to the countermeasures implemented inside the OS.
