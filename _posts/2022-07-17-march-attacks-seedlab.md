@@ -3,8 +3,8 @@ layout:             post
 title:              "SEED Labs 2.0: Meltdown and Spectre Attack Labs Preview"
 category:           "Computing Systems"
 tags:               hardware-security microarchitecture cache
-permalink:          /side-channels-seedlab/
-last_modified_at:   "2022-11-24"
+permalink:          /march-attacks-seedlab/
+last_modified_at:   "2022-12-14"
 ---
 
 **This post guides through some background knowledge required in the SEED Meltdown and Spectre Attack Labs**.
