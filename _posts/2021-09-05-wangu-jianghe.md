@@ -7,12 +7,14 @@ permalink:          /wangu-jianghe/
 last_modified_at:   "2022-12-15"
 ---
 
+<center>
 <p lang="zh" class="message"><em>
-<dl style="text-align:center;">深林有歧途</dl>
-<dl style="text-align:center;">败叶掩足印</dl>
-<dl style="text-align:center;">举步入荒径</dl>
-<dl style="text-align:center;">只为少人行</dl>
+深林有歧途<br/>
+败叶掩足印<br/>
+举步入荒径<br/>
+只为少人行
 </em></p>
+</center>
 
 读书摘记：许倬云著《万古江河：中国历史文化的转折与开展》，湖南人民出版社2017年简体中文版。
 
