@@ -7,7 +7,7 @@ permalink:          /march-attacks-raspberry-pi/
 last_modified_at:   "2022-12-16"
 ---
 
-I have discussed whys and hows regarding the [Spectre](https://xingjianxuanyuan.github.io/side-channels-seedlab/) and [Meltdown](https://xingjianxuanyuan.github.io/meltdown-seedlab/) attacks with the help of [SEED Labs](https://seedsecuritylabs.org) materials. A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
+I have attempted to shed light on whys and hows regarding the [Spectre](https://xingjianxuanyuan.github.io/side-channels-seedlab/) and [Meltdown](https://xingjianxuanyuan.github.io/meltdown-seedlab/) attacks with materials drawn from [SEED Labs 2.0](https://seedsecuritylabs.org). A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
 
 The officially released CPU information of Raspberry Pi 3 Model B+:
 
@@ -17,7 +17,7 @@ Broadcom BCM2837B0, Cortex-A53 (ARMv8) 64-bit quad-core System-on-Chip (MPSoC) @
 
 The kernel version can be retrieved by:
 
-```bash
+```console
 $ uname -a
 Linux xingjian 5.10.103-v7+ #1529 SMP Tue Mar 8 12:21:37 GMT 2022 armv7l GNU/Linux
 ```
