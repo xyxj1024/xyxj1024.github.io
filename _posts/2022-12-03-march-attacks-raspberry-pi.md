@@ -9,6 +9,8 @@ last_modified_at:   "2022-12-16"
 
 I have attempted to shed light on whys and hows regarding the [Spectre](https://xingjianxuanyuan.github.io/side-channels-seedlab/) and [Meltdown](https://xingjianxuanyuan.github.io/meltdown-seedlab/) attacks with materials drawn from [SEED Labs 2.0](https://seedsecuritylabs.org). A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
 
+<!-- excerpt-end -->
+
 The officially released CPU information of Raspberry Pi 3 Model B+:
 
 ```text
@@ -63,8 +65,6 @@ Flags:                  fp asimd evtstrm crc32 cpuid
 ```
 
 For this post, I will use the `armv7l` Linux kernel.
-
-<!-- excerpt-end -->
 
 ## Table of Contents
 {:.no_toc}

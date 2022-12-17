@@ -3,7 +3,7 @@ layout: 		      post
 title: 			      "Dictionaries and Spreadsheets in Standard ML"
 category:		      "Data Structures, Algorithms, Programming Languages"
 tags:			        data-structures functional-programming
-permalink:		    /dict-sheets-sml/
+permalink:		    /dict-sheet-sml/
 ---
 
 Standard ML exercises of [CSE 425S: "Programming Systems and Languages" at Washington University in St. Louis](https://classes.engineering.wustl.edu/cse425s).
