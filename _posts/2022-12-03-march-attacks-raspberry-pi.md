@@ -137,11 +137,13 @@ Although the code can be compiled successfully, I received the `Illegal instruct
 
 ### Replacing `_mm_mfence()`
 
+A memory barrier in ARM (or "memory fence" in other architectures) is an instruction that requires the core to apply an ordering constraint between memory operations that occur before and after the memory barrier instruction in the program.
+
 I added the following macro and function definitions to my timing program:
 
 ```c
-#define DSB     asm volatile ("dsb sy" : : : "memory")
-#define ISB     asm volatile ("isb sy" : : : "memory")
+#define DSB     asm volatile ("dsb sy" : : : "memory") /* Data Synchronization Barrier */
+#define ISB     asm volatile ("isb sy" : : : "memory") /* Instruction Synchronization Barrier */
 #define dsb()   DSB
 #define isb()   ISB
 
@@ -191,6 +193,11 @@ A similar instruction was introduced for ARM processors only in the most recent 
 
 uint8_t array[N * 4096];
 
+/* 
+ * Source:
+ * https://minghuasweblog.wordpress.com/2013/03/29/
+ * https://issuetracker.google.com/issues/36906645
+ */
 void clear_cache(void* start, void* end)
 {
     const int syscall = 0xf002; /* __ARM_NR_cacheflush */
@@ -253,6 +260,22 @@ int main()
 }
 ```
 
+The syscall number of `cacheflush` is defined in [this header file](https://elixir.bootlin.com/linux/v3.1/source/arch/arm/include/asm/unistd.h) by:
+
+```c
+#define __NR_OABI_SYSCALL_BASE	0x900000
+
+#if defined(__thumb__) || defined(__ARM_EABI__)
+#define __NR_SYSCALL_BASE	0
+#else
+#define __NR_SYSCALL_BASE	__NR_OABI_SYSCALL_BASE
+#endif
+
+#define __ARM_NR_BASE			(__NR_SYSCALL_BASE+0x0f0000)
+#define __ARM_NR_breakpoint		(__ARM_NR_BASE+1)
+#define __ARM_NR_cacheflush		(__ARM_NR_BASE+2)
+```
+
 Below is the results from running the program:
 
 ```console
@@ -269,6 +292,8 @@ Access time for array[9 * 4096]:   364
 ```
 
 There is no difference between the memory access time of two array elements we accessed after flushing and the other selected elements.
+
+## Denial-of-Service Attack on Shared Cache
 
 ## Notes
 
