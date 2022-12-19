@@ -303,10 +303,10 @@ In this section, I would like to present the results from running the benchmark 
 | **MT Approach** | **Resources Shared between Threads** | **Context Switch Mechanism**
 |:-|:-|:-
 | None | Everything | Explicit operating system <br /> context switch
-| Fine-grained | Everything but register file and <br /> control logic/state | Switch every cycle
-| Coarse-grained | Everything but I-fetch buffers, <br /> register file, and <br /> control logic/state | Switch on pipeline stall
-| SMT | Everything but instruction fetch <br /> buffers, return address stack, <br /> architected register file, <br /> control logic/state, reorder buffer, <br /> store queue, etc. | All contexts concurrently active; no switching
-| CMP | Secondary cache, system interconnect | All contexts concurrently active; no switching
+| Fine-grained | Everything but register file and control logic/state | Switch every cycle
+| Coarse-grained | Everything but I-fetch buffers, register file, and control logic/state | Switch on pipeline stall
+| SMT | Everything but instruction fetch buffers, return address stack, architected register file, control logic/state, reorder buffer, store queue, etc. | All contexts concurrently active; <br /> no switching
+| CMP | Secondary cache, system interconnect | All contexts concurrently active; <br /> no switching
 
 *Table 1: Various approaches to resource sharing and context switching, from Shen and Lipasti (2013)*[^5]
 {:.table-caption}
