@@ -305,8 +305,8 @@ In this section, I would like to present the results from running the benchmark 
 | None | Everything | Explicit operating system <br /> context switch
 | Fine-grained | Everything but register file <br /> and control logic/state | Switch every cycle
 | Coarse-grained | Everything but I-fetch buffers, <br /> register file, and control logic/state | Switch on pipeline stall
-| SMT | Everything but I-fetch buffers, <br /> return address stack, <br /> architected register file, <br /> control logic/state, <br /> reorder buffer, store queue, etc. | All contexts concurrently active; no switching
-| CMP | Secondary cache, system interconnect | All contexts concurrently active; no switching
+| SMT | Everything but I-fetch buffers, <br /> return address stack, <br /> architected register file, <br /> control logic/state, <br /> reorder buffer, store queue, etc. | All contexts concurrently <br /> active; no switching
+| CMP | Secondary cache, system interconnect | All contexts concurrently <br /> active; no switching
 
 *Table 1: Various approaches to resource sharing and context switching, from Shen and Lipasti (2013)*[^5]
 {:.table-caption}
