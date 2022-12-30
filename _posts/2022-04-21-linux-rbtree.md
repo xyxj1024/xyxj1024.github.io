@@ -2,12 +2,12 @@
 layout:           post
 title:            "Linux Red-Black Tree Data Structure"
 category:         "Computing Systems"
-tags:		      data-structure operating-system kernel-memory
+tags:		      operating-system kernel-memory tree
 permalink:        /linux-rbtree/
 last_modified_at: "2022-12-27"
 ---
 
-**Definition 1.** A **read-black tree**{: style="color: red"} is a binary search tree which has the following *red-black properties*:
+**Definition 1.** A **red-black tree**{: style="color: red"} is a binary search tree which has the following *red-black properties*:
 1. Every node is either red or black.
 2. Every leaf (<code>NULL</code>) is black.
 3. If a node is red, then both of its children are black.

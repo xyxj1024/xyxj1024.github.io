@@ -2,7 +2,7 @@
 layout:           post
 title:            "Linux Radix Tree Data Structure"
 category:         "Computing Systems"
-tags:		      data-structure operating-system
+tags:		      operating-system tree
 permalink:        /linux-radix-tree/
 last_modified_at: "2022-12-28"
 ---
