@@ -14,8 +14,6 @@ last_modified_at: "2022-12-28"
 * TOC 
 {:toc}
 
-## Radix Tree
-
 Linux's radix tree implementation lives in the file [<code>lib/radix-tree.c</code>](https://elixir.bootlin.com/linux/latest/source/lib/radix-tree.c). To use it, do:
 ```c
 #include <linux/radix-tree.h>
@@ -23,13 +21,13 @@ Linux's radix tree implementation lives in the file [<code>lib/radix-tree.c</cod
 
 [^1]
 
-### Genradix
+## Genradix
 
-### Integer ID Management
+## Integer ID Management
 
 idr, ida, Andrew Morton
 
-### XArray
+## XArray
 
 Matthew Wilcox[^2]
 

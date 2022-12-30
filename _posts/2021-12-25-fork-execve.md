@@ -1,6 +1,6 @@
 ---
 layout: 		    post
-title: 			    "Linux Processes: fork and execve Under the Hood"
+title: 			    "Linux Fork and Execve Under the Hood"
 category:		    "Computing Systems"
 tags:			    unix operating-system process-thread
 permalink:		    /linux-fork-execve/

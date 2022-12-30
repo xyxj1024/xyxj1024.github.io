@@ -7,15 +7,6 @@ permalink:        /linux-rbtree/
 last_modified_at: "2022-12-27"
 ---
 
-<!-- excerpt-end -->
-
-## Table of Contents
-{:.no_toc}
-* TOC 
-{:toc}
-
-## Red-Black Tree
-
 **Definition 1.** A **read-black tree**{: style="color: red"} is a binary search tree which has the following *red-black properties*:
 1. Every node is either red or black.
 2. Every leaf (<code>NULL</code>) is black.
@@ -24,7 +15,14 @@ last_modified_at: "2022-12-27"
 
 Each node in the tree contains a value and up to two children; the node's value will be greater than that of all children in the "left" child branch, and less than that of all children in the "right" branch. (Thus, it is possible to serialize a red-black tree by performing a depth-first. left-to-right traversal.) Implementations of the red-black tree algorithms will usually include the **sentinel**{: style="color: red"} nodes as a convenient means of flagging that you have reached a leaf node. They are <code>NULL</code> black nodes of **Property 2**. Formally, a red-black tree with $n$ internal nodes has height at least $\log_{2}(n+1)$ but at most $2\log_{2}(n+1)$.
 
-### Kernel Source Code
+<!-- excerpt-end -->
+
+## Table of Contents
+{:.no_toc}
+* TOC 
+{:toc}
+
+## Kernel Source Code
 
 The Linux kernel documentation for <code>rbtree</code> can be found [here](https://www.kernel.org/doc/html/latest/core-api/rbtree.html). Linux kernel's <code>rbtree</code> representation lives in the file [<code>include/linux/rbtree_types.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_types.h). Basic utilities can be viewed in: [<code>include/linux/rbtree_augmented.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree_augmented.h) and [<code>include/linux/rbtree.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/rbtree.h). To import the red-black tree facility, do:
 ```c
@@ -87,7 +85,7 @@ static inline void rb_set_black(struct rb_node *rb)
 }
 ```
 
-#### Insert
+### Insert
 
 Whenver we want to insert a new node onto a <code>rbtree</code>, we should first make a call to function:
 ```c
@@ -249,7 +247,7 @@ unsafe { bindings::rb_insert_color(node_links, &mut self.root) };
 ```
 Memory safety issues will be isolated within these code blocks marked with <code>unsafe</code>.
 
-#### Remove
+### Remove
 
 Whenever we want to remove an existing node, make a call to function:
 ```c
@@ -291,7 +289,7 @@ where
 }
 ```
 
-### Virtual Memory Areas in the Kernel Space
+## Virtual Memory Areas in the Kernel Space
 
 Red-black tree suppots virtual memory area tracking in the Linux **kernel space**. Here is a [quote](https://lwn.net/Articles/304188/) from Jonathan Corbet[^1]:
 
@@ -413,7 +411,7 @@ static struct kmemleak_object *__lookup_object(unsigned long ptr, int alias, boo
 }
 ```
 
-### <code>epoll</code> Subsystem
+## <code>epoll</code> Subsystem
 
 The eventpoll API was first introduced in version 2.5.44 of the Linux kernel to manage I/O events on high loads with $O(1)$ performance. It uses red-black tree to sort all the file descriptors that are added to the eventpoll interface based on their <code>struct file</code> pointers. Inside [the <code>eventpoll</code> structure](https://elixir.bootlin.com/linux/latest/source/fs/eventpoll.c), there is a field called "<code>rbr</code>":
 ```c
