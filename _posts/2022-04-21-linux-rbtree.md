@@ -4,7 +4,7 @@ title:            "Linux Red-Black Tree Data Structure"
 category:         "Computing Systems"
 tags:		      operating-system kernel-memory tree
 permalink:        /linux-rbtree/
-last_modified_at: "2022-12-27"
+last_modified_at: "2022-12-30"
 ---
 
 **Definition 1.** A **red-black tree**{: style="color: red"} is a binary search tree which has the following *red-black properties*:
@@ -411,6 +411,149 @@ static struct kmemleak_object *__lookup_object(unsigned long ptr, int alias, boo
 }
 ```
 
+## Kernel Samepage Merging (KSM)
+
+Systems running virtualized guests can have large number of pages holding identical data, but the kernel has no way to let guests share those pages. KSM is a memory-saving de-duplication feature, enabled by <code>CONFIG_KSM=y</code>, added to the Linux kernel in 2.6.32. KSM was originally developed as a device driver for use with KVM, where it was known as Kernel Shared Memory. A process which wants to take part in the page sharing regime can open that device and register with an <code>ioctl()</code> function call a portion of its address space with the KSM driver. Once the page sharing mechanism is turned on via another <code>ioctl()</code> call, the kernel will start looking for pages to share. Inside a kernel thread, the KSM driver picks one of the memory regions registered with it and start scanning over it. For each page which is resident in memory, KSM will generate an SHA1 hash of the page's contents. That hash will then be used to look up other pages with the same hash value. If a subsequent <code>memcmp()</code> function call shows that the contents of the pages are truly identical, all processes with a reference to the scanned page will be pointed (in Copy-on-Write mode) to the other one, and the redundant page will be returned to the system. As long as nobody modifies the page, the sharing can continue; once a write operation happens, the page will be copied and the sharing will end[^2].
+
+[The current KSM implementation](https://elixir.bootlin.com/linux/latest/source/mm/ksm.c) has replaced the hash table with two separate red-black trees. Pages tracked by KSM are initially stored in the "unstable tree":
+
+```c
+static struct rb_root one_unstable_tree[1] = { RB_ROOT };
+static struct rb_root *root_unstable_tree = one_unstable_tree;
+```
+
+The term "unstable" means that KSM considers their contents to be volatile. Placement in the tree is determined by a simple <code>memcmp()</code> of the page's contents; essentially, the page is treated as containing a huge number and sorted accordingly. The unstable tree is suitable for finding pages with duplicate contents; a relatively quick traversal of the tree will turn up the only candidates:
+
+```c
+static struct ksm_rmap_item *unstable_tree_search_insert(struct ksm_rmap_item *rmap_item,
+					                                     struct page *page,
+					                                     struct page **tree_pagep)
+{
+    struct rb_node **new;
+	struct rb_root *root;
+	struct rb_node *parent = NULL;
+	int nid;
+
+	nid = get_kpfn_nid(page_to_pfn(page));
+	root = root_unstable_tree + nid;
+	new = &root->rb_node;
+
+	while (*new) {
+		struct ksm_rmap_item *tree_rmap_item;
+		struct page *tree_page;
+		int ret;
+
+		cond_resched();
+		tree_rmap_item = rb_entry(*new, struct ksm_rmap_item, node);
+		tree_page = get_mergeable_page(tree_rmap_item);
+		if (!tree_page)
+			return NULL;
+
+		/*
+		 * Don't substitute a ksm page for a forked page.
+		 */
+		if (page == tree_page) {
+			put_page(tree_page);
+			return NULL;
+		}
+
+		ret = memcmp_pages(page, tree_page);
+
+		parent = *new;
+		if (ret < 0) {
+			put_page(tree_page);
+			new = &parent->rb_left;
+		} else if (ret > 0) {
+			put_page(tree_page);
+			new = &parent->rb_right;
+		} else if (!ksm_merge_across_nodes &&
+			   page_to_nid(tree_page) != nid) {
+			/*
+			 * If tree_page has been migrated to another NUMA node,
+			 * it will be flushed out and put in the right unstable
+			 * tree next time: only merge with it when across_nodes.
+			 */
+			put_page(tree_page);
+			return NULL;
+		} else {
+			*tree_pagep = tree_page;
+			return tree_rmap_item;
+		}
+	}
+
+	rmap_item->address |= UNSTABLE_FLAG;
+	rmap_item->address |= (ksm_scan.seqnr & SEQNR_MASK);
+	DO_NUMA(rmap_item->nid = nid);
+	rb_link_node(&rmap_item->node, parent, new);
+	rb_insert_color(&rmap_item->node, root);
+
+	ksm_pages_unshared++;
+	return NULL;
+}
+```
+
+where the <code>ksm_rmap_item</code> structure is defined as:
+
+```c
+struct ksm_rmap_item {
+    struct ksm_rmap_item *rmap_list;
+    union {
+        struct anon_vma *anon_vma;  /* when stable */
+#ifdef CONFIG_NUMA
+		int nid;                    /* when node of unstable tree */
+#endif
+	};
+	struct mm_struct *mm;
+	unsigned long address;          /* + low bits used for flags below */
+	unsigned int oldchecksum;       /* when unstable */
+	union {
+		struct rb_node node;        /* when node of unstable tree */
+		struct {                    /* when listed from stable tree */
+			struct ksm_stable_node *head;
+			struct hlist_node hlist;
+		};
+	};
+};
+```
+
+The nature of red-black trees means that search and insertion operations are almost the same thing, so there is little real cost to rebuilding the unstable tree from the beginning every time. Since shared pages are marked read-only, KSM knows that their contents cannot change. Those pages are put into a separate "stable tree." The stable tree is also a red-black tree, but, since pages cannot become misplaced there, it need not be rebuilt regularly. Once a page goes into the stable tree, it stays there until all users have either modified or unmapped it.
+
+```c
+struct ksm_stable_node {
+    union {
+		struct rb_node node;                    /* when node of stable tree */
+		struct {                                /* when listed for migration */
+			struct list_head *head;
+			struct {
+				struct hlist_node hlist_dup;    /* linked into the stable_node->hlist with a stable_node chain */
+				struct list_head list;          /* linked into migrate_nodes, pending placement in the proper node tree */
+			};
+		};
+	};
+	struct hlist_head hlist;                    /* hlist head of rmap_items using this ksm page */
+	union {
+		unsigned long kpfn;                     /* page frame number of this ksm page */
+		unsigned long chain_prune_time;         /* time of the last full garbage collection */
+	};
+	/*
+	 * STABLE_NODE_CHAIN can be any negative number in
+	 * rmap_hlist_len negative range, but better not -1 to be able
+	 * to reliably detect underflows.
+	 */
+#define STABLE_NODE_CHAIN -1024
+	int rmap_hlist_len;
+#ifdef CONFIG_NUMA
+	int nid;
+#endif
+};
+
+static struct rb_root one_stable_tree[1] = { RB_ROOT };
+static struct rb_root *root_stable_tree = one_stable_tree;
+
+/* Recently migrated nodes of stable tree, pending proper placement */
+static LIST_HEAD(migrate_nodes);
+```
+
 ## <code>epoll</code> Subsystem
 
 The eventpoll API was first introduced in version 2.5.44 of the Linux kernel to manage I/O events on high loads with $O(1)$ performance. It uses red-black tree to sort all the file descriptors that are added to the eventpoll interface based on their <code>struct file</code> pointers. Inside [the <code>eventpoll</code> structure](https://elixir.bootlin.com/linux/latest/source/fs/eventpoll.c), there is a field called "<code>rbr</code>":
@@ -559,3 +702,5 @@ write_unlock_irq(&ep->lock);
 ## References
 
 [^1]: [Linux Weekly News](lwn.net): "Reworking <code>vmap()</code>" By Jonathan Corbet, October 21, 2008.
+
+[^2]: [Linux Weekly News](lwn.net): "<code>/dev/ksm</code>: dynamic memory sharing" By Jonathan Corbet, November 12, 2008.
