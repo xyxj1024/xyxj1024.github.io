@@ -1,10 +1,10 @@
 ---
 layout:           post
-title:            "Linux Kernel Tree Data Structures"
+title:            "Linux Red-Black Tree Data Structure"
 category:         "Computing Systems"
-tags:		      unix operating-system data-structures
-permalink:        /linux-trees/
-last_modified_at: "2022-10-10"
+tags:		      data-structure operating-system kernel-memory
+permalink:        /linux-rbtree/
+last_modified_at: "2022-12-27"
 ---
 
 <!-- excerpt-end -->
@@ -13,23 +13,6 @@ last_modified_at: "2022-10-10"
 {:.no_toc}
 * TOC 
 {:toc}
-
-## Radix Tree
-
-Linux's radix tree implementation lives in the file [<code>lib/radix-tree.c</code>](https://elixir.bootlin.com/linux/latest/source/lib/radix-tree.c). To use it, do:
-```c
-#include <linux/radix-tree.h>
-```
-
-### Genradix
-
-### Integer ID Management
-
-idr, ida, Andrew Morton
-
-### XArray
-
-Matthew Wilcox[^2]
 
 ## Red-Black Tree
 
@@ -310,11 +293,11 @@ where
 
 ### Virtual Memory Areas in the Kernel Space
 
-Red-black tree suppots virtual memory area tracking in the Linux **kernel space**. Here is a [quote](https://lwn.net/Articles/304188/) from Jonathan Corbet:
+Red-black tree suppots virtual memory area tracking in the Linux **kernel space**. Here is a [quote](https://lwn.net/Articles/304188/) from Jonathan Corbet[^1]:
 
-> Kernel memory is normally allocated in relatively small chunks - usually just a single page at a time. As the size of an allocation grows, satisfying that allocation with physically-contiguous pages gets progressively harder. So most of the kernel has been written with an eye toward avoiding the use of large, contiguous allocations. There are times, though, when a large memory array needs to be virtually contiguous, but not necessarily physically contiguous. One example is the allocation of space for loadable modules; any given module should live in a single, contiguous address range, but nobody cares how it's laid out in physical RAM.[^4]
+> Kernel memory is normally allocated in relatively small chunks - usually just a single page at a time. As the size of an allocation grows, satisfying that allocation with physically-contiguous pages gets progressively harder. So most of the kernel has been written with an eye toward avoiding the use of large, contiguous allocations. There are times, though, when a large memory array needs to be virtually contiguous, but not necessarily physically contiguous. One example is the allocation of space for loadable modules; any given module should live in a single, contiguous address range, but nobody cares how it's laid out in physical RAM.
 
-Apart from physically contiguous memory blocks that are allocated by the buddy allocator as well as slab allocators, noncontiguous physical memory can be allocated and mapped into virtually contiguous memory between <code>VMALLOC_START</code> and <code>VMALLOC_END</code> with the <code>vmalloc()</code> function. This function wraps <code>__vmalloc_node_range()</code> in order to perform (large) memory allocation and return the address of the allocated kernel virtual area (KVA). Note that <code>VMALLOC_START</code> and <code>VMALLOC_END</code> are architecture-specific.
+Apart from physically contiguous memory blocks that are allocated by the buddy allocator as well as slab allocators (a slab is multiple pages of contiguous physical memory), noncontiguous physical memory can be allocated and mapped into virtually contiguous memory between <code>VMALLOC_START</code> and <code>VMALLOC_END</code> with the <code>vmalloc()</code> function. This function wraps <code>__vmalloc_node_range()</code> in order to perform (large) memory allocation and return the address of the allocated kernel virtual area (KVA). Note that <code>VMALLOC_START</code> and <code>VMALLOC_END</code> are architecture-specific.
 
 KVAs are represented by two different <code>struct</code>'s at the same time, defined in [<code>include/linux/vmalloc.h</code>](https://elixir.bootlin.com/linux/latest/source/include/linux/vmalloc.h):
 ```c
@@ -345,7 +328,7 @@ struct vmap_area {
     }
 }
 ```
-Connections between them can be setup using:
+Connection between <code>vm_struct</code> and <code>vmap_area</code> can be created using:
 ```c
 static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
     struct vmap_area *va, unsigned long flags, const void *caller)
@@ -373,7 +356,7 @@ insert_vmap_area(struct vmap_area *va,
         link_va(va, root, parent, link, head);
 }
 ```
-to insert a free block onto the global red-black tree and the allocation is done over free area lookups rather than finding a hole between two busy blocks, [which allows to have lower number of objects representing the free space and thus to have less external fragmentation](https://patchwork.kernel.org/project/linux-mm/cover/20190406183508.25273-1-urezki@gmail.com/). <code>vmap_struct</code>'s are sorted by their <code>va_start</code> fields. Given a virtual memory address <code>addr</code>, a tree lookup probably resembles this:
+to insert a free block onto the global red-black tree and the allocation is done over free area lookups rather than finding a hole between two busy blocks, [which allows to have lower number of objects representing the free space and thus to have less external fragmentation](https://patchwork.kernel.org/project/linux-mm/cover/20190406183508.25273-1-urezki@gmail.com/). <code>vmap_struct</code>'s are sorted by their <code>va_start</code> fields. Basically, given a virtual memory address <code>addr</code>, a tree lookup resembles this:
 ```c
 while (node) {
     struct vmap_area *va;
@@ -552,12 +535,12 @@ to_free = NULL;
 head = file->f_ep;
 if (head->first == &epi->fllink && !epi->fllink.next) {
     file->f_ep = NULL;
-	if (!is_file_epoll(file)) {
-	    struct epitems_head *v;
-		v = container_of(head, struct epitems_head, epitems);
-		if (!smp_load_acquire(&v->next))
-		    to_free = v;
-	}
+    if (!is_file_epoll(file)) {
+        struct epitems_head *v;
+        v = container_of(head, struct epitems_head, epitems);
+        if (!smp_load_acquire(&v->next))
+            to_free = v;
+    }
 }
 hlist_del_rcu(&epi->fllink);
 spin_unlock(&file->f_lock);
@@ -577,10 +560,4 @@ write_unlock_irq(&ep->lock);
 
 ## References
 
-[^1]: [Linux Weekly News](lwn.net): "Trees I: Radix Trees" by Jonathan Corbet, March 13, 2006.
-
-[^2]: *XArray* by Matthew Wilcox, [kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt).
-
-[^3]: *Examining Linux 2.6 Page-Cache Performance* by Sonny Rao, Dominique Heger, and Steven Pratt, [landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf](https://landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf)
-
-[^4]: [Linux Weekly News](lwn.net): "Reworking <code>vmap()</code>" By Jonathan Corbet, October 21, 2008.
+[^1]: [Linux Weekly News](lwn.net): "Reworking <code>vmap()</code>" By Jonathan Corbet, October 21, 2008.
