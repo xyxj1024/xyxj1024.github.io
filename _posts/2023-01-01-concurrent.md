@@ -2,7 +2,7 @@
 layout:     post
 title:      "Concurrent Stacks"
 category:   "Data Structures, Algorithms, Programming Languages"
-tags:       object-oriented-programming concurrency tree
+tags:       object-oriented-programming concurrency tree stack
 permalink:  /concurrent-stacks/
 ---
 
@@ -181,7 +181,7 @@ public class RegularBooleanMRSWRegister implements Register<Boolean> {
 
 When the newly written value `x` is the same as the old, the regular register can only return `x`, while a safe register may return either Boolean value.
 
-### Shared Counting
+### Distributed Counting
 
 In its purest form, a *counter* is an object that holds an integer value and provides a *fetch-and-increment* operation, incrementing the counter and returning its previous value. The code snippet below shows the counter class written to use CAS:
 
@@ -201,7 +201,7 @@ public class CASCounter {
 }
 ```
 
-Scalable counting can only achieved by methods that are distributed and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^5].
+Scalable counting can only achieved by methods that are distributed[^5] and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^6].
 
 A *combining tree* is a distributed binary-tree-based data structure with a shared counter at its root. Processors combine their increment requests going up the tree from the leaves to the root and propagate the answers down the tree, thus eliminating the need for all processors to actually reach the root in order to increment the counter. A counting tree *balancer* is a computing element with one input wire and two output wires. Tokens arrive on the balancer's input wire at arbitrary times and are output on its output wires. A *balancing tree* of width $$w$$ is a binary tree of balancers, where output wires of one balancer are connected to input wires of another, having one designated root input wire and $$w$$ designated output wires. On a shared-memory, multiprocessor one can implement a balancing tree as a shared data structure, where balancers are records, and wires are pointers from one record to another. Threads arrive at a balancer and it repeatedly sends them up and down, so its top wire always has the same or at most one more than the bottom one. One could implement the balancers in a straightforward way using a bit that threads toggle: they fetch the bit and then complement it, exiting on the output wire they fetched (zero or more):
 
@@ -243,6 +243,79 @@ public class Balancer {
 }
 ```
 
+If many tokens attempt to pass through the same balancer concurrently, the toggle bit quickly becomes a hot spot. Contention would be greatest at the root balancer through which all tokens must pass. A diffracting-balancer data structure adds a special "prism" array in front of the toggle bit in every balancer:
+
+```java
+public class Prism {
+    private static final int duration = 100;
+    Exchanger<Integer>[] exchanger;
+    public Prism(int capacity) {
+        exchanger = (Exchanger<Integer>[]) new Exchanger[capacity];
+        for (int i = 0; i < capacity; i++) {
+            exchanger[i] = new Exchanger<Integer>();
+        }
+    }
+    public boolean visit() throws TimeoutException, InterruptedException {
+        int me = ThreadID.get();
+        int slot = ThreadLocalRandom.current().nextInt(exchanger.length);
+        int other = exchanger[slot].exchange(me, duration, TimeUnit, MILLISECONDS);
+        return (me < other);
+    }
+}
+```
+
+When a token $$T$$ enters the balancer, it first selects a location $$l$$ in prism uniformly at random. $$T$$ tries to "collide" with the previous token to select $$l$$ or, by waiting for a fixed time, with the next token to do so. If a collision occurs, both tokens leave the balancer on separate wires; otherwise the undiffracted token $$T$$ toggles the bit and leaves accordingly.
+
+```java
+public class DiffractingBalancer {
+    Prism prism;
+    Balancer toggle;
+    public DiffractingBalancer(int capacity) {
+        prism = new Prism(capacity);
+        toggle = new Balancer();
+    }
+    public int traverse() {
+        boolean direction = false;
+        try {
+            if (prism.visit())
+                return 0;
+            else
+                return 1;
+        } catch(TimeoutException ex) {
+            return toggle.traverse();
+        }
+    }
+}
+```
+
+The `DiffractingTree` structure is based on the `DiffractingBalancer` structure:
+
+```java
+public class DiffractingTree {
+    DiffractingBalancer root;
+    DiffractingTree[] child;
+    int size;
+    public DiffractingTree(int mySize) {
+        size = mySize;
+        root = new DiffractingBalancer(size);
+        if (size > 2) {
+            child = new DiffractingTree[] {
+                new DiffractingTree(size / 2);
+                new DiffractingTree(size / 2);
+            }
+        }
+    }
+    public int traverse() {
+        int half = root.traverse();
+        if (size > 2) {
+            return (2 * (child[half].traverse()) + half);
+        } else {
+            return half;
+        }
+    }
+}
+```
+
 ## Concurrent Stack
 
 ## Notes
@@ -255,4 +328,6 @@ public class Balancer {
 
 [^4]: In the systems literature, a nonblocking operation returns immediately without waiting for the operation to take effect, whereas a blocking operation does not return until the operation is complete.
 
-[^5]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
+[^5]: A *distributed counter* is a concurrent object which provides a test-and-increment operation on a shared value. On the basis of a distributed counter, one can implement various fundamental data structures, such as queues or stacks.
+
+[^6]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
