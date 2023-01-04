@@ -99,13 +99,27 @@ public class SimulatedCAS {
 }
 ```
 
+The Java syntax
+
+```java
+synchronized (expression) {
+    statements
+}
+```
+
+works as follows:
+1. The `expression` is evaluated. It must produce (a reference to) an object which is treated as a lock.
+2. The synchronized statement acquires the lock. Locks are reentrant in Java, so the statement will not block if the executing thread already holds it.
+3. After the lock is successfully acquired, the `statements` are executed.
+4. When control leaves the `statements`, the lock is released[^3].
+
 Concurrent algorithms based on CAS are called *lock-free*, because threads do not ever have to wait for a lock. Either the CAS operation succeeds or it doesn't, but in either case, it completes in a predictable amount of time. If the CAS fails, the caller can retry the CAS operation or take another action as it sees fit.
 
 ### Basic Concepts of Shared-Memory Computation
 
 **Definition 2.** (Compositionality) A correctness property $$\mathcal{P}$$ is *compositional* if, whenever each object in the system satisfies $$\mathcal{P}$$, the system as a whole satisfies $$\mathcal{P}$$.
 
-**Definition 3.** (Sequential Consistency) Method calls should appear to happen in a one-at-a-time, sequential order (in which method calls do not overlap). Method calls should appear to take effect in program order (the order in which a single thread issues method calls). Sequential consistency is a *nonblocking* correctness condition such that for any pending method call in a sequentially consistent concurrent execution, there is some sequentially consistent response, that is, a response to the invocation that could be given immediately without violating sequential consistency[^2]. Sequential consistency is not compositional; that is, the result of composing sequentially consistent components is not itself necessarily sequentially consistent.
+**Definition 3.** (Sequential Consistency) Method calls should appear to happen in a one-at-a-time, sequential order (in which method calls do not overlap). Method calls should appear to take effect in program order (the order in which a single thread issues method calls). Sequential consistency is a *nonblocking* correctness condition such that for any pending method call in a sequentially consistent concurrent execution, there is some sequentially consistent response, that is, a response to the invocation that could be given immediately without violating sequential consistency[^4]. Sequential consistency is not compositional; that is, the result of composing sequentially consistent components is not itself necessarily sequentially consistent.
 
 **Definition 4.** (Linearizability) Each method call should appear to take effect instantaneously at some moment between its invocation and response. Every linearizable execution is sequentially consistent, but not vice versa. Linearizability is compositional.
 
@@ -187,7 +201,47 @@ public class CASCounter {
 }
 ```
 
-Scalable counting can only achieved by methods that are distributed and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^4].
+Scalable counting can only achieved by methods that are distributed and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^5].
+
+A *combining tree* is a distributed binary-tree-based data structure with a shared counter at its root. Processors combine their increment requests going up the tree from the leaves to the root and propagate the answers down the tree, thus eliminating the need for all processors to actually reach the root in order to increment the counter. A counting tree *balancer* is a computing element with one input wire and two output wires. Tokens arrive on the balancer's input wire at arbitrary times and are output on its output wires. A *balancing tree* of width $$w$$ is a binary tree of balancers, where output wires of one balancer are connected to input wires of another, having one designated root input wire and $$w$$ designated output wires. On a shared-memory, multiprocessor one can implement a balancing tree as a shared data structure, where balancers are records, and wires are pointers from one record to another. Threads arrive at a balancer and it repeatedly sends them up and down, so its top wire always has the same or at most one more than the bottom one. One could implement the balancers in a straightforward way using a bit that threads toggle: they fetch the bit and then complement it, exiting on the output wire they fetched (zero or more):
+
+```Java
+AtomicBoolean toggle = new AtomicBoolean(true);
+public boolean toggle() {
+    boolean result;
+    do {
+        result = toggle.get();
+    } while (!toggle.compareAndSet(result, !result));
+    return result;
+}
+```
+
+Elimination is a state when two threads carrying a *token* and *anti-token* meet, and "eliminate" each other. When such two threads meet in a data structure, they can exchange the information they carry. A common way to use elimination is to build an *elimination array*, which is a set of cells where each thread randomly chooses a location and spins waiting another thread to "collide" with. When collision occurred, in case the two collided threads carry a token and anti-token, they can exchange information and leave the data structure:
+
+```java
+public class Exchanger {
+    AtomicReference<ExchangerPackage> slot;
+}
+
+public class ExchangerPackage {
+    Object value;
+    State state;
+    Type type;
+}
+```
+
+Each exchanger contains a single `AtomicReference` which is used as an atomic placeholder for exchanging `ExchangerPackage`, where the `ExchangerPackage` is an object used to wrap the actual data and to mark its state and type.
+
+The `Balancer` data structure can be implemented as:
+
+```java
+public class Balancer {
+    ToggleBit producerToggle, consumerToggle;
+    Exchanger[] eliminationArray;
+    Balancer topChild, bottomChild;
+    ThreadLocal<Integer> lastSlotRange; // saved as the initial range at the beginning of the next operation
+}
+```
 
 ## Concurrent Stack
 
@@ -197,6 +251,8 @@ Scalable counting can only achieved by methods that are distributed and therefor
 
 [^2]: Maurice Herlihy, "Wait-Free Synchronization," *ACM Transactions on Programming Languages and Systems*, Vol. 11, No. 1, January 1991, Pages 124-149.
 
-[^3]: In the systems literature, a nonblocking operation returns immediately without waiting for the operation to take effect, whereas a blocking operation does not return until the operation is complete.
+[^3]: Please refer to [Professor Dan Grossman's teaching materials](https://homes.cs.washington.edu/~djg/).
 
-[^4]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
+[^4]: In the systems literature, a nonblocking operation returns immediately without waiting for the operation to take effect, whereas a blocking operation does not return until the operation is complete.
+
+[^5]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
