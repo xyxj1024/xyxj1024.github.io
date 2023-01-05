@@ -43,6 +43,101 @@ If `withdraw()` is called from an externally owned account (EOA), the function e
 
 ## Environment Setup
 
-![Choose one of the three providers to link a Web3.py instance with an Etheurem node.](/assets/images/web3py-and-nodes.png)
+### Connecting to the Blockchain
 
-"Ethereum node" and "Ethereum client" are used interchangeably. In either case, it refers to the software that a participant in the Ethereum network runs. This software can read block data, receive updates when new blocks are added to the chain, broadcast new transactions, and more. Technically, the client is the software, the node is the computer running the software. Ethereum clients can be configured to be reachable by IPC (uses local filesystem: fastest and most secure), HTTP (supported by more nodes), or Websockets (works remotely, faster than HTTP), so Web3.py will need to mirror this configuration.
+![web3-providers](/assets/images/web3py-and-nodes.png)
+
+"Ethereum node" and "Ethereum client" are sometimes used interchangeably. In either case, it refers to the software that a participant in the Ethereum network runs. This software can read block data, receive updates when new blocks are added to the chain, broadcast new transactions, and more. Technically, the client is the software, the node is the computer running the software. Ethereum clients can be configured to be reachable by IPC (uses local filesystem: fastest and most secure), HTTP (supported by more nodes), or Websockets (works remotely, faster than HTTP), so Web3.py will need to mirror this configuration.
+
+The SEED Internet Emulator enables the HTTP server on four Ethereum nodes that can only be accessed using a port on the SEED VM:
+
+```text
+localhost:8545 --> <IP 1>:8545 : Attacker (eth0)
+localhost:8546 --> <IP 2>:8545 : Victim   (eth1)
+localhost:8547 --> <IP 3>:8545 : User 1   (eth2)
+localhost:8548 --> <IP 4>:8545 : User 2   (eth3)
+```
+
+Geth (go-ethereum) is an Ethereum *execution client* meaning it handles transactions, deployment and execution of smart contracts and contains the EVM. Running Geth alongside a consensus client turns a computer into an Ethereum node. By default, Geth accepts connections from the local loopback interface (`127.0.0.1`) using the port `8545`. Geth supports **Clique**, a Proof-of-Authority (PoA) consensus mechanism. The code snippet shown below connects to a node:
+
+```python
+port = 8546 # the Victim node
+web3 = SEEDWeb3.connect_to_geth_poa('http://127.0.0.1:{}'.format(port))
+```
+
+The `connect_to_geth_poa()` method in the second line is a wrapper function included in `SEEDWeb3.py`:
+
+```python
+# Connect to a geth node
+def connect_to_geth_poa(url):
+    web3 = Web3(Web3.HTTPProvider(url))
+    if not web3.isConnected():
+        sys.exit("Connection failed!") 
+    web3.middleware_onion.inject(geth_poa_middleware, layer=0)
+    return web3
+```
+
+where
+
+```python
+# /web3/types.py
+Middleware = Callable[[Callable[[RPCEndpoint, Any], RPCResponse], "Web3"], Any]
+MiddlewareOnion = NamedElementOnion[str, Middleware]
+
+# /web3/datastructures.py
+class NamedElementOnion(Mapping[TKey, TValue]):
+    """
+    Add layers to an onion-shaped structure. Optionally, inject to a specific layer.
+    This structure is iterable, where the outermost layer is first, and innermost
+    is last.
+    """
+    
+    ...
+
+    def inject(
+        self, element: TValue, name: Optional[TKey] = None, layer: Optional[int] = None
+    ) -> None:
+        """
+        Inject a named element to an arbitrary layer in the onion.
+        The current implementation only supports insertion at the innermost layer,
+        or at the outermost layer. Note that inserting to the outermost is equivalent
+        to calling :meth:`add` .
+        """
+        if not is_integer(layer):
+            raise TypeError("The layer for insertion must be an int.")
+        elif layer != 0 and layer != len(self._queue):
+            raise NotImplementedError(
+                f"You can only insert to the beginning or end of a {type(self)}, "
+                f"currently. You tried to insert to {layer}, but only 0 and "
+                f"{len(self._queue)} are permitted. "
+            )
+
+        self.add(element, name=name)
+
+        if layer == 0:
+            if name is None:
+                name = cast(TKey, element)
+            self._queue.move_to_end(name, last=False)
+        elif layer == len(self._queue):
+            return
+        else:
+            raise AssertionError(
+                "Impossible to reach: earlier validation raises an error"
+            )
+
+    ...
+```
+
+and
+
+```python
+# web3/middleware/geth_poa.py
+geth_poa_middleware = construct_formatting_middleware(
+    result_formatters={
+        RPCEndpoint("eth_getBlockByHash"): geth_poa_cleanup,
+        RPCEndpoint("eth_getBlockByNumber"): geth_poa_cleanup,
+    },
+)
+```
+
+## Task 1: Getting Familiar with the Victim Smart Contract
