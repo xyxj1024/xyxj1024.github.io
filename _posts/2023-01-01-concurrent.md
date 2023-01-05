@@ -6,11 +6,11 @@ tags:       object-oriented-programming concurrency tree stack
 permalink:  /concurrent-stacks/
 ---
 
-A **concurrent stack**{: style="color: red"} is a data structure linearizable to a sequential stack that provides `push` and `pop` operations with the usual LIFO semantics. Linearizability is the *de facto* standard correctness condition for concurrent algorithms. Intuitively, an algorithm is linearizable with respect to a sequential specification if each execution of the algorithm is equivalent to some sequential execution of the specification, where the order between the non-overlapping methods is preserved. In this post, I would like to present Java code for two different concurrent stacks: the elimination back-off stack and the timestamped stack. Those who are interested in C++ implementations of concurrent data structures will find [this repo](https://github.com/cksystemsgroup/scal) useful.
+A **concurrent stack**{: style="color: red"} is a data structure linearizable to a sequential stack that provides `push` and `pop` operations with the usual LIFO semantics. Linearizability is the *de facto* standard correctness condition for concurrent algorithms. Intuitively, an algorithm is linearizable with respect to a sequential specification if each execution of the algorithm is equivalent to some sequential execution of the specification, where the order between the non-overlapping methods is preserved. In this post, I would like to summarize a Java implementation of the elimination back-off stack. Those who are interested in C++ implementations of concurrent data structures may find [this repo](https://github.com/cksystemsgroup/scal) useful.
 
 <!-- excerpt-end -->
 
-[R. Kent Treiber](https://dominoweb.draco.res.ibm.com/58319a2ed2b1078985257003004617ef.html) proposed the first non-blocking implementation of concurrent list-based stack. He presented the stack as a singly-linked list with a top pointer and used compare-and-swap operation to modify the value of the top atomically.
+[R. Kent Treiber](https://dominoweb.draco.res.ibm.com/58319a2ed2b1078985257003004617ef.html) proposed the first non-blocking implementation of concurrent list-based stack. The Treiber stack maintains a `top` pointer which points to the candidate. Every time a new element is pushed, the new element becomes the candidate element and therefore the `top` pointer is redirected to the new element. Similarly, every time the candidate element is popped, the `top` pointer is redirected to the next candidate element. This means that every operation which accesses the Treiber stack modifies the `top` pointer. When an increasing number of threads accesses the Treiber stack concurrently, the contention on the `top` pointer increases, and eventually the Treiber stack does not scale anymore.
 
 ```java
 public class TreiberStack<T> {
@@ -242,13 +242,15 @@ A *combining tree* is a distributed binary-tree-based data structure with a shar
 A counting tree *balancer* is a computing element with one input wire and two output wires. Tokens arrive on the balancer's input wire at arbitrary times and are output on its output wires. A *balancing tree* of width $$w$$ is a binary tree of balancers, where output wires of one balancer are connected to input wires of another, having one designated root input wire and $$w$$ designated output wires. On a shared-memory, multiprocessor one can implement a balancing tree as a shared data structure, where balancers are records, and wires are pointers from one record to another. Threads arrive at a balancer and it repeatedly sends them up and down, so its top wire always has the same or at most one more than the bottom one. One could implement the balancers in a straightforward way using a bit that threads toggle: they fetch the bit and then complement it, exiting on the output wire they fetched (zero or more):
 
 ```Java
-AtomicBoolean toggle = new AtomicBoolean(true);
-public boolean toggle() {
-    boolean result;
-    do {
-        result = toggle.get();
-    } while (!toggle.compareAndSet(result, !result));
-    return result;
+public class ToggleBit {
+    AtomicBoolean toggle = new AtomicBoolean(true);
+    public boolean toggle() {
+        boolean result;
+        do {
+            result = toggle.get();
+        } while (!toggle.compareAndSet(result, !result));
+        return result;
+    }
 }
 ```
 
@@ -432,8 +434,6 @@ public class Node<T> {
     }
 }
 ```
-
-## Timestamped Stack
 
 ## Notes
 
