@@ -1,14 +1,48 @@
 ---
 layout:     post
-title:      "Concurrent Stacks"
+title:      "Concurrent Stacks in Java"
 category:   "Data Structures, Algorithms, Programming Languages"
 tags:       object-oriented-programming concurrency tree stack
 permalink:  /concurrent-stacks/
 ---
 
-
+A **concurrent stack**{: style="color: red"} is a data structure linearizable to a sequential stack that provides `push` and `pop` operations with the usual LIFO semantics. Linearizability is the *de facto* standard correctness condition for concurrent algorithms. Intuitively, an algorithm is linearizable with respect to a sequential specification if each execution of the algorithm is equivalent to some sequential execution of the specification, where the order between the non-overlapping methods is preserved. In this post, I would like to present Java code for two different concurrent stacks: the elimination back-off stack and the timestamped stack. Those who are interested in C++ implementations of concurrent data structures will find [this repo](https://github.com/cksystemsgroup/scal) useful.
 
 <!-- excerpt-end -->
+
+[R. Kent Treiber](https://dominoweb.draco.res.ibm.com/58319a2ed2b1078985257003004617ef.html) proposed the first non-blocking implementation of concurrent list-based stack. He presented the stack as a singly-linked list with a top pointer and used compare-and-swap operation to modify the value of the top atomically.
+
+```java
+public class TreiberStack<T> {
+    AtomicReference<Node<T>> top = new AtomicReference<Node<T>>();
+    public void push(T item) {
+        Node<T> newHead = new Node<T>(item);
+        Node<T> oldHead;
+        do {
+            oldHead = top.get();
+            newHead.next = oldHead;
+        } while (!top.compareAndSet(oldHead, newHead));
+    }
+    public T pop() {
+        Node<T> oldHead;
+        Node<T> newHead;
+        do {
+            oldHead = top.get();
+            if (oldHead == null)
+                return null;
+            newHead = oldHead.next;
+        } while (!top.compareAndSet(oldHead, newHead));
+        return oldHead.item;
+    }
+    private static class Node <T> {
+        public final T item;
+        public Node<T> next;
+        public Node(T item) {
+            this.item = item;
+        }
+    }
+}
+```
 
 ## Table of Contents
 {:.no_toc}
@@ -203,7 +237,9 @@ public class CASCounter {
 
 Scalable counting can only achieved by methods that are distributed[^5] and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^6].
 
-A *combining tree* is a distributed binary-tree-based data structure with a shared counter at its root. Processors combine their increment requests going up the tree from the leaves to the root and propagate the answers down the tree, thus eliminating the need for all processors to actually reach the root in order to increment the counter. A counting tree *balancer* is a computing element with one input wire and two output wires. Tokens arrive on the balancer's input wire at arbitrary times and are output on its output wires. A *balancing tree* of width $$w$$ is a binary tree of balancers, where output wires of one balancer are connected to input wires of another, having one designated root input wire and $$w$$ designated output wires. On a shared-memory, multiprocessor one can implement a balancing tree as a shared data structure, where balancers are records, and wires are pointers from one record to another. Threads arrive at a balancer and it repeatedly sends them up and down, so its top wire always has the same or at most one more than the bottom one. One could implement the balancers in a straightforward way using a bit that threads toggle: they fetch the bit and then complement it, exiting on the output wire they fetched (zero or more):
+A *combining tree* is a distributed binary-tree-based data structure with a shared counter at its root. Processors combine their increment requests going up the tree from the leaves to the root and propagate the answers down the tree, thus eliminating the need for all processors to actually reach the root in order to increment the counter. In the classic combining tree scheme, scalability as the number of processors $$P$$ increases is achieved by making the tree deeper, adding more levels to make sure that the number of leaves is $$\lceil P / 2 \rceil$$. Under maximal load, the throughput of such a tree will be $$P / (2 \log P)$$ operations per time unit, offering a significant speedup.
+
+A counting tree *balancer* is a computing element with one input wire and two output wires. Tokens arrive on the balancer's input wire at arbitrary times and are output on its output wires. A *balancing tree* of width $$w$$ is a binary tree of balancers, where output wires of one balancer are connected to input wires of another, having one designated root input wire and $$w$$ designated output wires. On a shared-memory, multiprocessor one can implement a balancing tree as a shared data structure, where balancers are records, and wires are pointers from one record to another. Threads arrive at a balancer and it repeatedly sends them up and down, so its top wire always has the same or at most one more than the bottom one. One could implement the balancers in a straightforward way using a bit that threads toggle: they fetch the bit and then complement it, exiting on the output wire they fetched (zero or more):
 
 ```Java
 AtomicBoolean toggle = new AtomicBoolean(true);
@@ -219,6 +255,25 @@ public boolean toggle() {
 Elimination is a state when two threads carrying a *token* and *anti-token* meet, and "eliminate" each other. When such two threads meet in a data structure, they can exchange the information they carry. A common way to use elimination is to build an *elimination array*, which is a set of cells where each thread randomly chooses a location and spins waiting another thread to "collide" with. When collision occurred, in case the two collided threads carry a token and anti-token, they can exchange information and leave the data structure:
 
 ```java
+public class EliminationArray<T> {
+    Exchanger<T>[] exchanger;
+    final long TIMEOUT;
+    final TimeUnit UNIT;
+    Random random;
+    public EliminationArray(int capacity, long timeout, TimeUnit unit) {
+        exchanger = new Exchanger[capacity];
+        for (int i = 0; i < capacity; i++)
+            exchanger[i] = new Exchanger<>();
+        random = new Random();
+        TIMEOUT = timeout;
+        UNIT = unit;
+    }
+    public T visit(T value, int range) throws TimeoutException {
+        int slot = random.nextInt(exchanger.length);
+        return exchanger[slot].exchange(value, TIMEOUT, UNIT);
+    }
+}
+
 public class Exchanger {
     AtomicReference<ExchangerPackage> slot;
 }
@@ -258,7 +313,7 @@ public class Prism {
     public boolean visit() throws TimeoutException, InterruptedException {
         int me = ThreadID.get();
         int slot = ThreadLocalRandom.current().nextInt(exchanger.length);
-        int other = exchanger[slot].exchange(me, duration, TimeUnit, MILLISECONDS);
+        int other = exchanger[slot].exchange(me, duration, TimeUnit.MILLISECONDS);
         return (me < other);
     }
 }
@@ -316,7 +371,69 @@ public class DiffractingTree {
 }
 ```
 
-## Concurrent Stack
+## Elimination Back-off Stack
+
+The idea proposed by Hendler et al. (2004)[^7] is to use a single elimination array as a back-off scheme on a shared lock-free stack. If the threads fail on the stack, they attempt to eliminate on the array; if they fail in eliminating, they attempt to access the stack again and so on. Any operation on the shared stack can be linearized at the access point, and any pair of eliminated operations can be linearized when they met. It delivers the same performance as the simple stack at low loads since it is a back-off scheme. However, unlike the simple stack, it scales well as load increases because:
+- the number of successful eliminations grows, allowing many operations to complete in parallel, and
+- contention on the head of the shared stack is reduced beyond levels achievable by the best exponential back-off schemes since scores of backed off operations are eliminated in the array and *never* re-attempt to access the shared structure.
+
+```java
+public class EliminationBackoffStack<T> {
+    AtomicReference<Node<T>> top;
+    EliminationArray<T> eliminationArray;
+    static final int CAPACITY = 100;
+    static final long TIMEOUT = 10;
+    static final TimeUnit UNIT = TimeUnit.MILLISECONDS;
+    public EliminationBackoffStack() {
+        top = new AtomicReference<>(null);
+        eliminationArray = new EliminationArray<>(
+            CAPACITY, TIMEOUT, UNIT
+        );
+    }
+    public void push(T x) {
+        Node<T> n = new Node<>(x);
+        while (true) {
+            if (tryPush(n)) return;
+            try {
+                T y = eliminationArray.visit(x);
+                if (y == null) return;
+            } catch (TimeoutException e) {}   
+        }
+    }
+    public T pop() throws EmptyStackException {
+        while (true) {
+            Node<T> n = tryPop();
+            if (n != null) return n.value;
+            try {
+                T y = eliminationArray.visit(null);
+                if (y != null) return y;
+            } catch (TimeoutException e) {}
+        }
+    }
+    protected boolean tryPush(Node<T> n) {
+        Node<T> m = top.get();
+        n.next = m;
+        return top.compareAndSet(m, n);
+    }
+    protected Node<T> tryPop() throws EmptyStackException {
+        Node<T> m = top.get();
+        if (m == null) throw new EmptyStackException();
+        Node<T> n = m.next;
+        return top.compareAndSet(m, n)? m : null;
+    }
+}
+
+public class Node<T> {
+    public T value;
+    public Node<T> next;
+
+    public Node(T x) {
+        value = x;
+    }
+}
+```
+
+## Timestamped Stack
 
 ## Notes
 
@@ -331,3 +448,5 @@ public class DiffractingTree {
 [^5]: A *distributed counter* is a concurrent object which provides a test-and-increment operation on a shared value. On the basis of a distributed counter, one can implement various fundamental data structures, such as queues or stacks.
 
 [^6]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
+
+[^7]: Danny Hendler, Nir Shavit and Lena Yerushalmi, "A Scalable Lock-free Stack Algorithm," *SPAA'04*, June 27-30, 2004, Barcelona, Spain.
