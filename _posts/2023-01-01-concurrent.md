@@ -6,11 +6,11 @@ tags:       object-oriented-programming concurrency tree stack
 permalink:  /concurrent-stacks/
 ---
 
-A **concurrent stack**{: style="color: red"} is a data structure linearizable to a sequential stack that provides `push` and `pop` operations with the usual LIFO semantics. Linearizability is the *de facto* standard correctness condition for concurrent algorithms. Intuitively, an algorithm is linearizable with respect to a sequential specification if each execution of the algorithm is equivalent to some sequential execution of the specification, where the order between the non-overlapping methods is preserved. In this post, I would like to summarize a Java implementation of the elimination back-off stack. Those who are interested in C++ implementations of concurrent data structures may find [this repo](https://github.com/cksystemsgroup/scal) useful.
+A **concurrent stack**{: style="color: red"} is a data structure linearizable to a sequential stack that provides `push` and `pop` operations with the usual LIFO semantics. Linearizability is the *de facto* standard correctness condition for concurrent algorithms. Intuitively, an algorithm is linearizable with respect to a sequential specification if each execution of the algorithm is equivalent to some sequential execution of the specification, where the order between the non-overlapping methods is preserved. In this post, I would like to review a Java implementation of a concurrent stack data structure called the elimination back-off stack. Those who are interested in C++ implementations of concurrent data structures may find [this repo](https://github.com/cksystemsgroup/scal) useful. I also found [this article](http://people.csail.mit.edu/shanir/publications/concurrent-data-structures.pdf) by Mark Moir and Nir Shavit a good source for concurrent programming.
 
 <!-- excerpt-end -->
 
-[R. Kent Treiber](https://dominoweb.draco.res.ibm.com/58319a2ed2b1078985257003004617ef.html) proposed the first non-blocking implementation of concurrent list-based stack. The Treiber stack maintains a `top` pointer which points to the candidate. Every time a new element is pushed, the new element becomes the candidate element and therefore the `top` pointer is redirected to the new element. Similarly, every time the candidate element is popped, the `top` pointer is redirected to the next candidate element. This means that every operation which accesses the Treiber stack modifies the `top` pointer. When an increasing number of threads accesses the Treiber stack concurrently, the contention on the `top` pointer increases, and eventually the Treiber stack does not scale anymore.
+[R. Kent Treiber](https://dominoweb.draco.res.ibm.com/58319a2ed2b1078985257003004617ef.html) proposed the first nonblocking implementation of concurrent list-based stack. The Treiber stack maintains a `top` pointer which points to the candidate. Every time a new element is pushed, the new element becomes the candidate element and therefore the `top` pointer is redirected to the new element. Similarly, every time the candidate element is popped, the `top` pointer is redirected to the next candidate element. This means that every operation which accesses the Treiber stack modifies the `top` pointer. When an increasing number of threads accesses the Treiber stack concurrently, the contention on the `top` pointer increases, and eventually the Treiber stack does not scale anymore.
 
 ```java
 public class TreiberStack<T> {
@@ -44,6 +44,16 @@ public class TreiberStack<T> {
 }
 ```
 
+where
+
+```java
+public final boolean compareAndSet(V expect, V update) {
+    return unsafe.compareAndSwapObject(this, valueOffset, expect, update);
+}
+```
+
+atomically sets the value to the given updated value if the current value equals the expected value[^1].
+
 ## Table of Contents
 {:.no_toc}
 * TOC 
@@ -51,7 +61,7 @@ public class TreiberStack<T> {
 
 ## Some Preliminaries
 
-Please refer to Herlihy et al. (2021)[^1] (or Herlihy's 1991 paper[^2]) for more details.
+Please refer to Herlihy et al. (2021)[^2] (or Herlihy's 1991 paper[^3]) for more details.
 
 ### Amdahl's Law
 
@@ -145,7 +155,7 @@ works as follows:
 1. The `expression` is evaluated. It must produce (a reference to) an object which is treated as a lock.
 2. The synchronized statement acquires the lock. Locks are reentrant in Java, so the statement will not block if the executing thread already holds it.
 3. After the lock is successfully acquired, the `statements` are executed.
-4. When control leaves the `statements`, the lock is released[^3].
+4. When control leaves the `statements`, the lock is released[^4].
 
 Concurrent algorithms based on CAS are called *lock-free*, because threads do not ever have to wait for a lock. Either the CAS operation succeeds or it doesn't, but in either case, it completes in a predictable amount of time. If the CAS fails, the caller can retry the CAS operation or take another action as it sees fit.
 
@@ -153,7 +163,7 @@ Concurrent algorithms based on CAS are called *lock-free*, because threads do no
 
 **Definition 2.** (Compositionality) A correctness property $$\mathcal{P}$$ is *compositional* if, whenever each object in the system satisfies $$\mathcal{P}$$, the system as a whole satisfies $$\mathcal{P}$$.
 
-**Definition 3.** (Sequential Consistency) Method calls should appear to happen in a one-at-a-time, sequential order (in which method calls do not overlap). Method calls should appear to take effect in program order (the order in which a single thread issues method calls). Sequential consistency is a *nonblocking* correctness condition such that for any pending method call in a sequentially consistent concurrent execution, there is some sequentially consistent response, that is, a response to the invocation that could be given immediately without violating sequential consistency[^4]. Sequential consistency is not compositional; that is, the result of composing sequentially consistent components is not itself necessarily sequentially consistent.
+**Definition 3.** (Sequential Consistency) Method calls should appear to happen in a one-at-a-time, sequential order (in which method calls do not overlap). Method calls should appear to take effect in program order (the order in which a single thread issues method calls). Sequential consistency is a *nonblocking* correctness condition such that for any pending method call in a sequentially consistent concurrent execution, there is some sequentially consistent response, that is, a response to the invocation that could be given immediately without violating sequential consistency[^5]. Sequential consistency is not compositional; that is, the result of composing sequentially consistent components is not itself necessarily sequentially consistent.
 
 **Definition 4.** (Linearizability) Each method call should appear to take effect instantaneously at some moment between its invocation and response. Every linearizable execution is sequentially consistent, but not vice versa. Linearizability is compositional.
 
@@ -215,7 +225,7 @@ public class RegularBooleanMRSWRegister implements Register<Boolean> {
 
 When the newly written value `x` is the same as the old, the regular register can only return `x`, while a safe register may return either Boolean value.
 
-### Distributed Counting
+## Distributed Counting
 
 In its purest form, a *counter* is an object that holds an integer value and provides a *fetch-and-increment* operation, incrementing the counter and returning its previous value. The code snippet below shows the counter class written to use CAS:
 
@@ -235,13 +245,13 @@ public class CASCounter {
 }
 ```
 
-Scalable counting can only achieved by methods that are distributed[^5] and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^6].
+Scalable counting can only achieved by methods that are distributed[^6] and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^7].
 
 A *combining tree* is a distributed binary-tree-based data structure with a shared counter at its root. Processors combine their increment requests going up the tree from the leaves to the root and propagate the answers down the tree, thus eliminating the need for all processors to actually reach the root in order to increment the counter. In the classic combining tree scheme, scalability as the number of processors $$P$$ increases is achieved by making the tree deeper, adding more levels to make sure that the number of leaves is $$\lceil P / 2 \rceil$$. Under maximal load, the throughput of such a tree will be $$P / (2 \log P)$$ operations per time unit, offering a significant speedup.
 
 A counting tree *balancer* is a computing element with one input wire and two output wires. Tokens arrive on the balancer's input wire at arbitrary times and are output on its output wires. A *balancing tree* of width $$w$$ is a binary tree of balancers, where output wires of one balancer are connected to input wires of another, having one designated root input wire and $$w$$ designated output wires. On a shared-memory, multiprocessor one can implement a balancing tree as a shared data structure, where balancers are records, and wires are pointers from one record to another. Threads arrive at a balancer and it repeatedly sends them up and down, so its top wire always has the same or at most one more than the bottom one. One could implement the balancers in a straightforward way using a bit that threads toggle: they fetch the bit and then complement it, exiting on the output wire they fetched (zero or more):
 
-```Java
+```java
 public class ToggleBit {
     AtomicBoolean toggle = new AtomicBoolean(true);
     public boolean toggle() {
@@ -375,7 +385,7 @@ public class DiffractingTree {
 
 ## Elimination Back-off Stack
 
-The idea proposed by Hendler et al. (2004)[^7] is to use a single elimination array as a back-off scheme on a shared lock-free stack. If the threads fail on the stack, they attempt to eliminate on the array; if they fail in eliminating, they attempt to access the stack again and so on. Any operation on the shared stack can be linearized at the access point, and any pair of eliminated operations can be linearized when they met. It delivers the same performance as the simple stack at low loads since it is a back-off scheme. However, unlike the simple stack, it scales well as load increases because:
+The idea proposed by Hendler et al. (2004)[^8] is to use a single elimination array as a back-off scheme on a shared lock-free stack. If the threads fail on the stack, they attempt to eliminate on the array; if they fail in eliminating, they attempt to access the stack again and so on. Any operation on the shared stack can be linearized at the access point, and any pair of eliminated operations can be linearized when they met. It delivers the same performance as the simple stack at low loads since it is a back-off scheme. However, unlike the simple stack, it scales well as load increases because:
 - the number of successful eliminations grows, allowing many operations to complete in parallel, and
 - contention on the head of the shared stack is reduced beyond levels achievable by the best exponential back-off schemes since scores of backed off operations are eliminated in the array and *never* re-attempt to access the shared structure.
 
@@ -437,16 +447,18 @@ public class Node<T> {
 
 ## Notes
 
-[^1]: Maurice Herlihy, Nir Shavit, Victor Luchangco and Michael Spear, *The Art of Multiprocessor Programming (Second Edition)*, Morgan Kaufmann, 2021.
+[^1]: Please refer to [this post](https://blog.csdn.net/qqqqq1993qqqqq/article/details/75211993) for more details.
 
-[^2]: Maurice Herlihy, "Wait-Free Synchronization," *ACM Transactions on Programming Languages and Systems*, Vol. 11, No. 1, January 1991, Pages 124-149.
+[^2]: Maurice Herlihy, Nir Shavit, Victor Luchangco and Michael Spear, *The Art of Multiprocessor Programming (Second Edition)*, Morgan Kaufmann, 2021.
 
-[^3]: Please refer to [Professor Dan Grossman's teaching materials](https://homes.cs.washington.edu/~djg/).
+[^3]: Maurice Herlihy, "Wait-Free Synchronization," *ACM Transactions on Programming Languages and Systems*, Vol. 11, No. 1, January 1991, Pages 124-149.
 
-[^4]: In the systems literature, a nonblocking operation returns immediately without waiting for the operation to take effect, whereas a blocking operation does not return until the operation is complete.
+[^4]: Please refer to [Professor Dan Grossman's teaching materials](https://homes.cs.washington.edu/~djg/).
 
-[^5]: A *distributed counter* is a concurrent object which provides a test-and-increment operation on a shared value. On the basis of a distributed counter, one can implement various fundamental data structures, such as queues or stacks.
+[^5]: In the systems literature, a nonblocking operation returns immediately without waiting for the operation to take effect, whereas a blocking operation does not return until the operation is complete.
 
-[^6]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
+[^6]: A *distributed counter* is a concurrent object which provides a test-and-increment operation on a shared value. On the basis of a distributed counter, one can implement various fundamental data structures, such as queues or stacks.
 
-[^7]: Danny Hendler, Nir Shavit and Lena Yerushalmi, "A Scalable Lock-free Stack Algorithm," *SPAA'04*, June 27-30, 2004, Barcelona, Spain.
+[^7]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
+
+[^8]: Danny Hendler, Nir Shavit and Lena Yerushalmi, "A Scalable Lock-free Stack Algorithm," *SPAA'04*, June 27-30, 2004, Barcelona, Spain.
