@@ -34,7 +34,17 @@ This contract exposes a `withdraw()` function to allow users to withdraw ETH pre
 - Sends funds to the calling address;
 - Resets their balance to $$0$$, preventing additional withdrawals from the user.
 
-If `withdraw()` is called from an externally owned account (EOA), the function executes as expected. However, if `msg.sender` is a smart contract account that calls `withdraw()`, sending funds using `msg.sender.call.value()` will also trigger code stored at that address to run. Because the caller's balance isn't set to $$0$$ until the function execution completes, subsequent invocations will succeed and allow the caller to withdraw their balance multiple times. Reentrancy attacks are still a critical issue for smart contracts on Ethereum today.
+If `withdraw()` is called from an externally owned account (EOA), the function executes as expected. However, if `msg.sender` is a smart contract account that calls `withdraw()`, sending funds using `msg.sender.call.value()` will also trigger code stored at that address to run. Because the caller's balance isn't set to $$0$$ until the function execution completes, subsequent invocations will succeed and allow the caller to withdraw their balance multiple times with a fallback function[^1]:
+
+```solidity
+function () payable {
+    if (Victim.balance > 1 ether) {
+        Victim.withdraw(1 ether);
+    }
+}
+```
+
+Reentrancy attacks are still a critical issue for smart contracts on Ethereum today.
 
 ## Table of Contents
 {:.no_toc}
@@ -43,7 +53,7 @@ If `withdraw()` is called from an externally owned account (EOA), the function e
 
 ## Environment Setup
 
-### Connecting to the Blockchain
+### Ethereum Nodes and Accounts
 
 ![web3-providers](/assets/images/web3py-and-nodes.png)
 
@@ -58,7 +68,7 @@ localhost:8547 --> <IP 3>:8545 : User 1   (eth2)
 localhost:8548 --> <IP 4>:8545 : User 2   (eth3)
 ```
 
-Geth (go-ethereum) is an Ethereum *execution client* meaning it handles transactions, deployment and execution of smart contracts and contains the EVM. Running Geth alongside a consensus client turns a computer into an Ethereum node. By default, Geth accepts connections from the local loopback interface (`127.0.0.1`) using the port `8545`. Geth supports **Clique**, a Proof-of-Authority (PoA) consensus mechanism. The code snippet shown below connects to a node:
+Geth (go-ethereum) is an Ethereum *execution client* meaning it handles transactions, deployment and execution of smart contracts and contains the EVM. Running Geth alongside a consensus client turns a computer into an Ethereum node. By default, Geth accepts connections from the local loopback interface (`127.0.0.1`) using the port `8545`. Geth supports **Clique**, a Proof-of-Authority (PoA) consensus mechanism. The following code snippet shows how to connect to the Victim node:
 
 ```python
 port = 8546 # the Victim node
@@ -140,4 +150,27 @@ geth_poa_middleware = construct_formatting_middleware(
 )
 ```
 
+All the accounts in the emulator are encrypted, and the password is `admin`. After connecting to an Ethereum node, we can access all its accounts via the `web3.eth.accounts[]` array:
+
+```python
+sender_account = web3.eth.account[1] # use the account indexed 1
+web3.geth.personal.unlockAccount(sender_account, "admin")
+```
+
+and get the balance of an account:
+
+```python
+web3.eth.get_balance(Web3.toChecksumAddress(address))
+```
+
 ## Task 1: Getting Familiar with the Victim Smart Contract
+
+## Task 2: The Attacking Contract
+
+## Task 3: Launching the Reentrancy Attack
+
+## Task 4: Countermeasures
+
+## Notes
+
+[^1]: Andreas M. Antonopoulos and Gavin Wood, "Mastering Ethereum," 2018, [https://github.com/ethereumbook/ethereumbook](https://github.com/ethereumbook/ethereumbook). See also [Smart Contract Security](https://ethereum.org/en/developers/docs/smart-contracts/security/) from Ethereum official documents.
