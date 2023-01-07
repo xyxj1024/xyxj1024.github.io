@@ -159,7 +159,7 @@ works as follows:
 
 Concurrent algorithms based on CAS are called *lock-free*, because threads do not ever have to wait for a lock. Either the CAS operation succeeds or it doesn't, but in either case, it completes in a predictable amount of time. If the CAS fails, the caller can retry the CAS operation or take another action as it sees fit.
 
-### Basic Concepts of Shared-Memory Computation
+### Shared-Memory Computation
 
 **Definition 2.** (Compositionality) A correctness property $$\mathcal{P}$$ is *compositional* if, whenever each object in the system satisfies $$\mathcal{P}$$, the system as a whole satisfies $$\mathcal{P}$$.
 
@@ -225,7 +225,7 @@ public class RegularBooleanMRSWRegister implements Register<Boolean> {
 
 When the newly written value `x` is the same as the old, the regular register can only return `x`, while a safe register may return either Boolean value.
 
-## Distributed Counting
+## Shared Counting
 
 In its purest form, a *counter* is an object that holds an integer value and provides a *fetch-and-increment* operation, incrementing the counter and returning its previous value. The code snippet below shows the counter class written to use CAS:
 
