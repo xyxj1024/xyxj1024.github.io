@@ -83,7 +83,7 @@ last_modified_at:   "2022-12-29"
 - **中间**有北达晋北，南走南阳、荆州（汉水---长江）的南北大道；
 - **东侧**有太行东麓的大道及南下直入长江下游的大道。
 
-![earlier-han](/assets/images/earlier-han.png)[^4]
+[*Figure 1: Economic Development Under the Earlier Han Dynasty, CA. 100 B.C.*](/assets/images/earlier-han.png)[^4]
 
 东西干道东端入山东，西端入河西走廊；四川的干道，在通西南夷之后，又可进入西南；中线的南向大道路，过长江进入华南；东侧的南线，则过了长江下游，分别进入今日的江西与福建。
 
