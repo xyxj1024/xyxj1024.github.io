@@ -56,6 +56,9 @@ Reentrancy attacks are still a critical issue for smart contracts on Ethereum to
 ### Ethereum Nodes and Accounts
 
 ![web3-providers](/assets/images/web3py-and-nodes.png)
+<p style="color:gray; font-size:80%;">
+图片来源：ethereum.org
+</p>
 
 "Ethereum node" and "Ethereum client" are sometimes used interchangeably. In either case, it refers to the software that a participant in the Ethereum network runs. This software can read block data, receive updates when new blocks are added to the chain, broadcast new transactions, and more. Technically, the client is the software, the node is the computer running the software. Ethereum clients can be configured to be reachable by IPC (uses local filesystem: fastest and most secure), HTTP (supported by more nodes), or Websockets (works remotely, faster than HTTP), so Web3.py will need to mirror this configuration.
 

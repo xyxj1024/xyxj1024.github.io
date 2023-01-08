@@ -13,6 +13,11 @@ As evening fell a maiden stood at the edge of a wood; In her hands lay the reins
 
 *Legends of the Fall* by Jim Harrison (1979). Notes are my own.
 
+![montana-1864](/assets/images/montana-1864.png)
+<p style="color:gray; font-size:80%;">
+图片来源：montana1864.com
+</p>
+
 <!-- excerpt-end -->
 
 ## Table of Contents
