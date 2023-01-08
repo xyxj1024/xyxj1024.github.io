@@ -85,7 +85,7 @@ last_modified_at:   "2023-01-06"
 
 ![earlier-han](/assets/images/earlier-han.jpg){:class="img-responsive"}
 <p style="color:gray; font-size:80%;">
-图片来源：Albert Herrmann, *An Historical Atlas of China (New Edition)*, Aldine Publishing Company, 1966.
+图片来源：Albert Herrmann, <i>An Historical Atlas of China (New Edition)</i>, Aldine Publishing Company, 1966.
 </p>
 
 东西干道东端入山东，西端入河西走廊；四川的干道，在通西南夷之后，又可进入西南；中线的南向大道路，过长江进入华南；东侧的南线，则过了长江下游，分别进入今日的江西与福建。
