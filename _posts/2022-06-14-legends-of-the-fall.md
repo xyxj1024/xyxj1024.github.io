@@ -15,7 +15,7 @@ As evening fell a maiden stood at the edge of a wood; In her hands lay the reins
 
 ![montana-1864](/assets/images/montana-1864.png)
 <p style="color:gray; font-size:80%;">
-图片来源：montana1864.com
+Source: montana1864.com
 </p>
 
 <!-- excerpt-end -->
