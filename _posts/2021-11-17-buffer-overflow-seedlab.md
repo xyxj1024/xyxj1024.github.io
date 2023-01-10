@@ -801,7 +801,7 @@ done
 
 ## Notes
 
-[^1]: See "Daniel P. Bovet and Marco Cesati, *Understanding the Linux Kernel, Third Edition*, O'Reilly, 2006."
+[^1]: From Daniel P. Bovet and Marco Cesati, *Understanding the Linux Kernel, Third Edition*, O'Reilly, 2006.
 
 [^2]: A privileged program is one that can give users extra privileges beyond that are already assigned to them. A Set-Root-UID program is a privileged program because it allows users to gain the root privilege during the execution of the programs. For Set-UID programs in UNIX and UNIX-like operating systems, which stands for **set user ID on execution**, the effective <code>uid</code> is the owner of the program, while the real <code>uid</code> is the user of the program. Windows does not have the notion of Set-UID. A different mechanism is used for implementing privileged functionality. A developer would write a privileged program as a service and the user sends the command line arguments to the service using Local Procedure Call.
 

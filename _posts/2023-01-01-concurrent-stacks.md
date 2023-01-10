@@ -157,13 +157,18 @@ works as follows:
 3. After the lock is successfully acquired, the `statements` are executed.
 4. When control leaves the `statements`, the lock is released[^4].
 
-Concurrent algorithms based on CAS are called *lock-free*, because threads do not ever have to wait for a lock. Either the CAS operation succeeds or it doesn't, but in either case, it completes in a predictable amount of time. If the CAS fails, the caller can retry the CAS operation or take another action as it sees fit.
+Many concurrent data structure algorithms that have been developed use locks in order to enforce the correct semantics of the operations to be performed. However, locking risks blocking. Concurrent algorithms based on CAS are called *lock-free*, because threads do not ever have to wait for a lock. Either the CAS operation succeeds or it doesn't, but in either case, it completes in a predictable amount of time. If the CAS fails, the caller can retry the CAS operation or take another action as it sees fit[^5].
 
 ### Shared-Memory Computation
 
+*Instructions* are the lowest level of operations. An instruction accesses a single unit of memory called a *primitive element*. A primitive element is either a basic data type such as an integer, float, pointer, or lock. A data structure is composed of *cells*. Cells are the unit of locking. An *execution* is a sequence of instructions and the return values of those instructions. A *proper execution* of a concurrent program, $$P$$, is an execution, $$E$$, where:
+- The first instruction is the first statement of the program.
+- The last instruction is an exit from the program.
+- Instruction $$k + 1$$ in $$E$$ is the one that the program would emit based on the return values of the first $$k$$ instructions.
+
 **Definition 2.** (Compositionality) A correctness property $$\mathcal{P}$$ is *compositional* if, whenever each object in the system satisfies $$\mathcal{P}$$, the system as a whole satisfies $$\mathcal{P}$$.
 
-**Definition 3.** (Sequential Consistency) Method calls should appear to happen in a one-at-a-time, sequential order (in which method calls do not overlap). Method calls should appear to take effect in program order (the order in which a single thread issues method calls). Sequential consistency is a *nonblocking* correctness condition such that for any pending method call in a sequentially consistent concurrent execution, there is some sequentially consistent response, that is, a response to the invocation that could be given immediately without violating sequential consistency[^5]. Sequential consistency is not compositional; that is, the result of composing sequentially consistent components is not itself necessarily sequentially consistent.
+**Definition 3.** (Sequential Consistency) Method calls should appear to happen in a one-at-a-time, sequential order (in which method calls do not overlap). Method calls should appear to take effect in program order (the order in which a single thread issues method calls). Sequential consistency is a *nonblocking* correctness condition such that for any pending method call in a sequentially consistent concurrent execution, there is some sequentially consistent response, that is, a response to the invocation that could be given immediately without violating sequential consistency[^6]. Sequential consistency is not compositional; that is, the result of composing sequentially consistent components is not itself necessarily sequentially consistent.
 
 **Definition 4.** (Linearizability) Each method call should appear to take effect instantaneously at some moment between its invocation and response. Every linearizable execution is sequentially consistent, but not vice versa. Linearizability is compositional.
 
@@ -245,7 +250,7 @@ public class CASCounter {
 }
 ```
 
-Scalable counting can only achieved by methods that are distributed[^6] and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^7].
+Scalable counting can only achieved by methods that are distributed[^7] and therefore have low contention on memory and interconnect, and are parallel, and thus allow many requests to be dealt with concurrently[^8].
 
 A *combining tree* is a distributed binary-tree-based data structure with a shared counter at its root. Processors combine their increment requests going up the tree from the leaves to the root and propagate the answers down the tree, thus eliminating the need for all processors to actually reach the root in order to increment the counter. In the classic combining tree scheme, scalability as the number of processors $$P$$ increases is achieved by making the tree deeper, adding more levels to make sure that the number of leaves is $$\lceil P / 2 \rceil$$. Under maximal load, the throughput of such a tree will be $$P / (2 \log P)$$ operations per time unit, offering a significant speedup.
 
@@ -385,7 +390,7 @@ public class DiffractingTree {
 
 ## Elimination Back-off Stack
 
-The idea proposed by Hendler et al. (2004)[^8] is to use a single elimination array as a back-off scheme on a shared lock-free stack. If the threads fail on the stack, they attempt to eliminate on the array; if they fail in eliminating, they attempt to access the stack again and so on. Any operation on the shared stack can be linearized at the access point, and any pair of eliminated operations can be linearized when they met. It delivers the same performance as the simple stack at low loads since it is a back-off scheme. However, unlike the simple stack, it scales well as load increases because:
+The idea proposed by Hendler et al. (2004)[^9] is to use a single elimination array as a back-off scheme on a shared lock-free stack. If the threads fail on the stack, they attempt to eliminate on the array; if they fail in eliminating, they attempt to access the stack again and so on. Any operation on the shared stack can be linearized at the access point, and any pair of eliminated operations can be linearized when they met. It delivers the same performance as the simple stack at low loads since it is a back-off scheme. However, unlike the simple stack, it scales well as load increases because:
 - the number of successful eliminations grows, allowing many operations to complete in parallel, and
 - contention on the head of the shared stack is reduced beyond levels achievable by the best exponential back-off schemes since scores of backed off operations are eliminated in the array and *never* re-attempt to access the shared structure.
 
@@ -455,10 +460,12 @@ public class Node<T> {
 
 [^4]: Please refer to [Professor Dan Grossman's teaching materials](https://homes.cs.washington.edu/~djg/).
 
-[^5]: In the systems literature, a nonblocking operation returns immediately without waiting for the operation to take effect, whereas a blocking operation does not return until the operation is complete.
+[^5]: Herlihy proved the universality of CAS by showing that it can be used to convert any sequential data object into a concurrent, wait-free data object. See Maurice Herlihy, "Impossibility and Universality Results for Wait-Free Synchronization," In *Proceedings of the Seventh Annual ACM Symposium on Principles of Distributed Computing*, pages 276-290, Toronto, Ontario, Canada, August 1988.
 
-[^6]: A *distributed counter* is a concurrent object which provides a test-and-increment operation on a shared value. On the basis of a distributed counter, one can implement various fundamental data structures, such as queues or stacks.
+[^6]: In the systems literature, a *nonblocking* operation returns immediately without waiting for the operation to take effect, whereas a *blocking* operation does not return until the operation is complete. Algorithms for concurrent access to shared data structures are called *nonblocking* if the failure of any subset of the processes will not indefinitely delay the progress of the live processes.
 
-[^7]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
+[^7]: A *distributed counter* is a concurrent object which provides a test-and-increment operation on a shared value. On the basis of a distributed counter, one can implement various fundamental data structures, such as queues or stacks.
 
-[^8]: Danny Hendler, Nir Shavit and Lena Yerushalmi, "A Scalable Lock-free Stack Algorithm," *SPAA'04*, June 27-30, 2004, Barcelona, Spain.
+[^8]: Nir Shavit and Asaph Zemach, "Diffracting Trees," *ACM Transactions on Computer Systems*, Vol. 14, No. 4, November 1996, Pages 385-428.
+
+[^9]: Danny Hendler, Nir Shavit and Lena Yerushalmi, "A Scalable Lock-free Stack Algorithm," *SPAA'04*, June 27-30, 2004, Barcelona, Spain.
