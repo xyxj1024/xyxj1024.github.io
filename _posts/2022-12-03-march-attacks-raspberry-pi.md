@@ -370,13 +370,14 @@ double mysecond()
     struct timezone tzp;
     int i;
     
-    i = gettimeofday(&tp,&tzp);
+    i = gettimeofday(&tp, &tzp);
     return ( (double) tp.tv_sec + (double) tp.tv_usec * 1.e-6 );
 }
 
 void main_loop()
 {
     scalar = 3.0;
+    
     for (k = 0; k < NTIMES; k++) {
 
         times[0][k] = mysecond();
@@ -402,6 +403,7 @@ void main_loop()
         for (j = 0; j < STREAM_ARRAY_SIZE; j++)
             a[j] = b[j] + scalar * c[j];
         times[3][k] = mysecond() - times[3][k];
+
     }
 
     for (k = 1; k < NTIMES; k++) {
