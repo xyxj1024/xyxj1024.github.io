@@ -1,26 +1,21 @@
 ---
 layout: page
-title: About
+title: Xingjian Xuanyuan
 permalink: /about-en
 nav_order: 2
 ---
 
-# Xingjian Xuanyuan
-
 <!-- The unordered list immediately after the h1 will be formatted on a single
 line. It is intended to be used for contact details -->
-- <x.xingian@wustl.edu>
-- +1 (314) 583-3004
-- [xingjianxuanyuan.github.io](https://xingjianxuanyuan.github.io)
-- St. Louis, MO, USA
+<x.xingian@wustl.edu> | +1 (314) 583-3004 | [xingjianxuanyuan.github.io](https://xingjianxuanyuan.github.io) | St. Louis, MO, USA
 
 <!-- The paragraph after the h1 and ul and before the first h2 is optional. It
 is intended to be used for a short summary. -->
 Once thinking that I am destined for a career as a social scientist, right now I am a dedicated systems engineer.
 
-## Education
+## Education<hr>
 
-### <span>Washington University in St. Louis, Master of Engineering in Computer Science and Engineering</span> <span>Aug. 2021 -- Present</span>
+### <span style="float:left">Washington University in St. Louis, Master of Engineering in Computer Science and Engineering</span> <span style="float:right">Aug. 2021 -- Present</span>
 
   - GPA 3.3
   - CSE523S - Systems Security
@@ -29,12 +24,12 @@ Once thinking that I am destined for a career as a social scientist, right now I
   - CSE425S - Programming Systems and Languages
   - ECON558 - Matching and Assignment
 
-### <span>Tsinghua University, Bachelor of Arts in Economics</span> <span>Sep. 2017 -- Jul. 2021</span>
+### <span style="float:left">Tsinghua University, Bachelor of Arts in Economics</span> <span style="float:right">Sep. 2017 -- Jul. 2021</span>
 
  - GPA 3.58
  - Thesis Title: "The U.S. Tri-Party Repo Market"
 
-## Projects
+## Course Projects<hr>
 
 ### <span>Miss Direction</span> <span>Aug 2016</span>
 
@@ -44,7 +39,7 @@ A mapping engine that misguides you:
    - Built by all women team of newbie programmers
    - Using modern technologies such as GoogleMaps, Chrome Extension and Javascript
 
-## Experience
+## Experience<hr>
 
 <!-- You have to wrap the "left" and "right" half of these headings in spans by
 hand -->
@@ -66,7 +61,7 @@ Global movement of free coding clubs for young people.
 
  - Awarded 'Teacher of the Month'
 
-## Skills
+## Skills<hr>
 
  - Web development: HTML, CSS, JavaScript
  - Compression: Mpeg, MP4, GIF
