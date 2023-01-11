@@ -5,9 +5,9 @@ permalink: /about-en
 nav_order: 2
 ---
 
-XINGJIAN XUANYUAN (轩辕 行健)
-Gender: Male
-Nationality: China
+<p>XINGJIAN XUANYUAN (轩辕 行健)</p>
+<p>Gender: Male</p>
+<p>Nationality: China</p>
 
 <!-- The unordered list immediately after the h1 will be formatted on a single
 line. It is intended to be used for contact details -->
@@ -18,6 +18,7 @@ is intended to be used for a short summary. -->
 Once thinking that I am destined for a career as a social scientist, right now I am a dedicated systems engineer.
 
 ### Education
+
 <hr-cv>
 
 #### <span style="text-align:left">Washington University in St. Louis, Master of Engineering in Computer Science and Engineering</span> <span style="text-align:right">Aug. 2021 -- Present</span>
@@ -35,6 +36,7 @@ Once thinking that I am destined for a career as a social scientist, right now I
  - Thesis Title: "The U.S. Tri-Party Repo Market"
 
 ### Course Projects
+
 <hr-cv>
 
 #### <span>Miss Direction</span> <span>Aug 2016</span>
@@ -46,6 +48,7 @@ A mapping engine that misguides you:
    - Using modern technologies such as GoogleMaps, Chrome Extension and Javascript
 
 ### Experience
+
 <hr-cv>
 
 <!-- You have to wrap the "left" and "right" half of these headings in spans by
@@ -69,6 +72,7 @@ Global movement of free coding clubs for young people.
  - Awarded 'Teacher of the Month'
 
 ### Skills
+
 <hr-cv>
 
  - Web development: HTML, CSS, JavaScript
