@@ -13,9 +13,10 @@ line. It is intended to be used for contact details -->
 is intended to be used for a short summary. -->
 Once thinking that I am destined for a career as a social scientist, right now I am a dedicated systems engineer.
 
-## Education<hr>
+## Education
+<hr>
 
-### <span style="float:left">Washington University in St. Louis, Master of Engineering in Computer Science and Engineering</span> <span style="float:right">Aug. 2021 -- Present</span>
+### <span style="text-align:left">Washington University in St. Louis, Master of Engineering in Computer Science and Engineering</span> <span style="text-align:right">Aug. 2021 -- Present</span>
 
   - GPA 3.3
   - CSE523S - Systems Security
@@ -24,12 +25,13 @@ Once thinking that I am destined for a career as a social scientist, right now I
   - CSE425S - Programming Systems and Languages
   - ECON558 - Matching and Assignment
 
-### <span style="float:left">Tsinghua University, Bachelor of Arts in Economics</span> <span style="float:right">Sep. 2017 -- Jul. 2021</span>
+### <span style="text-align:left">Tsinghua University, Bachelor of Arts in Economics</span> <span style="text-align:right">Sep. 2017 -- Jul. 2021</span>
 
  - GPA 3.58
  - Thesis Title: "The U.S. Tri-Party Repo Market"
 
-## Course Projects<hr>
+## Course Projects
+<hr>
 
 ### <span>Miss Direction</span> <span>Aug 2016</span>
 
@@ -39,7 +41,8 @@ A mapping engine that misguides you:
    - Built by all women team of newbie programmers
    - Using modern technologies such as GoogleMaps, Chrome Extension and Javascript
 
-## Experience<hr>
+## Experience
+<hr>
 
 <!-- You have to wrap the "left" and "right" half of these headings in spans by
 hand -->
@@ -61,7 +64,8 @@ Global movement of free coding clubs for young people.
 
  - Awarded 'Teacher of the Month'
 
-## Skills<hr>
+## Skills
+<hr>
 
  - Web development: HTML, CSS, JavaScript
  - Compression: Mpeg, MP4, GIF
