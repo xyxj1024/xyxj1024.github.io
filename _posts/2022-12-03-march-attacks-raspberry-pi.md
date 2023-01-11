@@ -299,6 +299,11 @@ In this section, I would like to present the results from running the benchmark 
 
 ### Background
 
+Burger et al. (1996)[^5] divided program execution time $$T$$ into three categories:
+- *Processor time* $$T_{p}$$: the time in which the processor is either fully utilized, or is only partially utilized or stalled due to lack of instruction-level parallelism (ILP);
+- *Latency time* $$T_{L}$$: the number of lost cycles due to untolerated, intrinsic memory latencies (could not be reduced by adding more bandwidth in between levels of the memory hierarchy);
+- *Bandwidth time* $$T_{B}$$: the number of lost cycles due both to contention in the memory system and to insufficient bandwidth between levels of the hierarchy.
+
 |---
 | **MT Approach** | **Resources Shared between Threads** | **Context Switch Mechanism**
 |:-|:-|:-
@@ -308,14 +313,116 @@ In this section, I would like to present the results from running the benchmark 
 | SMT | Everything but I-fetch buffers, <br /> return address stack, <br /> architected register file, <br /> control logic/state, <br /> reorder buffer, store queue, etc. | All contexts concurrently <br /> active; no switching
 | CMP | Secondary cache, system interconnect | All contexts concurrently <br /> active; no switching
 
-*Table 1: Various approaches to resource sharing and context switching, from Shen and Lipasti (2013)*[^5]
+*Table 1: Various approaches to resource sharing and context switching, from Shen and Lipasti (2013)*[^6]
 {:.table-caption}
 
 A *denial-of-service* (or "DoS" for short) attack is an incident in which a user or organization is deprived of the services of a resource they would normally expect to have. Historically, DoS attacks are directed towards network services; although they can affect other resources, operating systems have typically implemented "fairness" or priority mechanisms to counter malicious misuse. In a conventional computer architecture, it is difficult for a program to launch a DoS attack because there is limited sharing of shared resources such as processor memory bandwidth.
 
-The immense complexity of processors as well as limits on power consumption has made it increasingly difficut to further enhance single-thread performance. For this reason, processor manufacturers have moved on to integrating multiple processors on the same chip in a *tiled* fashion to increase system performance power-efficiently[^6]. In a multi-core chip[^7], different applications can be executed on different processing cores concurrently, thereby improving overall system throughput (with the hope that the execution of an application on one core does not interfere with an application on another core). Caches in modern high-performance multi-processor system-on-a-chips (MPSoCs) are crucial components that efficiently circumvent the performance gap between the speed of the processing elements and the main memory. In some systems, each core has its own private L2 cache, while in others (e.g., ARM Cortex-A53) the L2 cache is shared between different cores. The choice of a shared vs. non-shared L2 cache affects the performance of the system and a shared cache can be a possible source of vulnerability to DoS attacks[^8].
+The immense complexity of processors as well as limits on power consumption has made it increasingly difficut to further enhance single-thread performance. For this reason, processor manufacturers have moved on to integrating multiple processors on the same chip in a *tiled* fashion to increase system performance power-efficiently[^7]. In a multi-core chip[^8], different applications can be executed on different processing cores concurrently, thereby improving overall system throughput (with the hope that the execution of an application on one core does not interfere with an application on another core). Caches in modern high-performance multi-processor system-on-a-chips (MPSoCs) are crucial components that efficiently circumvent the performance gap between the speed of the processing elements and the main memory. In some systems, each core has its own private L2 cache, while in others (e.g., ARM Cortex-A53) the L2 cache is shared between different cores. The choice of a shared vs. non-shared L2 cache affects the performance of the system and a shared cache can be a possible source of vulnerability to DoS attacks[^9].
 
-As good as they are at providing high bandwidth, *blocking caches* are ineffective at hiding cache-miss penalty because they stall the processing elements until the data is received from the main memory. In order to hide this penalty and improve the cache performance, Kroft (1981)[^9] proposed the first *Miss-Handling-Architecture (MHA)*. This type of cache referred to as *non-blocking* relies on the introduction of a set of new registers called *Miss-Status-Holding-Register* (MSHR), which are in charge of tracking the status of cache line misses. Each MSHR stores important information regarding the cache-misses such as the target address and the location of the cache line to refill. For each level of cache in a system, the amount of MSHRs denotes the number of outstanding (i.e., simultaneous) transactions it can handle. This amount is known as the *Memory-Level-Parallelism (MLP)*. At run time, a non-blocking cache behaves as follows: When a cache-miss occurs, the metadata of the cache-miss is stored in one of the available MSHRs. In case the same cache-miss already happened and one MSHR already holds the metadata, the two requests are merged. It is only once the cache line refill request has been served and placed in the proper cache line that the MSHR is made available to store new cache-misses requests. If none of the MSHRs are available, the system stops until one of them becomes available[^10]. In other words, cache hit requests can be delayed if all MSHRs are used up. This situation can happen even if the cache space is partitioned among cores.
+As good as they are at providing high bandwidth, *blocking caches* are ineffective at hiding cache-miss penalty because they stall the processing elements until the data is received from the main memory. In order to hide this penalty and improve the cache performance, Kroft (1981)[^10] proposed the first *Miss-Handling-Architecture (MHA)*. This type of cache referred to as *non-blocking* relies on the introduction of a set of new registers called *Miss-Status-Holding-Register* (MSHR), which are in charge of tracking the status of cache line misses. Each MSHR stores important information regarding the cache-misses such as the target address and the location of the cache line to refill. For each level of cache in a system, the amount of MSHRs denotes the number of outstanding (i.e., simultaneous) transactions it can handle. This amount is known as the *Memory-Level-Parallelism (MLP)*. At run time, a non-blocking cache behaves as follows: When a cache-miss occurs, the metadata of the cache-miss is stored in one of the available MSHRs. In case the same cache-miss already happened and one MSHR already holds the metadata, the two requests are merged. It is only once the cache line refill request has been served and placed in the proper cache line that the MSHR is made available to store new cache-misses requests. If none of the MSHRs are available, the system stops until one of them becomes available[^11]. In other words, cache hit requests can be delayed if all MSHRs are used up. This situation can happen even if the cache space is partitioned among cores.
+
+### Intel's Memory Bandwidth Benchmark
+
+The source code can be found [here](https://github.com/intel/memory-bandwidth-benchmarks/).
+
+```c
+# ifndef MIN
+# define MIN(x,y)           ((x)<(y)?(x):(y))
+# endif
+# ifndef MAX
+# define MAX(x,y)           ((x)>(y)?(x):(y))
+# endif
+
+#ifndef STREAM_TYPE
+#define STREAM_TYPE         double
+#endif
+
+#ifndef STREAM_ARRAY_SIZE
+#define STREAM_ARRAY_SIZE   10000000
+#endif
+
+#ifndef NTIMES
+#define NTIMES              10
+#endif
+
+static STREAM_TYPE a[STREAM_ARRAY_SIZE+OFFSET],
+                   b[STREAM_ARRAY_SIZE+OFFSET],
+                   c[STREAM_ARRAY_SIZE+OFFSET];
+
+static double bytes[4] = {
+    2 * sizeof(STREAM_TYPE) * STREAM_ARRAY_SIZE,
+    2 * sizeof(STREAM_TYPE) * STREAM_ARRAY_SIZE,
+    3 * sizeof(STREAM_TYPE) * STREAM_ARRAY_SIZE,
+    3 * sizeof(STREAM_TYPE) * STREAM_ARRAY_SIZE
+};
+
+static char *label[4] = {
+    "Copy:      ",
+    "Scale:     ",
+    "Add:       ",
+    "Triad:     "
+};
+
+double mysecond()
+{
+    struct timeval tp;
+    struct timezone tzp;
+    int i;
+    
+    i = gettimeofday(&tp,&tzp);
+    return ( (double) tp.tv_sec + (double) tp.tv_usec * 1.e-6 );
+}
+
+void main_loop()
+{
+    scalar = 3.0;
+    for (k = 0; k < NTIMES; k++) {
+
+        times[0][k] = mysecond();
+#pragma omp parallel for
+        for (j = 0; j < STREAM_ARRAY_SIZE; j++)
+            c[j] = a[j];
+        times[0][k] = mysecond() - times[0][k];
+
+        times[1][k] = mysecond();
+#pragma omp parallel for
+        for (j = 0; j < STREAM_ARRAY_SIZE; j++)
+            b[j] = scalar * c[j];
+        times[1][k] = mysecond() - times[1][k];
+
+        times[2][k] = mysecond();
+#pragma omp parallel for
+        for (j = 0; j < STREAM_ARRAY_SIZE; j++)
+            c[j] = a[j] + b[j];
+        times[2][k] = mysecond() - times[2][k];
+
+        times[3][k] = mysecond();
+#pragma omp parallel for
+        for (j = 0; j < STREAM_ARRAY_SIZE; j++)
+            a[j] = b[j] + scalar * c[j];
+        times[3][k] = mysecond() - times[3][k];
+    }
+
+    for (k = 1; k < NTIMES; k++) {
+        for (j = 0; j < 4; j++) {
+            avgtime[j] = avgtime[j] + times[j][k];
+            mintime[j] = MIN(mintime[j], times[j][k]);
+            maxtime[j] = MAX(maxtime[j], times[j][k]);
+	    }
+	}
+    printf("Function    Best Rate MB/s  Avg time     Min time     Max time\n");
+    for (j = 0; j < 4; j++) {
+        avgtime[j] = avgtime[j] / (double)(NTIMES - 1);
+        printf("%s%12.1f  %11.6f  %11.6f  %11.6f\n",
+            label[j],
+            1.0E-06 * bytes[j] / mintime[j],
+            avgtime[j],
+            mintime[j],
+            maxtime[j]);
+    }
+}
+```
 
 ### Threat Model
 
@@ -442,7 +549,7 @@ Elapsed = 0.26 sec (258313 usec)
 Bandwidth = 1563.994 MB/s | Average = 39.03 ns
 ```
 
-When the variable `acc_type` is set to `WRITE`, the write attack function is called: the code iterates the same array, at every cache-line distance, it updates each entry. On a write-back cache, each missed store will trigger two memory transactions: one memory read (cache-line fill) and one memory write (write-back of the evicted cache line). Therefore, these missed stores will stress both the MSHRs and write buffer[^11] of a cache.
+When the variable `acc_type` is set to `WRITE`, the write attack function is called: the code iterates the same array, at every cache-line distance, it updates each entry. On a write-back cache, each missed store will trigger two memory transactions: one memory read (cache-line fill) and one memory write (write-back of the evicted cache line). Therefore, these missed stores will stress both the MSHRs and write buffer[^12] of a cache.
 
 ```console
 $ gcc -O2 -Wall bandwidth.c -o bandwidth
@@ -735,18 +842,20 @@ From the results shown above, we can see that read attacks have moderate impacts
 
 [^3]: If a cache line is cleaned, the contents of the dirty cache line are written out to main memory, and the dirty bit is cleared, which makes the contents of the cache and the main memory coherent. This is only applicable if the write-back policy is used.
 
-[^4]: Michael G. Bechtel and Heechul Yun, "Denial-of-service attacks on shared cache in multicore: Analysis and prevention," In *Proc. IEEE Real-Time Embedded Technol. Appl. Symp.*, 2019, pp. 357-367.
+[^4]: Michael G. Bechtel and Heechul Yun, "Denial-of-service attacks on shared cache in multicore: Analysis and prevention," In *Proc. IEEE Real-Time Embedded Technol. Appl. Symp.*, 2019, Pages 357-367.
 
-[^5]: John Paul Shen and Mikko H. Lipasti, *Modern Processor Design: Fundamentals of Superscalar Processors*, Waveland Press, 2013. Note that ARMv7 supports both SMP and CMP kernels.
+[^5]: Doug Burger, James R. Goodman and Alain K&auml;gi, "Memory bandwidth limitations of future microprocessors," In *ISCA'96: Proceedings of the 23rd annual international symposium on Computer architecture*, May 1996, Pages 78-89.
 
-[^6]: Tiled multi-core architectures are specifically designed to scale easily as improvements in process technology provide more transistors on each chip. In a tiled multi-core, each core is combined with a communication network router to form an independent modular "tile." By replicating tiles across the area of a chip and connecting neighboring routers together, a complete on-chip communication network is created. Processors of any size can be built by simply laying down additional tiles.
+[^6]: John Paul Shen and Mikko H. Lipasti, *Modern Processor Design: Fundamentals of Superscalar Processors*, Waveland Press, 2013. Note that ARMv7 supports both SMP and CMP kernels.
 
-[^7]: A "core" includes the instruction processing pipelines (integer and floating-point), instruction execution units, and the L1 instruction and data caches.
+[^7]: Tiled multi-core architectures are specifically designed to scale easily as improvements in process technology provide more transistors on each chip. In a tiled multi-core, each core is combined with a communication network router to form an independent modular "tile." By replicating tiles across the area of a chip and connecting neighboring routers together, a complete on-chip communication network is created. Processors of any size can be built by simply laying down additional tiles.
 
-[^8]: See: Thomas Moscibroda and Onur Mutlu, "Memory performance attacks: denial of memory service in multi-core systems," *SS'07: Proceedings of 16th USENIX Security Symposium on USENIX Security Symposium*, August 2007, Pages 1-18.
+[^8]: A "core" includes the instruction processing pipelines (integer and floating-point), instruction execution units, and the L1 instruction and data caches.
 
-[^9]: David Kroft, "Lockup-free instruction fetch/prefetch cache organization," *ISCA'81: Proceedings of the 8th annual symposium on Computer Architecture*, May 1981, Pages 81-87.
+[^9]: See: Thomas Moscibroda and Onur Mutlu, "Memory performance attacks: denial of memory service in multi-core systems," *SS'07: Proceedings of 16th USENIX Security Symposium on USENIX Security Symposium*, August 2007, Pages 1-18.
 
-[^10]: Denis Hoornaert, Shahin Roozkhosh, Renato Mancuso and Marco Caccamo, "Work in Progress: Indentifying Unexpected Inter-core Interference Induced by Shared Cache," *2021 IEEE 27th Real-Time and Embedded Technology and Applications Symposium (RTAS)*, 18-21 May 2021, Nashville, TN, USA.
+[^10]: David Kroft, "Lockup-free instruction fetch/prefetch cache organization," *ISCA'81: Proceedings of the 8th annual symposium on Computer Architecture*, May 1981, Pages 81-87.
 
-[^11]: The L1 Data cache of ARM Cortex-A53 supports only a Write-Back policy. It normally allocates a cache line on either a read miss or a write miss. In the Write-Back policy, a write buffer can be used to minimize latency. When a read miss occurs, the dirty cache is first copied to the write buffer after which the memory can be read, filling the cache with the new data. Only then the main memory is updated by the write buffer.
+[^11]: Denis Hoornaert, Shahin Roozkhosh, Renato Mancuso and Marco Caccamo, "Work in Progress: Indentifying Unexpected Inter-core Interference Induced by Shared Cache," *2021 IEEE 27th Real-Time and Embedded Technology and Applications Symposium (RTAS)*, 18-21 May 2021, Nashville, TN, USA.
+
+[^12]: The L1 Data cache of ARM Cortex-A53 supports only a Write-Back policy. It normally allocates a cache line on either a read miss or a write miss. In the Write-Back policy, a write buffer can be used to minimize latency. When a read miss occurs, the dirty cache is first copied to the write buffer after which the memory can be read, filling the cache with the new data. Only then the main memory is updated by the write buffer.
