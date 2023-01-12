@@ -5,8 +5,10 @@ permalink: /about-en
 nav_order: 2
 ---
 
-<p>Name: XINGJIAN XUANYUAN (轩辕 行健)</p>
+**XINGJIAN XUANYUAN (轩辕 行健)**
+
 <p>Gender: Male</p>
+
 <p>Nationality: China</p>
 
 <!-- The unordered list immediately after the h1 will be formatted on a single
@@ -21,7 +23,9 @@ Once thinking that I am destined for a career as a social scientist, right now I
 ### Education
 
 <p style="font-size:120%"><b><span style="float:left">Master of Engineering in Computer Science and Engineering</span> <span style="float:right">Washington University in St. Louis</span></b></p>
+
 <p style="text-align:right; font-size:120%"><b><i>St. Louis, MO, USA</i></b></p>
+
 <p style="text-align:right; font-size:120%"><b><i>Aug. 2021 -- Present</i></b></p>
 
   - CSE523S - Systems Security
@@ -31,7 +35,9 @@ Once thinking that I am destined for a career as a social scientist, right now I
   - ECON558 - Matching and Assignment
 
 <p style="font-size:120%"><b><span style="float:left">Bachelor of Arts in Economics</span> <span style="float:right">Tsinghua University</span></b></p>
+
 <p style="text-align:right; font-size:120%"><b><i>Beijing, China</i></b></p>
+
 <p style="text-align:right; font-size:120%"><b><i>Sep. 2017 -- Jul. 2021</i></b></p>
 
  - Thesis Title: "The U.S. Tri-Party Repo Market"
