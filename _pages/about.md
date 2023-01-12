@@ -24,7 +24,9 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 <p style="font-size:130%"><b><span style="float:left">Master of Engineering in Computer Science and Engineering</span> <span style="float:right">Washington University in St. Louis</span></b></p>
 
-<p style="text-align:right; font-size:130%"><b><i>Aug. 2021 -- Present</i></b></p>
+<p style="font-size:130%"><b><i><span style="float:right">St. Louis, MO, USA</span></i></b></p>
+
+<p style="font-size:130%"><b><i><span style="float:right">Aug. 2021 -- Present</span></i></b></p>
 
   - CSE523S - Systems Security
   - CSE522S - Advanced Operating Systems
@@ -34,7 +36,9 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 <p style="font-size:130%"><b><span style="float:left">Bachelor of Arts in Economics</span> <span style="float:right">Tsinghua University</span></b></p>
 
-<p style="text-align:right; font-size:130%"><b><i>Sep. 2017 -- Jul. 2021</i></b></p>
+<p style="font-size:130%"><b><i><span style="float:right">Beijing, China</span></i></b></p>
+
+<p style="font-size:130%"><b><i><span style="float:right">Sep. 2017 -- Jul. 2021</span></i></b></p>
 
  - Thesis Title: "The U.S. Tri-Party Repo Market"
 
