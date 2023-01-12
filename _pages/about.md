@@ -20,22 +20,22 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 ### Education
 
-#### <span style="text-align:left">Washington University in St. Louis, Master of Engineering in Computer Science and Engineering</span>
+#### <span>Master of Engineering in Computer Science and Engineering</span>
 
-<p style="text-align:right"><i>Aug. 2021 -- Present</i></p>
+<p style="text-align:right"><b>Washington University in St. Louis</b></p>
+<p style="text-align:right"><b><i>Aug. 2021 -- Present</i></b></p>
 
-  - GPA 3.3
   - CSE523S - Systems Security
   - CSE522S - Advanced Operating Systems
   - CSE422S - Operating Systems Organization
   - CSE425S - Programming Systems and Languages
   - ECON558 - Matching and Assignment
 
-#### <span style="text-align:left">Tsinghua University, Bachelor of Arts in Economics</span>
+#### <span>Bachelor of Arts in Economics</span>
 
-<p style="text-align:right"><i>Sep. 2017 -- Jul. 2021</i></p>
+<p style="text-align:right"><b>Tsinghua University</b></p>
+<p style="text-align:right"><b><i>Sep. 2017 -- Jul. 2021</i></b></p>
 
- - GPA 3.58
  - Thesis Title: "The U.S. Tri-Party Repo Market"
 
 ### Course Projects
