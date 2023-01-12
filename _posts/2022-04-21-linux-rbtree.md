@@ -15,6 +15,8 @@ last_modified_at: "2022-12-30"
 
 Each node in the tree contains a value and up to two children; the node's value will be greater than that of all children in the "left" child branch, and less than that of all children in the "right" branch. (Thus, it is possible to serialize a red-black tree by performing a depth-first. left-to-right traversal.) Implementations of the red-black tree algorithms will usually include the **sentinel**{: style="color: red"} nodes as a convenient means of flagging that you have reached a leaf node. They are <code>NULL</code> black nodes of **Property 2**. Formally, a red-black tree with $n$ internal nodes has height at least $\log_{2}(n+1)$ but at most $2\log_{2}(n+1)$.
 
+[Here](http://www.mew.org/~kazu/proj/red-black-tree/) is a pretty decent article on red-black trees written by Kazu Yamamoto with [source code](https://github.com/kazu-yamamoto/llrbtree) in Haskell.
+
 <!-- excerpt-end -->
 
 ## Table of Contents

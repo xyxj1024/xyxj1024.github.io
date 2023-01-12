@@ -28,11 +28,13 @@ Once thinking that I am destined for a career as a social scientist, right now I
 #### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis (Aug. 2021 -- Present)
 
   - CSE523S: Systems Security, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/)
-  - CSE522S: Advanced Operating Systems
-  - [CSE422S: Operating Systems Organization, taught by Dr. James Orr](https://www.cse.wustl.edu/~cdgill/courses/cse422/)
+  - [CSE522S: Advanced Operating Systems, taught by Dr. James Orr](https://www.cse.wustl.edu/~james.orr/courses/cse522/)
+  - CSE467S: Embedded Computing Systems, taught by Dr. Darko Ivanovich
+  - [CSE433S: Introduction to Computer Security, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html)
   - [CSE425S: Programming Languages and Systems, taught by Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/)
-  - [MATH4351: Number Theory and Cryptography, taught by Dr. Ben Wormleighton](https://sites.google.com/view/benw/teaching/math-4351-spring-22)
+  - [CSE422S: Operating Systems Organization, taught by Dr. James Orr](https://www.cse.wustl.edu/~cdgill/courses/cse422/)
   - ECON558: Matching and Assignment, taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
+  - [MATH4351: Number Theory and Cryptography, taught by Dr. Ben Wormleighton](https://sites.google.com/view/benw/teaching/math-4351-spring-22)
 
 #### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 -- Jul. 2021)
 
@@ -41,7 +43,9 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 ### Course Projects
 
-#### CSAPP Cache Lab
+#### Microarchitectural Attacks (Fall 2022)
+
+#### CSAPP Cache Lab (Fall 2021)
 
 ### Experience
 
