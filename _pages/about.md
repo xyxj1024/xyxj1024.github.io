@@ -5,7 +5,7 @@ permalink: /about-en
 nav_order: 2
 ---
 
-<p>XINGJIAN XUANYUAN (轩辕 行健)</p>
+<p>Name: XINGJIAN XUANYUAN (轩辕 行健)</p>
 <p>Gender: Male</p>
 <p>Nationality: China</p>
 
@@ -20,7 +20,9 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 ### Education
 
-#### <span style="text-align:left">Washington University in St. Louis, Master of Engineering in Computer Science and Engineering</span> <span style="text-align:right">Aug. 2021 -- Present</span>
+#### <span style="text-align:left">Washington University in St. Louis, Master of Engineering in Computer Science and Engineering</span>
+
+<p style="text-align:right"><i>Aug. 2021 -- Present</i></p>
 
   - GPA 3.3
   - CSE523S - Systems Security
@@ -29,20 +31,22 @@ Once thinking that I am destined for a career as a social scientist, right now I
   - CSE425S - Programming Systems and Languages
   - ECON558 - Matching and Assignment
 
-#### <span style="text-align:left">Tsinghua University, Bachelor of Arts in Economics</span> <span style="text-align:right">Sep. 2017 -- Jul. 2021</span>
+#### <span style="text-align:left">Tsinghua University, Bachelor of Arts in Economics</span>
+
+<p style="text-align:right"><i>Sep. 2017 -- Jul. 2021</i></p>
 
  - GPA 3.58
  - Thesis Title: "The U.S. Tri-Party Repo Market"
 
 ### Course Projects
 
-####
+#### CSAPP Cache Lab
 
 ### Experience
 
 <!-- You have to wrap the "left" and "right" half of these headings in spans by
 hand -->
-####
+#### Tsinghua University Student Orchestra
 
 ### Skills
 
