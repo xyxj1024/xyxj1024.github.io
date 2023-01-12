@@ -24,9 +24,7 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 #### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis
 
-<p style="font-size:1.2rem"><b><i>Aug. 2021 -- Present</i><b></p>
-
-<p>Relevant courses:</p>
+<p style="font-size:120%"><b><i>Aug. 2021 -- Present</i><b></p>
 
   - CSE523S - Systems Security
   - CSE522S - Advanced Operating Systems
@@ -36,7 +34,7 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 #### Bachelor of Arts in Economics, Tsinghua University
 
-<p style="font-size:1.2rem"><b><i>Sep. 2017 -- Jul. 2021</i><b></p>
+<p style="font-size:120%"><b><i>Sep. 2017 -- Jul. 2021</i><b></p>
 
 Thesis Title: "The U.S. Tri-Party Repo Market"
 
