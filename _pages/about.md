@@ -31,6 +31,7 @@ Once thinking that I am destined for a career as a social scientist, right now I
   - [CSE522S: Advanced Operating Systems, taught by Dr. James Orr](https://www.cse.wustl.edu/~james.orr/courses/cse522/)
   - CSE467S: Embedded Computing Systems, taught by Dr. Darko Ivanovich
   - [CSE433S: Introduction to Computer Security, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html)
+  - CSE433R: Capture The Flag (CTF) Studio, taught by [Dr. Steve Cole](https://github.com/cole-wustl)
   - [CSE425S: Programming Languages and Systems, taught by Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/)
   - [CSE422S: Operating Systems Organization, taught by Dr. James Orr](https://www.cse.wustl.edu/~cdgill/courses/cse422/)
   - ECON558: Matching and Assignment, taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
@@ -38,7 +39,7 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 #### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 -- Jul. 2021)
 
-  - Thesis Title: "The U.S. Tri-Party Repo Market"
+  - Thesis Title: "The U.S. Tri­-Party Repo Market During the Global Financial Crisis"
   - Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
 ### Course Projects
@@ -47,11 +48,20 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 #### CSAPP Cache Lab (Fall 2021)
 
+#### China's Shadow Banking System and Chinese Government Debt Problem (Spring 2019)
+
 ### Experience
 
 <!-- You have to wrap the "left" and "right" half of these headings in spans by
 hand -->
 #### Tsinghua University Student Orchestra
+
+Chamber music performances: 
+- National Center for the Performing Arts, Beijing, China
+- The New Tsinghua Xuetang, Beijing, China
+- Mong Man Wai Concert Hall, Beijing, China
+- Lee Hysan Concert Hall, Hong Kong, China
+- Art Center of Shanghai University of Finance and Economics, Shanghai, China.
 
 ### Skills
 
