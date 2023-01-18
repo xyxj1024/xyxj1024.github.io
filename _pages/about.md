@@ -27,7 +27,8 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 #### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis (Aug. 2021 -- Present)
 
-  - **CSE 523S: Systems Security**, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/)
+CS-related coursework with links:
+  - **CSE 523S: Systems Security**, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/) (complemented with [SEED Labs](https://seedsecuritylabs.org/) developed by [Dr. Wenliang Du](https://web.ecs.syr.edu/~wedu/) from [Syracuse University](https://www.syracuse.edu/))
   - **CSE 522S: Advanced Operating Systems**, taught by [Dr. James Orr](https://www.cse.wustl.edu/~james.orr/) and [Dr. Marion Sudvarg](https://www.sudvarg.com/) (originally developed by [Dr. David Ferry](https://cs.slu.edu/~ferry/), [Dr. Christopher D. Gill](https://www.cse.wustl.edu/~cdgill/), [Dr. Brian Kocoloski](https://www.isi.edu/people/bkocolos/about), Dr. James Orr, and Dr. Marion Sudvarg)
   - [**CSE 330/503S: Rapid Prototype Development and Creative Programming**](https://classes.engineering.wustl.edu/cse330), taught by [Dr. Todd Sproull](https://research.engineering.wustl.edu/~todd/)
   - **CSE 467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich
@@ -40,8 +41,13 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 #### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 -- Jul. 2021)
 
-  - **Thesis Title**: "The U.S. Tri­-Party Repo Market During the Global Financial Crisis"
-  - **Supervisor**: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
+**Thesis Title**: "The U.S. Tri­-Party Repo Market During the Global Financial Crisis"
+
+**Supervisor**: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
+
+  - Hand-collected and visualized macro-­financial data sets retrieved from official websites of FRB, New York Fed, St. Louis Fed, SEC, SIFMA, OFR, as well as multiple academic publications.
+  - Explained market segmentation, (estimated) transaction volume, major participants, collateral types, rehypothecation, and contract features of tri-­party repos in the U.S.
+  - Recounted the origin, early developments, and 2007-2009 market run, emphasizing legal complexity, balance sheet effects, and systemic risk associated with repo transactions.
 
 ### Course Projects
 
