@@ -31,7 +31,7 @@ Once thinking that I am destined for a career as a social scientist, right now I
   - **CSE522S: Advanced Operating Systems**, taught by [Dr. James Orr](https://www.cse.wustl.edu/~james.orr/) and [Dr. Marion Sudvarg](https://www.sudvarg.com/) (originally developed by [Dr. David Ferry](https://cs.slu.edu/~ferry/), [Dr. Christopher D. Gill](https://www.cse.wustl.edu/~cdgill/), [Dr. Brian Kocoloski](https://www.isi.edu/people/bkocolos/about), Dr. James Orr, and Dr. Marion Sudvarg)
   - **CSE467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich
   - [**CSE433S: Introduction to Computer Security**, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html)
-  - **CSE433R: Capture The Flag (CTF) Studio**, taught by [Dr. Steve Cole](https://github.com/cole-wustl)
+  - **CSE433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (see [Kaplan et al. (2022), "A Capture The Flag (CTF) Platform and Exercises for an Intro to Computer Security Class," *ITiCSE '22: Proceedings of the 27th ACM Conference on Innovation and Technology in Computer Science Education Vol. 2*, Pages 597-598](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153))
   - [**CSE425S: Programming Languages and Systems**, taught by Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/)
   - **CSE422S: Operating Systems Organization**, taught by Dr. James Orr (originally developed by Dr. David Ferry and subsequently revised and extended by Dr. Christopher D. Gill, Dr. Brian Kocoloski, Dr. James Orr, and Dr. Marion Sudvarg)
   - **ECON558: Matching and Assignment**, taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
