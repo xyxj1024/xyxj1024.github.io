@@ -21,7 +21,7 @@ line. It is intended to be used for contact details
 
 <!-- The paragraph after the h1 and ul and before the first h2 is optional. It
 is intended to be used for a short summary. -->
-Once thinking that I am destined for a career as a social scientist, right now I am a dedicated systems engineer.
+Once thinking that I am destined for a career as a social scientist, right now I am a dedicated systems engineer. I believe that it is documentation that promotes knowledge sharing and cultural understanding, and more importantly, defines true essence of being human.
 
 ### Education
 
