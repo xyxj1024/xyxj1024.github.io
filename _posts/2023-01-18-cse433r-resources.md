@@ -19,7 +19,7 @@ This post contains a list of computer security resources from [Dr. Stephen V. Co
   - [b34r5hell mini CTF](https://github.com/WUSTL-B34R5HELL/bearshell-ctf)
   - [pwnable.kr](http://pwnable.kr/)
   - [pwnable.tw](https://pwnable.tw/)
-  - [microcorruption (binary exploitation)](https://www.nccgroup.com/)
+  - [microcorruption](https://www.nccgroup.com/) (binary exploitation)
   - [HackTheBox](https://www.hackthebox.com/)
   - [TryHackMe](https://tryhackme.com/) (many free rooms, some subscriber-only)
   - [Google Gruyere](http://google-gruyere.appspot.com/) (web security)

@@ -31,7 +31,7 @@ CS-related coursework with links:
   - **CSE 522S: Advanced Operating Systems**, taught by [Dr. James Orr](https://www.cse.wustl.edu/~james.orr/) and [Dr. Marion Sudvarg](https://www.sudvarg.com/) (originally developed by [Dr. David Ferry](https://cs.slu.edu/~ferry/), [Dr. Christopher D. Gill](https://www.cse.wustl.edu/~cdgill/), [Dr. Brian Kocoloski](https://www.isi.edu/people/bkocolos/about), Dr. James Orr, and Dr. Marion Sudvarg)
   - [**CSE 330/503S: Rapid Prototype Development and Creative Programming**](https://classes.engineering.wustl.edu/cse330), taught by [Dr. Todd Sproull](https://research.engineering.wustl.edu/~todd/)
   - **CSE 467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich
-  - [**CSE 433S: Introduction to Computer Security**, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html) (pedagogy partially explained in [this 2022 paper](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153)[^1])
+  - [**CSE 433S: Introduction to Computer Security**, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html) (pedagogy partially explained in [this 2022 paper](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153))
   - **CSE 433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (find resources [here](xingjianxuanyuan.github.io/cse433r-resources/))
   - [**CSE 425S: Programming Languages and Systems**, taught by Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/) (complemented with CSE 341 course materials developed by [Dr. Dan Grossman](https://homes.cs.washington.edu/~djg/teachingMaterials/spl/) at [University of Washington](https://www.washington.edu/))
   - **CSE 422S: Operating Systems Organization**, taught by Dr. James Orr (originally developed by Dr. David Ferry and subsequently revised and extended by Dr. Christopher D. Gill, Dr. Brian Kocoloski, Dr. James Orr, and Dr. Marion Sudvarg)
@@ -75,5 +75,3 @@ Orchestral and chamber music events held at:
 
  - General programming: C/C++, Java, Python, R
  - Web development: HTML, CSS, JavaScript
-
-[^1]: Kaplan et al. (2022), "A Capture The Flag (CTF) Platform and Exercises for an Intro to Computer Security Class," *ITiCSE '22: Proceedings of the 27th ACM Conference on Innovation and Technology in Computer Science Education Vol. 2*, Pages 597-598
