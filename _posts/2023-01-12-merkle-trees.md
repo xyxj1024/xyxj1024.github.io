@@ -6,7 +6,7 @@ tags:       tree cryptography
 permalink:  /merkle-trees/
 ---
 
-[Merkle tree](http://www.ralphmerkle.com/papers/Certified1979.pdf)[^1] data structure was proposed by Ralph C. Merkle to mitigate the huge storage requirements of traditional one-time signature methods. The research problem was originally stated as shown below:
+The [Merkle tree](http://www.ralphmerkle.com/papers/Certified1979.pdf)[^1] data structure was proposed by Ralph C. Merkle in 1979 to mitigate the huge storage requirements of traditional one-time signature methods. The research problem was originally stated as shown below:
 
 > Given a vector of data items $$Y = Y_{1}, Y_{2}, \dots , Y_{n}$$, design an algorithm which can quickly authenticate a randomly chosen $$Y_{i}, i = 1, \dots , n$$ but which has modest memory requirements, i.e., does not have a table of $$Y_{1}, Y_{2}, \dots , Y_{n}$$.
 
