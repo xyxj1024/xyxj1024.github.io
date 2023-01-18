@@ -1,7 +1,7 @@
 ---
 layout:             post
 title:              "SEED Labs 2.0: Meltdown Attack Lab Writeup"
-category:           "Computing Systems"
+category:           "Computing Systems, Systems Security"
 tags:               hardware-security microarchitecture cache
 permalink:          /meltdown-seedlab/
 last_modified_at:   "2022-11-11"

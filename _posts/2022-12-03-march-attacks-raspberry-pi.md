@@ -1,7 +1,7 @@
 ---
 layout:             post
 title:              "Microarchitectural Attacks on a Raspberry Pi"
-category:           "Computing Systems"
+category:           "Computing Systems, Systems Security"
 tags:               hardware-security microarchitecture cache raspberry-pi
 permalink:          /march-attacks-raspberry-pi/
 last_modified_at:   "2022-12-18"

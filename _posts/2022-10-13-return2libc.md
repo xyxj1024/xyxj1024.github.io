@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        "Defeating NX: The Return-to-libc Method"
-category:     "Computing Systems"
+category:     "Computing Systems, Systems Security"
 tags:         software-security aslr nx
 permalink:    /ret2libc/
 ---

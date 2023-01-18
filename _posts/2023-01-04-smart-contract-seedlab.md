@@ -1,7 +1,7 @@
 ---
 layout:             post
 title:              "SEED Labs 2.0: Smart Contract Reentrancy Attack Lab Writeup"
-category:           "Computing Systems"
+category:           "Computing Systems, Systems Security"
 tags:               ethereum blockchain
 permalink:          /smart-contract-seedlab/
 ---

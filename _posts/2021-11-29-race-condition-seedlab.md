@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        "SEED Labs 2.0: Race Condition Vulnerability Lab Writeup"
-category:     "Computing Systems"
+category:     "Computing Systems, Systems Security"
 tags:         software-security
 permalink:    /race-condition-seedlab/
 ---
