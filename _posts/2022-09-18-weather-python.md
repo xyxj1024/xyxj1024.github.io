@@ -3,7 +3,7 @@ layout: 		post
 title:          "Python Weather Data Scraping"
 category:       "Data Structures, Algorithms, Programming Languages"
 tags:           web-scraping python
-permalink:      /weather-py/
+permalink:      /posts/web-scraping/weather
 ---
 
 It was a cozy Midwest Sunday morning. I woke up a little later than usual and just couldn't decide whether I should go to the lab. Typically, to deal with this situation, I will first check the weather using iPhone's built-in weather app. However, a random thought came to me: how about letting the Terminal display weather information for me?

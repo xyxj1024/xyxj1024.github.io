@@ -3,7 +3,7 @@ layout: 		    post
 title: 			    "Linux Fork and Execve Under the Hood"
 category:		    "Computing Systems, Systems Security"
 tags:			    unix operating-system process-thread
-permalink:		    /linux-fork-execve/
+permalink:		    /posts/linux-plumbing/fork-execve
 last_modified_at:   "2022-12-13"
 ---
 

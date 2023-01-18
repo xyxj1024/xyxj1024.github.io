@@ -3,7 +3,7 @@ layout: 		      post
 title: 			      "Pattern Matching in Standard ML"
 category:		      "Data Structures, Algorithms, Programming Languages"
 tags:			        functional-programming
-permalink:		    /pattern-matching-sml/
+permalink:		    /posts/pattern-matching-sml
 last_modified_at: "2022-10-09"
 ---
 

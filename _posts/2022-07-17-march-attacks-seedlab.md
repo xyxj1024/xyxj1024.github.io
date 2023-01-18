@@ -3,7 +3,7 @@ layout:             post
 title:              "SEED Labs 2.0: Meltdown and Spectre Attack Labs Preview"
 category:           "Computing Systems, Systems Security"
 tags:               hardware-security microarchitecture cache
-permalink:          /march-attacks-seedlab/
+permalink:          /posts/seedlabs/march-attacks
 last_modified_at:   "2022-12-14"
 ---
 

@@ -3,7 +3,7 @@ layout:             post
 title:              "Legends of the Fall"
 category:           "Miscellaneous"
 tags:               english-literature north-america montana
-permalink:          /legends-of-the-fall/
+permalink:          /posts/legends-of-the-fall
 last_modified_at:   "2022-12-28"
 ---
 

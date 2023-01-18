@@ -3,7 +3,7 @@ layout: 		      post
 title: 			      "WashU CSE433R Resources"
 category:		      "Computing Systems, Systems Security"
 tags:			        
-permalink:		    /cse433r-resources/
+permalink:		    /posts/cse433r-resources
 ---
 
 This post contains a list of computer security resources from [Dr. Stephen V. Cole](https://github.com/cole-wustl) at Washington University in St. Louis.

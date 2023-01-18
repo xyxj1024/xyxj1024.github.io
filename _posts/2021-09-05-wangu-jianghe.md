@@ -3,7 +3,7 @@ layout:             post
 title:              "万古江河"
 category:           "Miscellaneous"
 tags:               Chinese-history Chinese-classics
-permalink:          /wangu-jianghe/
+permalink:          /posts/Chinese-history/wangu-jianghe
 last_modified_at:   "2023-01-06"
 ---
 

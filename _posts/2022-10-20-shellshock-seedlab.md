@@ -3,7 +3,7 @@ layout:       post
 title:        "SEED Labs 2.0: Shellshock Attack Lab Writeup"
 category:     "Computing Systems, Systems Security"
 tags:         software-security docker reverse-shell
-permalink:    /shellshock-seedlab/
+permalink:    /posts/seedlabs/shellshock
 ---
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org/Labs_20.04/Software/Shellshock/). The lab assignment was conducted using Docker Compose, which does not depend much on the SEED VM.

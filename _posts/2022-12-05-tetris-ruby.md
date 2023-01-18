@@ -3,7 +3,7 @@ layout: 		      post
 title: 			      "Tetris Game in Ruby"
 category:		      "Data Structures, Algorithms, Programming Languages"
 tags:			        object-oriented-programming game
-permalink:		    /tetris-ruby/
+permalink:		    /posts/tetris-ruby
 last_modified_at: "2022-12-08"
 ---
 
