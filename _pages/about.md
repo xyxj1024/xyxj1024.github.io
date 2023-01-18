@@ -27,15 +27,16 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 #### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis (Aug. 2021 -- Present)
 
-  - **CSE523S: Systems Security**, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/)
-  - **CSE522S: Advanced Operating Systems**, taught by [Dr. James Orr](https://www.cse.wustl.edu/~james.orr/) and [Dr. Marion Sudvarg](https://www.sudvarg.com/) (originally developed by [Dr. David Ferry](https://cs.slu.edu/~ferry/), [Dr. Christopher D. Gill](https://www.cse.wustl.edu/~cdgill/), [Dr. Brian Kocoloski](https://www.isi.edu/people/bkocolos/about), Dr. James Orr, and Dr. Marion Sudvarg)
-  - **CSE467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich
-  - [**CSE433S: Introduction to Computer Security**, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html)
-  - **CSE433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (see [Kaplan et al. (2022), "A Capture The Flag (CTF) Platform and Exercises for an Intro to Computer Security Class," *ITiCSE '22: Proceedings of the 27th ACM Conference on Innovation and Technology in Computer Science Education Vol. 2*, Pages 597-598](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153))
-  - [**CSE425S: Programming Languages and Systems**, taught by Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/)
-  - **CSE422S: Operating Systems Organization**, taught by Dr. James Orr (originally developed by Dr. David Ferry and subsequently revised and extended by Dr. Christopher D. Gill, Dr. Brian Kocoloski, Dr. James Orr, and Dr. Marion Sudvarg)
-  - **ECON558: Matching and Assignment**, taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
-  - [**MATH4351: Number Theory and Cryptography**, taught by Dr. Ben Wormleighton](https://sites.google.com/view/benw/teaching/math-4351-spring-22) (following lecture notes from [Dr. Matt Kerr](https://www.math.wustl.edu/~matkerr/))
+  - **CSE 523S: Systems Security**, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/)
+  - **CSE 522S: Advanced Operating Systems**, taught by [Dr. James Orr](https://www.cse.wustl.edu/~james.orr/) and [Dr. Marion Sudvarg](https://www.sudvarg.com/) (originally developed by [Dr. David Ferry](https://cs.slu.edu/~ferry/), [Dr. Christopher D. Gill](https://www.cse.wustl.edu/~cdgill/), [Dr. Brian Kocoloski](https://www.isi.edu/people/bkocolos/about), Dr. James Orr, and Dr. Marion Sudvarg)
+  - [**CSE 330/503S: Rapid Prototype Development and Creative Programming**](https://classes.engineering.wustl.edu/cse330), taught by [Dr. Todd Sproull](https://research.engineering.wustl.edu/~todd/)
+  - **CSE 467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich
+  - [**CSE 433S: Introduction to Computer Security**, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html)
+  - **CSE 433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (see [Kaplan et al. (2022), "A Capture The Flag (CTF) Platform and Exercises for an Intro to Computer Security Class," *ITiCSE '22: Proceedings of the 27th ACM Conference on Innovation and Technology in Computer Science Education Vol. 2*, Pages 597-598](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153))
+  - [**CSE 425S: Programming Languages and Systems**, taught by Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/) (complemented with CSE 341 course materials developed by [Dr. Dan Grossman](https://homes.cs.washington.edu/~djg/teachingMaterials/spl/) at [University of Washington](https://www.washington.edu/))
+  - **CSE 422S: Operating Systems Organization**, taught by Dr. James Orr (originally developed by Dr. David Ferry and subsequently revised and extended by Dr. Christopher D. Gill, Dr. Brian Kocoloski, Dr. James Orr, and Dr. Marion Sudvarg)
+  - **ECON 558: Matching and Assignment**, taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
+  - [**MATH 4351: Number Theory and Cryptography**, taught by Dr. Ben Wormleighton](https://sites.google.com/view/benw/teaching/math-4351-spring-22) (following lecture notes from [Dr. Matt Kerr](https://www.math.wustl.edu/~matkerr/))
 
 #### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 -- Jul. 2021)
 
