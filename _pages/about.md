@@ -41,12 +41,12 @@ CS-related coursework with links:
 
 #### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 -- Jul. 2021)
 
-**Thesis Title**: "The U.S. Tri­-Party Repo Market During the Global Financial Crisis"
+Thesis Title: "The U.S. Tri­-Party Repo Market During the Global Financial Crisis"
 
-**Supervisor**: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
+Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
   - Hand-collected and visualized macro-­financial data sets retrieved from official websites of FRB, New York Fed, St. Louis Fed, SEC, SIFMA, OFR, as well as multiple academic publications.
-  - Explained market segmentation, (estimated) transaction volume, major participants, collateral types, rehypothecation, and contract features of tri-­party repos in the U.S.
+  - Explained market segmentation, (estimated) transaction volume, major participants, collateral types, rehypothecation, and contract features of tri-party repos in the U.S.
   - Recounted the origin, early developments, and 2007-2009 market run, emphasizing legal complexity, balance sheet effects, and systemic risk associated with repo transactions.
 
 ### Course Projects
