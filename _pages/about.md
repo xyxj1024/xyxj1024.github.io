@@ -51,16 +51,14 @@ Once thinking that I am destined for a career as a social scientist, right now I
 #### China's Shadow Banking System and Chinese Government Debt Problem (Spring 2019)
 
 - Created a conceptual diagram for China's shadow banking credit intermediation.
-- Hand-collected, cross-checked, cleaned, and visualized provincial data sets over the period of 2013-2017. Data sources include official websites of PBoC, MoF, NAO, MoHURD along with commercial databases such as WIND, CEIC, and Choice. Data items include fiscal position, wealth management product issuance, municipal and chengtou bond issuance, local and foreign currency deposits of financial institutions, supply of state­owned land for construction purposes, etc., totaling 8215 entries.
+- Hand-collected, cross-checked, cleaned, and visualized provincial data sets for the period 2013-2017. Data sources include official websites of PBoC, MoF, NAO, MoHURD along with commercial databases such as WIND, CEIC, and Choice. Data items include fiscal position, wealth management product issuance, municipal and chengtou bond issuance, local and foreign currency deposits of financial institutions, supply of state­owned land for construction purposes, etc., totaling $$8215$$ entries.
 - Validated the spatial correlation between the number of wealth management products issued by major commercial banks and outstanding local government debt.
 
 ### Experience
 
-<!-- You have to wrap the "left" and "right" half of these headings in spans by
-hand -->
 #### Tsinghua University Student Orchestra
 
-Chamber music performances: 
+Orchestral and chamber music events held at:
 - National Center for the Performing Arts, Beijing, China
 - The New Tsinghua Xuetang, Beijing, China
 - Mong Man Wai Concert Hall, Beijing, China
@@ -69,4 +67,5 @@ Chamber music performances:
 
 ### Skills
 
+ - General programming: C/C++, Java, Python, R
  - Web development: HTML, CSS, JavaScript
