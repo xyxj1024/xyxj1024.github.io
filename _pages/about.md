@@ -6,7 +6,7 @@ nav_order: 2
 ---
 
 ![me-at-british-columbia](/assets/images/bc.jpg){:class="img-responsive"}
-<p style="align:center;color:gray;font-size:80%;">
+<p style="text-align:center;color:gray;font-size:80%;">
 British Columbia, December 2022<br>
 Photo by Michael Qiushi Pan
 </p>
