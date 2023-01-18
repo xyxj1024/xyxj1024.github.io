@@ -6,13 +6,12 @@ nav_order: 2
 ---
 
 ![me-at-british-columbia](/assets/images/bc.jpg){:class="img-responsive"}
-<p style="color:gray; font-size:80%;">
+<p style="align:center;color:gray;font-size:80%;">
+British Columbia, December 2022<br>
 Photo by Michael Qiushi Pan
 </p>
 
 **XINGJIAN XUANYUAN (轩辕 行健)**
-
-Gender: Male; Nationality: China; Email: <xingjian.tsinghua@gmail.com>
 
 <!-- The unordered list immediately after the h1 will be formatted on a single
 line. It is intended to be used for contact details
