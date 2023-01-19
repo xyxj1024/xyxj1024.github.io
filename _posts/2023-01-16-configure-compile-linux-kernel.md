@@ -6,7 +6,7 @@ tags:               operating-system raspberry-pi
 permalink:          /posts/configure-compile-linux-kernel
 ---
 
-Studio 1 and 2 of [CSE 522S: "Advanced Operating Systems" at Washington University in St. Louis](https://classes.engineering.wustl.edu/cse522s). I am using a Raspberry Pi 3 Model B Plus for the course.
+Studio 1 and 2 of [CSE 522S: "Advanced Operating Systems" at Washington University in St. Louis](https://classes.engineering.wustl.edu/cse522s). I am using a Raspberry Pi 3 Model B Plus for the course, which has a quad-core ARM Cortex-A53 (ARMv8) CPU.
 
 <!-- excerpt-end -->
 
@@ -180,4 +180,20 @@ Finally, our new kernel has installed. When reboot, we will be running our very 
 ```console
 pi@xingjian: ̃ $ uname -a
 Linux xingjian 5.10.17-v7-x.xingjian #1 SMP PREEMPT Wed Jan 16 11:52:31 CST 2023 armv7l GNU/Linux
+```
+
+The directory tree on the Linux lab machine:
+
+```text
+/project/scratch01/compile/x.xingjian
+    |- linux_source
+        |- linux
+        |- modules/lib/modules/5.10.17-v7-x.xingjian (in-tree)
+    |- modules (out-of-tree)
+```
+
+In-tree modules will match the "local version" on my Raspberry Pi:
+
+```text
+linux_source/modules/lib/modules/5.10.17-v7-x.xingjian
 ```
