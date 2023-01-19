@@ -19,7 +19,7 @@ Studio 1 and 2 of [CSE 522S: "Advanced Operating Systems" at Washington Universi
 
 On a Linux lab machine besides my Raspberry Pi, I created a folder called `linux_source` in which to keep all of my source code and build files organized. Inside this new folder, issue the following commands:
 
-```console
+```bash
 wget https://github.com/raspberrypi/linux/archive/raspberrypi-kernel_1.20210527-1.tar.gz
 
 tar -xzf raspberrypi-kernel_1.20210527-1.tar.gz
@@ -49,13 +49,13 @@ NAME = Kleptomaniac Octopus
 
 Add the cross-compiler to `PATH` variable:
 
-```console
+```bash
 module add arm-rpi
 ```
 
 Add an updated C compiler to `PATH` variable
 
-```console
+```bash
 module add gcc-8.3.0
 ```
 
@@ -69,19 +69,19 @@ fi
 
 Issue the following command:
 
-```console
+```bash
 make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig
 ```
 
 If Raspberry Pi 4 or 4B is used, use the following command instead:
 
-```console
+```bash
 make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2711_defconfig
 ```
 
 Then, issue the command:
 
-```console
+```bash
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
 ```
 
@@ -95,7 +95,7 @@ Navigate to `General Setup`, select `Local Version`. The local version string we
 
 I could not select the `Preemption Model` option, so I manually modified the `.config` file by commenting out `CONFIG_PREEMPT_VOLUNTARY=y` and adding `CONFIG_PREEMPT=y`:
 
-```console
+```bash
 # CONFIG_PREEMPT_NONE is not set
 # CONFIG_PREEMPT_VOLUNTARY is not set
 CONFIG_PREEMPT=y
@@ -111,25 +111,25 @@ This will enable us to use the hardware counters provided by the Raspberry Pi. W
 
 To track how long the compilation step takes, issue the following command, which compiles the kernel, while writing start and end times to a file:
 
-```console
+```bash
 date>>time.txt; make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs; date>>time.txt
 ```
 
 Once it is done, issue the following command:
 
-```console
+```bash
 mkdir ../modules
 ```
 
 This will create a directory that the cross-compiler will use to store the kernel modules that it creates. Then issue the command:
 
-```console
+```bash
 make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=../modules modules_install
 ```
 
 Congratulations! We have just compiled an operating system from source! Now, we can transfer our compiled kernel and built modules to the Raspberry Pi in order to install them. Compress the files to make the transfer process faster:
 
-```console
+```bash
 tar -C modules/lib -czf modules.tgz modules
 
 tar -C linux/arch/arm -czf boot.tgz boot
@@ -139,7 +139,7 @@ In a local terminal on the Raspberry Pi, I created a directory called `linux_sou
 
 Back up our directories:
 
-```console
+```bash
 sudo cp -r /usr/lib/modules ~/Desktop/modules_backup
 
 sudo cp -r /boot ~/Desktop/boot_backup
@@ -149,7 +149,7 @@ sudo cp -r /boot ~/Desktop/boot_backup
 
 Run the following commands to install the kernel we just built:
 
-```console
+```bash
 tar -xzf modules.tgz
 
 tar -xzf boot.tgz
@@ -171,7 +171,7 @@ sudo cp boot/zImage /boot/kernel7.img
 
 If a Raspberry Pi 4 or 4B is used, the last command should be:
 
-```console
+```bash
 sudo cp boot/zImage /boot/kernel7l.img
 ```
 
@@ -179,5 +179,5 @@ Finally, our new kernel has installed. When reboot, we will be running our very 
 
 ```console
 pi@xingjian: ̃ $ uname -a
-Linux xingjian 5.10.17-v7-x.xingjian #1 SMP PREEMPT Wed Jan 18 11:52:31 CST 2023 armv7l GNU/Linux
+Linux xingjian 5.10.17-v7-x.xingjian #1 SMP PREEMPT Wed Jan 16 11:52:31 CST 2023 armv7l GNU/Linux
 ```
