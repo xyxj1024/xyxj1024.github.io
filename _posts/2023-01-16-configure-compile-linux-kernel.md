@@ -29,14 +29,14 @@ This has the effect of downloading a specific version of the Raspberry Pi Linux 
 
 We can check the Linux kernel version:
 
-```console
+```sh
 [x.xingjian@linuxlab002 linux]$ make kernelversion
 5.10.17
 ```
 
 The first several lines of Makefile look like:
 
-```cmake
+```makefile
 # SPDX-License-Identifier: GPL-2.0
 VERSION = 5
 PATCHLEVEL = 10
@@ -177,7 +177,7 @@ sudo cp boot/zImage /boot/kernel7l.img
 
 Finally, our new kernel has installed. When reboot, we will be running our very own, custom kernel.
 
-```console
+```sh
 pi@xingjian: ̃ $ uname -a
 Linux xingjian 5.10.17-v7-x.xingjian #1 SMP PREEMPT Wed Jan 16 11:52:31 CST 2023 armv7l GNU/Linux
 ```
