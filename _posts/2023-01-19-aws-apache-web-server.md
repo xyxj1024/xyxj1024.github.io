@@ -192,17 +192,17 @@ sudo /usr/sbin/apachectl start
 
 In order for your web server to be accessible, you need to open up Port 80 on your EC2 instance. (By default amazon blocks all traffic to our instance.) Go to the "Security Groups" under "Network & Security" on the AWS EC2 website. Select your security group and add a new `Custom TCP` rule with a port range of `80`. Leave the source at `0.0.0.0/0` (for all traffic). Click "Add Rule", and then click "Apply Rule Change".
 
-To make sure things are working, create a file, like `hello.txt`, in your web server root. Give it some content (might I suggest "Hello, world!"). The web server root is at `/var/www/html`. You should now be able to visit your server load up the file using your web browser! Example Link: http://ec2-xxx-xxx-xxx-xx.compute-1.amazonaws.com/hello.txt. Depending on the city in which your server is located, your link might look like: http://ec2-xxx-xxx-xxx-xxx.us-west-2.compute.amazonaws.com/hello.txt.
+To make sure things are working, create a file, like `hello.txt`, in your web server root. Give it some content (might I suggest "Hello, world!"). The web server root is at `/var/www/html`. You should now be able to visit your server load up the file using your web browser! Example Link: [http://ec2-xxx-xxx-xxx-xx.compute-1.amazonaws.com/hello.txt](http://ec2-xxx-xxx-xxx-xx.compute-1.amazonaws.com/hello.txt). Depending on the city in which your server is located, your link might look like: [http://ec2-xxx-xxx-xxx-xxx.us-west-2.compute.amazonaws.com/hello.txt](http://ec2-xxx-xxx-xxx-xxx.us-west-2.compute.amazonaws.com/hello.txt).
 
 Finally, you need to edit the master Apache configuration file. Open `/etc/httpd/conf.d/userdir.conf` in your favorite text editor and find the line that says:
 
-```ini
+```text
 UserDir disabled
 ```
 
 Change it to:
 
-```ini
+```text
 UserDir disabled root
 ```
 
@@ -216,7 +216,9 @@ and uncomment it. This tells Apache that the directory containing each user's ht
 
 ```bash
 mkdir /home/<username>/public_html
+
 sudo chmod o+x /home/<username>
+
 sudo chmod o+rx /home/<username>/public_html
 ```
 
