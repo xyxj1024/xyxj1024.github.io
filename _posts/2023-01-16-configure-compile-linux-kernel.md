@@ -6,7 +6,7 @@ tags:               operating-system raspberry-pi
 permalink:          /posts/configure-compile-linux-kernel
 ---
 
-Studio 1 and 2 of [CSE 522S: "Advanced Operating Systems" at Washington University in St. Louis](https://classes.engineering.wustl.edu/cse522s). I am using a Raspberry Pi 3 Model B Plus for the course, which has a quad-core ARM Cortex-A53 (ARMv8) CPU.
+Studio 1 and 2 of [CSE 522S: "Advanced Operating Systems" at Washington University in St. Louis](https://classes.engineering.wustl.edu/cse522s). I am using a Raspberry Pi 3 Model B Plus for the course, which has a quad-core Arm&reg; Cortex-A53 (ARMv8) CPU.
 
 <!-- excerpt-end -->
 
