@@ -1,6 +1,6 @@
 ---
 layout:             post
-title:              "货币的教训"
+title:              "周其仁货币评论"
 category:           "Economics, Finance, Political Economy"
 tags:               macroeconomics monetary-policy China
 permalink:          /posts/zhou-qiren-monetary-policy
