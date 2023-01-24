@@ -6,7 +6,7 @@ tags:               ethereum blockchain
 permalink:          /posts/seedlabs/smart-contract-reentrancy
 ---
 
-The DAO was a decentralized autonomous organization (DAO) that was launched in 2016 on the Ethereum blockchain. After raising $$\$150$$ million USD worth of ether (ETH) through a token sale, The DAO was hacked due to vulnerabilities in its code base. The Ethereum blockchain was eventually hard forked to restore the stolen funds, but not all parties agreed with this decision, which resulted in the network splitting into two distinct blockchains: Ethereum and Ethereum Classic.
+**The DAO** was a *decentralized autonomous organization (DAO)* that was launched in 2016 on the Ethereum blockchain. After raising $$\$150$$ million USD worth of ether (ETH) through a token sale, The DAO was hacked due to vulnerabilities in its code base. The Ethereum blockchain was eventually hard forked to restore the stolen funds, but not all parties agreed with this decision, which resulted in the network splitting into two distinct blockchains: Ethereum and Ethereum Classic.
 
 Reentrancy played a major role in the attack. A reentrancy attack occurs when a malicious contract calls back into a vulnerable contract before the original function invocation is complete. The EVM doesn't permit concurrency, meaning two contracts involved in a message call cannot run simultaneously. An external call pauses the calling contract's execution and memory until the call returns, at which point execution proceeds normally. Consider a simple smart contract ("Victim") that allows anyone to deposit and withdraw ETH:
 
@@ -52,6 +52,43 @@ Reentrancy attacks are still a critical issue for smart contracts on Ethereum to
 {:toc}
 
 ## Environment Setup
+
+Please download the `Labsetup.zip` file from the SEED Labs 2.0 website, and unzip it.
+
+```console
+[January 24 2023] seed@xingjian:~/Documents/SmartContract$ ls
+attacker  contract  emulator  victim
+```
+
+Go to the container folder (`/emulator/output` or `/emulator/output-small`), and run the following docker commands to build and start the containers:
+
+```bash
+docker-compose build
+docker-compose up
+
+# Aliases for the Compose commands above (only available in the SEED VM)
+dcbuild # Alias for: docker-compose build
+dcup    # Alias for: docker-compose up
+dcdown  # ALias for: docker-compose down
+```
+
+There are many ways to interact with the Ethereum network, including using existing tools, such as Remix, Metamask, and Hardhat. In this lab, we choose to write our own Python program, which uses the popular `web3.py` library. We need to install this library with the following command:
+
+```bash
+[January 24 2023] seed@xingjian:~/Documents/SmartContract$ pip3 install web3
+
+[January 24 2023] seed@xingjian:~/Documents/SmartContract$ pip3 show web3
+Name: web3
+Version: 5.31.3
+Summary: Web3.py
+Home-page: https://github.com/ethereum/web3.py
+Author: Piper Merriam
+Author-email: pipermerriam@gmail.com
+License: MIT
+Location: /home/seed/.local/lib/python3.8/site-packages
+Requires: websockets, eth-typing, jsonschema, aiohttp, eth-utils, requests, eth-rlp, eth-account, ipfshttpclient, lru-dict, hexbytes, eth-hash, eth-abi, protobuf
+Required-by:
+```
 
 ### Ethereum Nodes and Accounts
 
@@ -167,6 +204,120 @@ web3.eth.get_balance(Web3.toChecksumAddress(address))
 ```
 
 ## Task 1: Getting Familiar with the Victim Smart Contract
+
+The `ReentrancyVictim.sol` program shown below is the vulnerable smart contract that we will be attacking.
+
+```solidity
+//SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.6.8;
+
+contract ReentrancyVictim {
+    mapping (address => uint) public balances;
+    uint256 total_amount;
+    
+    function deposit() public payable {
+        balances[msg.sender] += msg.value;
+        total_amount += msg.value;
+    }
+
+    receive() external payable {
+        total_amount += msg.value;
+    }
+    
+    function withdraw(uint _amount) public {
+        require(balances[msg.sender] >= _amount);
+        
+        (bool sent, ) = msg.sender.call{value: _amount}("");
+        require(sent, "Failed to send Ether!");
+
+        balances[msg.sender] -= _amount;
+        total_amount -= _amount;
+    }
+
+    function getBalance(address _addr) public view returns (uint) {
+        return balances[_addr];
+    }
+    
+    function getContractBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+}
+```
+
+`ReentrancyVictim.sol` acts as a wallet for users: users can deposit any amount of ETH to this contract; they can also withdraw their money later.
+
+### Task 1.a: Compiling the Contract
+
+We can use the following command to compile the contract:
+
+```bash
+solc-0.6.8 --overwrite --abi --bin -o . ReentrancyVictim.sol
+```
+
+Two files will be generated: the `bin` file and the `abi` file:
+
+```console
+[January 24 2023] seed@xingjian:~/Documents/SmartContract/contract$ ls
+Makefile   ReentrancyAttacker.abi  ReentrancyAttacker.sol  ReentrancyVictim.bin  solc-0.6.8
+README.md  ReentrancyAttacker.bin  ReentrancyVictim.abi    ReentrancyVictim.sol
+```
+
+The `bin` file contains the bytecode of the contract. After a contract is deployed, the bytecode will be stored to the blockchain. The `abi` file contains the API information of the contract. It is needed when
+we need to interact with a contract, so we know the name of the functions, their parameters and return
+values.
+
+### Task 1.b: Deploying the Victim Contract
+
+In this lab, we will use our own Python program (`/victim/deploy_victim_contract.py`) to do the deployment:
+
+```python
+#!/bin/env python3
+  
+from web3 import Web3
+import SEEDWeb3
+
+abi_file = "../contract/ReentrancyVictim.abi"
+bin_file = "../contract/ReentrancyVictim.bin" 
+
+# Connect to a geth node
+port = 8546   # Deploy the contract from a user node
+web3 = SEEDWeb3.connect_to_geth_poa('http://127.0.0.1:{}'.format(port))
+
+# We use web3.eth.accounts[1] as the sender because it has more Ethers
+sender_account = web3.eth.accounts[1]
+web3.geth.personal.unlockAccount(sender_account, "admin")
+print("Sending tx ...")
+addr = SEEDWeb3.deploy_contract(web3, sender_account,
+                                abi_file, bin_file, None)
+print("Victim contract: {}".format(addr))
+with open("contract_address_victim.txt", "w") as fd:
+    fd.write(addr)
+```
+
+In `SEEDWeb3.py`:
+
+```python
+# Deploy contract (high-level)
+def deploy_contract(_web3, sender_account, abi_file, bin_file, arg1):
+    print("---------Deploying Contract ----------------")
+    abi      = getFileContent(abi_file)
+    bytecode = getFileContent(bin_file)
+
+    contract = _web3.eth.contract(abi=abi, bytecode=bytecode)
+    tx_hash = contract.constructor(arg1).transact({ 'from': sender_account })
+    print("... Waiting for block")
+    tx_receipt = _web3.eth.wait_for_transaction_receipt(tx_hash)
+    contract_address = tx_receipt.contractAddress
+    print("Transaction Hash: {}".format(tx_receipt.transactionHash.hex()))
+    print("Transaction Receipt: {}".format(tx_receipt))
+    return contract_address
+```
+
+It basically creates a `Contract` class from the `abi` and bytecode, and then create a transaction to deploy the contract.
+
+### Task 1.c: Interacting with the Victim Contract
+
+
 
 ## Task 2: The Attacking Contract
 
