@@ -6,7 +6,7 @@ tags:
 permalink:          /posts/apache-web-server-setup-guide
 ---
 
-Individual portion of [Module 2](https://classes.engineering.wustl.edu/cse330/index.php/Module_2) from CSE 330/503S: "Rapid Prototype Development and Creative Programming" at Washington University in St. Louis. The Apache web server will be installed and configured on an AWS EC2 instance.
+Individual portion of [Module 2](https://classes.engineering.wustl.edu/cse330/index.php/Module_2) from CSE 330/503S: "Rapid Prototype Development and Creative Programming" at Washington University in St. Louis. The Apache web server will be installed and configured on an AWS EC2 instance. A Mac laptop is used as the local machine.
 
 <!-- excerpt-end -->
 
@@ -23,7 +23,7 @@ In the dialog box, create a new key pair, enter some name for it (e.g., `sp2023`
 
 ### SSH Configuration
 
-Open a terminal window on your local computer and run the following command:
+Open a terminal window on your local computer (in my case a MacBook Air) and run the following command:
 
 ```bash
 # Passphrase is optional
@@ -37,7 +37,7 @@ $ ls ~/.ssh
 id_rsa  id_rsa.pub
 ```
 
-The first file stores your private key and the second stores the corresponding public key. If you are using Mac OS X, run the following command to add your key to the SSH agent:
+The first file stores your private key and the second stores the corresponding public key. If you are using macOS like me, run the following command to add your key to the SSH agent:
 
 ```bash
 ssh-add
@@ -76,7 +76,7 @@ Enter new UNIX password:
 Retype new UNIX password:
 ```
 
-For security reasons, you should never SSH into your server as the root user. Instead, you should use a normal user to whom you give `sudo` privileges. To give a user `sudo` privileges, use the command `visudo`, which opens up the SUDO configuration file in the system's default text editor. (Never edit the file `/etc/sudoers` directly!) SUDO users are specified using lines similar to:
+For security reasons, you should never SSH into your server as the root user. Instead, you should use a normal user to whom you give `sudo` privileges. To give a user `sudo` privileges, use the command `visudo`, which opens up the `sudo` configuration file in the system's default text editor. (Never edit the file `/etc/sudoers` directly!) `sudo` users are specified using lines similar to:
 
 ```text
 <username>  ALL=(ALL)   ALL
@@ -231,3 +231,51 @@ sudo /etc/init.d/httpd restart
 sudo /sbin/service httpd restart
 sudo service httpd restart
 ```
+
+## PHP Installation and Workspace Setup
+
+PHP is a server-side scripting language widely used in web development. PHP is what turns your website from a static file server into a dynamic web application. By default, Apache only knows how to serve static HTML pages to the client. You can write as many HTML pages as you want, which is fine for basic websites. But if you want to have users post to a forum, or process credit card transactions, or make your own online calendar, a server-side language like PHP is what you need. Here are some points to keep in mind:
+
+- A PHP file on your server is not an HTML document. It is a PHP script.
+- PHP generates documents. By default, it generates HTML documents.
+- PHP can generate other document types by changing the MIME Type in the Content-Type HTTP Header.
+- Apache runs the PHP interpreter on your PHP script before transmitting it to the browser. The content that is generated after the PHP interpreter runs is expected to match the MIME type: by default, an HTML document.
+- The W3C Validator checks for valid markup in an HTML document. Everywhere that PHP generates an HTML document, that HTML document should be valid.
+
+To install PHP 7.2, run the following command to install `php7.2` from the Amazon Linux Extras repository:
+
+```bash
+sudo amazon-linux-extras install -y php7.2
+sudo service php-fpm start
+```
+
+Once you install the required packages, restart Apache for the changes to take effect. The PHP configuration file is called `php.ini`. In RHEL, it is located at `/etc/php.ini`. Open `php.ini` in your favorite text editor, find the `display_errors` option, and set it to `On`:
+
+```ini
+display_errors = On
+```
+
+You will need to restart Apache for any `php.ini` changes to take effect.
+
+The PHP Extension and Application Repository (PEAR) is a package manager that enables you to install classes and/or extensions to PHP. It is available through both the `yum` and `apt` repositories under the package name `php-pear`:
+
+```bash
+# In RHEL
+sudo yum install php-pear
+```
+
+Using PEAR to install PHP extensions is just as easy as `yum`, `apt`, `gem`, and `pip`. Just run `sudo pear install xxx`.
+
+![cse-330-workflow](/assets/images/cse-330-workflow.png)
+<p style="color:gray; font-size:80%;"><em>
+Figure 1: Three methods to copy files to your cloud instance
+</em></p>
+
+If you are using an external SFTP client, you can use FileZilla. Download and install FileZilla from [https://filezilla-project.org/download.php?type=client](https://filezilla-project.org/download.php?type=client). When you launch FileZilla, go to Edit->Settings or FileZilla->Preferences, and go to the SFTP options (under Connection). Click "Add key file...". Choose your `id_rsa` file. (**macOS Tip:** Press Shift+Command+Period to reveal hidden files in the file chooser window.) On FileZilla's main screen, there are four fields: `Host`, `Username`, `Password`, and `Port`. Fill them in as follws:
+
+- `Host`: `sftp://<ec2-xxx-xx-xx-xxx.compute-1.amazonaws.com>`
+- `Username`: The username you created on your server
+- `Password`: You may leave this blank.
+- `Port`: 22
+
+Then click "Quickconnect". If everything is configured correctly, FileZilla should log into your server. On the left and right of the FileZilla window, you can drag files between your local computer and your server. Thus, you can edit a file in a text editor on your decktop, and then upload it to your server by simply dragging it from the left pane to the right pane in FileZilla.
