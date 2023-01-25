@@ -73,5 +73,5 @@ Orchestral and chamber music events held at:
 
 ### Skills
 
- - General programming: C/C++, Java, Python, R
+ - General programming: C/C++, Java, Python, R, Bash
  - Web development: HTML, CSS, JavaScript
