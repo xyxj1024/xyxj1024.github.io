@@ -2,7 +2,7 @@
 layout: 		      post
 title: 			      "WashU CSE433R Resources"
 category:		      "Computing Systems, Systems Security"
-tags:			        
+tags:			        ctf
 permalink:		    /posts/cse433r-resources
 ---
 
