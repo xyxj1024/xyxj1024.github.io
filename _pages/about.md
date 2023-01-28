@@ -68,6 +68,8 @@ Washington University CSE 523S: "Systems Security"
 
 #### Tsinghua University Student Orchestra (Aug. 2016 -- Aug. 2020)
 
+Principal Second Violin
+
 Orchestral and chamber music events held at:
 - National Center for the Performing Arts, Beijing, China
 - The New Tsinghua Xuetang, Beijing, China
