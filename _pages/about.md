@@ -62,7 +62,11 @@ Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
 ### Experience
 
-#### Tsinghua University Student Orchestra
+#### Graduate Teaching Assistant (Spring 2023)
+
+Washington University CSE 523S: "Systems Security"
+
+#### Tsinghua University Student Orchestra (Aug. 2016 -- Aug. 2020)
 
 Orchestral and chamber music events held at:
 - National Center for the Performing Arts, Beijing, China
