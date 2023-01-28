@@ -1,9 +1,10 @@
 ---
-layout: 		post
-title:          "Python Weather Data Scraping"
-category:       "Data Structures, Algorithms, Programming Languages"
-tags:           web-scraping python
-permalink:      /posts/web-scraping/weather
+layout:             post
+title:              "Python Weather Data Scraping"
+category:           "Data Structures, Algorithms, Programming Languages"
+tags:               web-scraping python
+permalink:          /posts/web-scraping/weather
+last_modified_at:   "2023-01-28"
 ---
 
 It was a cozy Midwest Sunday morning. I woke up a little later than usual and just couldn't decide whether I should go to the lab. Typically, to deal with this situation, I will first check the weather using iPhone's built-in weather app. However, a random thought came to me: how about letting the Terminal display weather information for me?
@@ -83,10 +84,11 @@ def weather(lat, lon):
     items = soup.find_all("div", class_ = "tombstone-container")
     times = [item.find(class_ = "period-name").get_text(separator = " ") for item in items]
     weathers = [item.find(class_ = "short-desc").get_text(separator = " ") for item in items]
-    temperatures = [item.find(class_ = "temp").get_text(separator = " ") for item in items]
-    print("".join(f'{times[i]:^20}' for i in range(4)))
-    print("".join(f'{weathers[i]:^20}' for i in range(4)))
-    print("".join(f'{temperatures[i]:^20}' for i in range(4)))
+    temp = re.compile('.*temp.*')
+    temperatures = [item.find(class_ = temp).get_text(separator = " ") for item in items]
+    print("".join(f'{times[i]:^24}' for i in range(4)))
+    print("".join(f'{weathers[i]:^24}' for i in range(4)))
+    print("".join(f'{temperatures[i]:^24}' for i in range(4)))
     print("\n")
 ```
 
