@@ -7,7 +7,8 @@ permalink:          /posts/Chinese-history/fhhk-China-monetary-policy
 last_modified_at:   "2023-01-30"
 ---
 
-<p lang="zh" class="message"><em>
+<p lang="en" class="message"><em>
+China was neither primitive nor was its economy simple; rather it was vital, changing, developing. But it did not modernize. It did not accept the challenge of the industrial West and <emph>develop</emph> in this special sense of the term.
 </em></p>
 
 读书摘记&#xFF1A;Frank H. H. King, *Money and Monetary Policy in China: 1845-1895*, Harvard University Press, 1965&#x3002;作者景复朗乃中国经济史学家，曾任香港大学亚洲研究中心创始主任（1968-1979），著有[四卷本汇丰银行史](https://history.hsbc.com/history/lessons)。本书记录了十九世纪下半叶---1842年第一次鸦片战争结束至1895年中日《马关条约》签订---清代中国的货币系统如何适应来自外部工业文明的挑战。
@@ -34,7 +35,7 @@ last_modified_at:   "2023-01-30"
 一项1926-1936年期间针对中国定县的社会调查揭示了515个家庭共1282名14岁以上男性的从业分布情况。以下数字或许同样可以代表1895年的中国社会：
 
 |---
-|-:|:-|-:|:-|
+|--:|:--|--:|:--|
 | $$993$$ | farming          | $$11$$ | government
 | $$64$$  | hired farm labor | $$8$$  | away from home
 | $$48$$  | student          | $$7$$  | peddler
@@ -45,7 +46,7 @@ last_modified_at:   "2023-01-30"
 | $$15$$  | military         | $$2$$  | no occupation
 | $$13$$  | unskilled labor  | $$1$$  | no data
 
-*表一: Signey D. Gamble, *Ting Hsien, a North China Rural Community* (New York, 1954), p. 62.
+*表一: Signey D. Gamble,* Ting Hsien, a North China Rural Community *(New York, 1954), p. 62.*
 {:.table-caption}
 
 清代中国的税收严重依赖地税：
@@ -64,6 +65,6 @@ last_modified_at:   "2023-01-30"
 
 [^5]: 参见徐义生《甲午战争前清政府的外债》（《经济研究》1956年5、10期）。
 
-[^6]: 可参见the prohibition of the bean cake trade in the report of Lt. Col. Neale, H. M. Secretary of Legation, Peking, December 1861, in *BPP*, 1862, LVIII, "Manufacturing and Commerce and Trade of Foreign Countries," pp. 385-386。
+[^6]: 参见the prohibition of the bean cake trade in the report of Lt. Col. Neale, H. M. Secretary of Legation, Peking, December 1861, in *BPP*, 1862, LVIII, "Manufacturing and Commerce and Trade of Foreign Countries," pp. 385-386。
 
 [^7]: 参见Edwin G. Beal, Jr., *The Origin of Likin (1853-1864)* (Cambridge, Mass., 1957).
