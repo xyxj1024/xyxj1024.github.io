@@ -8,7 +8,7 @@ last_modified_at:   "2023-01-30"
 ---
 
 <p lang="en" class="message"><em>
-China was neither primitive nor was its economy simple; rather it was vital, changing, developing. But it did not modernize. It did not accept the challenge of the industrial West and <emph>develop</emph> in this special sense of the term.
+China was neither primitive nor was its economy simple; rather it was vital, changing, developing. But it did not modernize. It did not accept the challenge of the industrial West and "develop" in this special sense of the term.
 </em></p>
 
 读书摘记&#xFF1A;Frank H. H. King, *Money and Monetary Policy in China: 1845-1895*, Harvard University Press, 1965&#x3002;作者景复朗乃中国经济史学家，曾任香港大学亚洲研究中心创始主任（1968-1979），著有[四卷本汇丰银行史](https://history.hsbc.com/history/lessons)。本书记录了十九世纪下半叶---1842年第一次鸦片战争结束至1895年中日《马关条约》签订---清代中国的货币系统如何适应来自外部工业文明的挑战。
@@ -32,10 +32,9 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 
 > A recent estimate of the external loans contracted by the Imperial and provincial governments from 1853 to 1890 shows that of a total of $$45.3$$ million *Kuping* or *Treasury taels*[^4], all but $$10.9$$ million *taels* or $$24$$ per cent were for external wars ($$14.5$$ million *taels*) or internal rebellion ($$19.9$$ million *taels*)[^5].
 
-一项1926-1936年期间针对中国定县的社会调查揭示了515个家庭共1282名14岁以上男性的从业分布情况。以下数字或许同样可以代表1895年的中国社会：
+一项1926-1936年期间针对中国定县的社会调查揭示了$$515$$个家庭共$$1282$$名$$14$$岁以上男性的从业分布情况。以下数字或许同样可以代表1895年的中国社会：
 
-|---
-|--:|:--|--:|:--|
+|--------:|:-----------------|-------:|:--------------|
 | $$993$$ | farming          | $$11$$ | government
 | $$64$$  | hired farm labor | $$8$$  | away from home
 | $$48$$  | student          | $$7$$  | peddler
@@ -46,12 +45,18 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 | $$15$$  | military         | $$2$$  | no occupation
 | $$13$$  | unskilled labor  | $$1$$  | no data
 
-*表一: Signey D. Gamble,* Ting Hsien, a North China Rural Community *(New York, 1954), p. 62.*
+*数据来源：Signey D. Gamble,* Ting Hsien, a North China Rural Community *(New York, 1954), p. 62.*
 {:.table-caption}
 
 清代中国的税收严重依赖地税：
 
 > The basis of the taxation system was the land tax, which before 1850 furnished probably more than $$75$$ percent of total imperial revenue[^6]. The land tax was usually collected in legal tender in an amount fixed in 1723 by the K'ang-hsi Emperor. Thus the most important source of revenue appeared inflexible, although the amount actually collected exceeded the specified amount more than threefold by the end of the nineteenth century. Such excess sums went to collectors, local and provincial authorities, but not directly to the imperial treasury in Peking. In 1853 the revenue requirements of the governments were so great that the *likin* tax, a tax on goods in transit, was first levied, accounting by 1900 for $$18$$ per cent of the total revenue[^7]. With the growth of foreign trade and the efficient administration of the customs under the foreign-staffed Imperial Maritime Customs, import and export duties on general cargo and foreign opium accounted for $$26$$ per cent of the national revenue, and the native customs, for duties on trade carried in native-type craft, accounted for another $$2$$ per cent.
+>
+> &hellip; *Likin* could not be increased indefinitely, not only for purely economic considerations relative to the disruption of trade, but also due to the complications involved with foreign goods which under the treaties had paid their full duty. And foreigners objected to the tax in principle. The import and export duties were fixed by treaty and could not be increased unilaterally. As they were based on an *ad valorem* intent but actually set down as specific duties denominated in a silver unit of account, the revenues suffered from a decrease in the gold price of silver, although the full effects of this were not felt until after 1895 when the external gold debt of China was significant.
+>
+> &hellip; During the Taiping rebellion the government issued token coins and paper money in an effort to meet the requirements of the military budget and yet maintain vital public works, but more extensive use of this obvious fiscal device was impossible due to the hyperinflation which it produced and the traditional reluctance of the Chinese, a reluctance well justified by experience, to accept government fiat money.
+
+上海，其他通商口岸，及香港的情况：
 
 ## 脚注
 
