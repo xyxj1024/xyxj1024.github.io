@@ -80,12 +80,20 @@ This is my new <code>weather()</code> function:
 def weather(lat, lon):
     res = requests.get(f'https://forecast.weather.gov/MapClick.php?lat={lat}&lon={lon}', headers = headers)
     soup = BeautifulSoup(res.text, "html.parser")
+
     times = soup.find_all("p", {"class": "period-name"})
     descs = soup.find_all("p", {"class": "short-desc"})
     temps = soup.find_all("p", {"class": re.compile('.*temp.*')})
     times = [time.get_text(separator = " ") for time in times]
     descs = [desc.get_text(separator = " ") for desc in descs]
     temps = [temp.get_text(separator = " ") for temp in temps]
+    # Convert Fahrenheit into Celsius
+    for i, temp in enumerate(temps):
+        temp = re.sub(r'\D', '', temp)
+        temp = int((int(temp) - 32) * (5 / 9))
+        temp = str(str(temp) + " \u00B0C")
+        temps[i] = temp
+    # Print results
     print("".join(f'{times[i]:^24}' for i in range(4)))
     print("".join(f'{descs[i]:^24}' for i in range(4)))
     print("".join(f'{temps[i]:^24}' for i in range(4)))
@@ -95,7 +103,7 @@ def weather(lat, lon):
 Finally, I got my daily weather checker working:
 
 ```console
-Last login: Sun Jan 29 19:47:32 on ttys000
+Last login: Sun Jan 29 20:14:37 on ttys000
 
 	大雨落幽燕，白浪滔天，秦皇岛外打鱼船。一片汪洋都不见，知向谁边？
 	往事越千年，魏武挥鞭，东临碣石有遗篇。萧瑟秋风今又是，换了人间。
@@ -104,5 +112,5 @@ Another beautiful day in University City, Missouri, US:
 
   NOW until 9:00am Mon          Tonight                  Monday               Monday Night      
 Winter Weather Advisory        Wintry Mix          Decreasing Clouds         Mostly Cloudy      
-       Low: 20 °F             High: 25 °F              Low: 13 °F             High: 26 °F
+         -6 °C                   -3 °C                   -10 °C                  -3 °C 
 ```
