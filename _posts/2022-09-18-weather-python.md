@@ -4,7 +4,7 @@ title:              "Python Weather Data Scraping"
 category:           "Data Structures, Algorithms, Programming Languages"
 tags:               web-scraping python
 permalink:          /posts/web-scraping/weather
-last_modified_at:   "2023-01-29"
+last_modified_at:   "2023-01-30"
 ---
 
 It was a cozy Midwest Sunday morning. I woke up a little later than usual and just couldn't decide whether I should go to the lab. Typically, to deal with this situation, I will first check the weather using iOS's built-in weather app. However, a random thought came to me: why not just let the Terminal display weather information for me?
@@ -103,14 +103,14 @@ def weather(lat, lon):
 Finally, I got my daily weather checker working:
 
 ```console
-Last login: Sun Jan 29 20:14:37 on ttys000
+Last login: Sun Jan 29 21:52:20 on ttys000
 
 	大雨落幽燕，白浪滔天，秦皇岛外打鱼船。一片汪洋都不见，知向谁边？
 	往事越千年，魏武挥鞭，东临碣石有遗篇。萧瑟秋风今又是，换了人间。
 
 Another beautiful day in University City, Missouri, US:
 
-  NOW until 9:00am Mon          Tonight                  Monday               Monday Night      
-Winter Weather Advisory        Wintry Mix          Decreasing Clouds         Mostly Cloudy      
-         -6 °C                   -3 °C                   -10 °C                  -3 °C 
+         Today                  Tonight                 Tuesday              Tuesday Night      
+         Cloudy              Mostly Cloudy           Mostly Cloudy           Mostly Cloudy      
+         -4 °C                   -8 °C                   -3 °C                   -7 °C
 ```
