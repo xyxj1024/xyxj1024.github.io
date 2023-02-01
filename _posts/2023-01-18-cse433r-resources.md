@@ -6,7 +6,7 @@ tags:			        ctf
 permalink:		    /posts/cse433r-resources
 ---
 
-This post contains a list of computer security resources from [Dr. Stephen V. Cole](https://github.com/cole-wustl) at Washington University in St. Louis.
+This post contains a list of computer security resources from [Dr. Stephen V. Cole](https://github.com/cole-wustl) at Washington University in St. Louis. Other resources can also be found at WUSTL B34R5HELL team's [GitHub repo](https://github.com/WUSTL-B34R5HELL/bearshell-ctf/tree/master/Resources).
 
 <!-- excerpt-end -->
 
