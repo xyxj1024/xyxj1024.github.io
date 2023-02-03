@@ -11,7 +11,7 @@ last_modified_at:   "2023-02-03"
 China was neither primitive nor was its economy simple; rather it was vital, changing, developing. But it did not modernize. It did not accept the challenge of the industrial West and "develop" in this special sense of the term.
 </em></p>
 
-读书摘记&#xFF1A;Frank H. H. King, *Money and Monetary Policy in China: 1845-1895*, Harvard University Press, 1965&#x3002;作者景复朗乃中国经济史学家，曾任香港大学亚洲研究中心创始主任（1968-1979），著有[四卷本汇丰银行史](https://history.hsbc.com/history/lessons)。本书记录了十九世纪下半叶---1842年第一次鸦片战争结束至1895年中日《马关条约》签订---清代中国的货币系统如何适应来自外部工业文明的挑战。
+读书摘记&#xFF1A;Frank H. H. King, *Money and Monetary Policy in China: 1845-1895*, Harvard University Press, 1965&#x3002;作者景复朗乃中国经济史学家&#xFF0C;香港大学亚洲研究中心创始主任&#xFF08;1968-1979&#xFF09;&#xFF0C;曾著有[四卷本汇丰银行史](https://history.hsbc.com/history/lessons)&#x3002;本书记录了十九世纪下半叶---1842年第一次鸦片战争结束至1895年中日《马关条约》签订---清代中国的货币系统如何适应来自外部工业文明的挑战&#x3002;
 
 <!-- excerpt-end -->
 
@@ -56,7 +56,7 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 >
 > &hellip; During the Taiping rebellion the government issued token coins and paper money in an effort to meet the requirements of the military budget and yet maintain vital public works, but more extensive use of this obvious fiscal device was impossible due to the hyperinflation which it produced and the traditional reluctance of the Chinese, a reluctance well justified by experience, to accept government fiat money.
 
-上海，其他通商口岸，及香港的情况：
+上海、香港，及其他通商口岸的情况：
 
 |            | 1877 | 1880 | 1885 | 1890 | 1895
 |:----------:|:-----:|:------:|:-------:|:-------:|
@@ -76,6 +76,20 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 > &hellip; Economic modernization in China prior to 1895 hardly extended beyond the treaty ports. Even in the treaty ports modern industry was restricted to those fields ancillary to the China trade---shipbuilding and processing of exports---while foreign participation in manufacturing industry was hindered by the difficulty of importing machinery over the protests of officials and the desire of the more progressive Chinese to keep modern-style companies in wholly Chinese hands.
 
 ## 中国货币系统的主要特征
+
+> The confusions by which the Chinese monetary system appears to have been characterized are of two general kinds, those common to all metallic monetary systems and those peculiar to the Chinese.
+
+### 定义与问题
+
+金属货币制度下，货币可以是任何被人们接受的支付媒介。
+
+> A metallic currency system may be defined as one in which the assigned value of the commodity used as money is thought to be essentially derived from its market value as non-money.
+
+记账单位和货币是两个不同的概念：
+
+> In China the rates for receiving and paying out the same dollar coin were notoriously different. However, originally derived, a unit of account must be considered at any one time to be given datum, that is, to exist independently of any means of payment. &hellip; A debt expressed in terms of the unit of account says nothing more than that at the time of repayment some sum of money valued at the number of units of account equal to the debt shall be repaid.
+>
+> &hellip; Although governments or merchants' associations were often successful in keeping money fixed in terms of the unit of account, the relationship eventually broke down. The conclusion must be that in a metallic monetary system every monetary transaction is potentially an exchange transaction. The price of the commodity being purchased having been settled, the price of money must be decided. Contrary to our present-day expectations, people did haggle over money's price.
 
 “银铜复本位”：
 
