@@ -1,8 +1,8 @@
 ---
 layout:             post
-title:              "晚清货币体系探微"
-category:           "Miscellaneous"
-tags:               Chinese-history monetary-policy
+title:              "晚清货币与货币政策"
+category:           "Economics, Finance, Political Economy"
+tags:               Chinese-history monetary-policy China
 permalink:          /posts/Chinese-history/fhhk-China-monetary-policy
 last_modified_at:   "2023-01-30"
 ---
@@ -58,6 +58,33 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 
 上海，其他通商口岸，及香港的情况：
 
+|            | 1877 | 1880 | 1885 | 1890 | 1895
+|:----------:|:-----:|:------:|:-------:|:-------:|
+| 股份数（千）| $$84$$ | $$69$$ | $$289$$ | $$878$$ | $$1300$$
+| 上海两[^8]（百万）| $$11.6$$ | $$13.8$$ | $$30.8$$ | $$47.2$$ | $$57.6$$
+| 英镑（百万） | $$3.6$$ | $$3.5$$ | $$7.0$$ | $$11.1$$ | $$8.5$$
+
+*上交所总股份数及市值统计*
+{:.table-caption}
+
+> In the thirty years between 1865 and 1895 some $$90$$ companies were at one time or another listed on the Shanghai share market. (In considering the companies listed on the Shanghai stock market a few cautions should be noted. First, some of the companies had their head offices outside China, may have operated mainly in other countries, and may have been listed on several other exchanges from which they derived most of their capital. Second, there are no reliable figure as to the percentage of capital invested by Chinese in these companies, although figures as high as $$40$$ per cent may be found. Finally, wholly Chinese joint-stock companies having no foreign shareholders were not listed and are considered later.) In addition there were at least $$74$$ other companies in Shanghai using foreign machinery or techniques to some degree.
+>
+> Despite the unsatisfactory scope of the statistics, several further facts emerge. First, the companies were not conspicuous for success. Of the $$90$$ companies listed, $$72$$ either failed or at some time showed the market value of their shares below paid-up capital. This is consistent with the existence of speculative periods followed by failures of many more concerns than were listed on the stock exchange. These fluctuations were caused by many factors---China's relations with the Powers, the speculative move of funds from the interior and the resulting land speculation during periods of refugee movements to the treaty ports, the course of the exchanges and other speculative aspects of foreign trade which affected the native money market, and business fluctuations in the United Kingdom, especially the collapse of Baring Brothers and the depression of the early 1890's.
+>
+> If institutional factors were the key to China's slow acceptance of modernization, Hong Kong, a British crown colony, should have been able to set the pace. That it failed to do so despite such obvious advantages as the right of incorporation with limited liability and the protection of a government sympathetic to enterprise suggests that Hong Kong was subject to economic forces similar to those operating in China and that these were unfavorable. The timing of Hong Kong's industrial revolution, which began during the trade depression following the Korean War-United Nations embargo, emphasizes the importance of the economic factors.
+>
+> Economic modernization in China prior to 1895 hardly extended beyond the treaty ports. Even in the treaty ports modern industry was restricted to those fields ancillary to the China trade---shipbuilding and processing of exports---while foreign participation in manufacturing industry was hindered by the difficulty of importing machinery over the protests of officials and the desire of the more progressive Chinese to keep modern-style companies in wholly Chinese hands.
+
+## 中国货币系统的主要特征
+
+“银铜复本位”：
+
+> The *tael* was the unit of account when payment in silver was expected; the *ch'uan*, when payment was to be in copper coin, or "cash." A *tael* could be satisfied by tender of one liang, or Chinese ounce, of monetary silver. The *ch'uan* was divided into $$1000$$ units referred to as *ch'ien*, and one *ch'ien* unit of account could be satisfied by payment of one cash coin.
+
+$$1 \text{两} = 1 \text{川} \equiv 1000 \text{钱}$$
+
+> The ideal nature of one *tael* being satisfied by one liang of monetary silver is based on the fact that "liang" in Chinese was used both for the unit of account (*tael*) and for the weight of silver (Chinese ounce or liang) used to satisfy it. Similarly, *ch'ien* refers both to a unit of account (*ch'ien*) and a weight ($$0.1$$ liang), again requiring a $$1:1$$ relationship between the unit of account and its money.
+
 ## 脚注
 
 [^1]: 参见Walter Hampton Mallory, *China: Land of Famine*, American Geographical Society, 1928, pp. 29-30。
@@ -73,3 +100,5 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 [^6]: 参见the prohibition of the bean cake trade in the report of Lt. Col. Neale, H. M. Secretary of Legation, Peking, December 1861, in *BPP*, 1862, LVIII, "Manufacturing and Commerce and Trade of Foreign Countries," pp. 385-386。
 
 [^7]: 参见Edwin G. Beal, Jr., *The Origin of Likin (1853-1864)* (Cambridge, Mass., 1957).
+
+[^8]: 可以参考这里的讨论：[John Parke Young, "The Shanghai Tael," *The American Economic Review*, Dec., 1931, Vol. 21, No. 4, pp. 682-684](https://www.jstor.org/stable/pdf/498.pdf)。
