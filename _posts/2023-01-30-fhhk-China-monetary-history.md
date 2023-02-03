@@ -4,7 +4,7 @@ title:              "晚清货币与货币政策"
 category:           "Economics, Finance, Political Economy"
 tags:               Chinese-history monetary-policy China
 permalink:          /posts/Chinese-history/fhhk-China-monetary-policy
-last_modified_at:   "2023-01-30"
+last_modified_at:   "2023-02-03"
 ---
 
 <p lang="en" class="message"><em>
@@ -45,7 +45,7 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 | $$15$$  | military         | $$2$$  | no occupation
 | $$13$$  | unskilled labor  | $$1$$  | no data
 
-*数据来源：Signey D. Gamble,* Ting Hsien, a North China Rural Community *(New York, 1954), p. 62.*
+*表一（数据来源：Signey D. Gamble,* Ting Hsien, a North China Rural Community *(New York, 1954), p. 62.）*
 {:.table-caption}
 
 清代中国的税收严重依赖地税：
@@ -64,7 +64,7 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 | 上海两[^8]（百万）| $$11.6$$ | $$13.8$$ | $$30.8$$ | $$47.2$$ | $$57.6$$
 | 英镑（百万） | $$3.6$$ | $$3.5$$ | $$7.0$$ | $$11.1$$ | $$8.5$$
 
-*上交所总股份数及市值统计*
+*表二：上交所总股份数及市值统计*
 {:.table-caption}
 
 > In the thirty years between 1865 and 1895 some $$90$$ companies were at one time or another listed on the Shanghai share market. (In considering the companies listed on the Shanghai stock market a few cautions should be noted. First, some of the companies had their head offices outside China, may have operated mainly in other countries, and may have been listed on several other exchanges from which they derived most of their capital. Second, there are no reliable figure as to the percentage of capital invested by Chinese in these companies, although figures as high as $$40$$ per cent may be found. Finally, wholly Chinese joint-stock companies having no foreign shareholders were not listed and are considered later.) In addition there were at least $$74$$ other companies in Shanghai using foreign machinery or techniques to some degree.
@@ -81,7 +81,7 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 
 > The *tael* was the unit of account when payment in silver was expected; the *ch'uan*, when payment was to be in copper coin, or "cash." A *tael* could be satisfied by tender of one liang, or Chinese ounce, of monetary silver. The *ch'uan* was divided into $$1000$$ units referred to as *ch'ien*, and one *ch'ien* unit of account could be satisfied by payment of one cash coin.
 
-$$1 \text{两} = 1 \text{川} \equiv 1000 \text{钱}$$
+$$1 \text{ 两} = 1 \text{ 川} \equiv 1000 \text{ 钱}$$
 
 > The ideal nature of one *tael* being satisfied by one liang of monetary silver is based on the fact that "liang" in Chinese was used both for the unit of account (*tael*) and for the weight of silver (Chinese ounce or liang) used to satisfy it. Similarly, *ch'ien* refers both to a unit of account (*ch'ien*) and a weight ($$0.1$$ liang), again requiring a $$1:1$$ relationship between the unit of account and its money.
 
