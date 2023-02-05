@@ -20,9 +20,9 @@ title:            Xingjian
 # tagline:        'Personal Website'
 description-1:    '譬大道之在天下猶川谷之於江海'
 description-2:    'Eventually, all things merge into one, and a river runs through it.'
-baseurl:          https://xingjianxuanyuan.github.io/
+baseurl:          https://xyxj1024.github.io/
 twitter_username: xyxj1024
-github_username:  XingjianXuanyuan
+github_username:  xyxj1024
 
 include: ["_pages", "_posts"]
 
@@ -35,7 +35,7 @@ plugins:
 
 author:
   name:           'Xingjian Xuanyuan'
-  url:            https://github.com/XingjianXuanyuan
+  url:            https://github.com/xyxj1024
 
 paginate:         5
 
@@ -43,4 +43,4 @@ paginate:         5
 version:          1.1
 
 github:
-  repo:           https://github.com/XingjianXuanyuan/XingjianXuanyuan.github.io
+  repo:           https://github.com/xyxj1024/xyxj1024.github.io
