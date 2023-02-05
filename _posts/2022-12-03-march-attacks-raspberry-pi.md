@@ -7,7 +7,7 @@ permalink:          /posts/march-attacks-raspberry-pi
 last_modified_at:   "2022-12-18"
 ---
 
-I have attempted to shed light on whys and hows regarding the [Spectre](https://xingjianxuanyuan.github.io/posts/seedlabs/march-attacks) and [Meltdown](https://xingjianxuanyuan.github.io/posts/seedlabs/meltdown) attacks with materials drawn from [SEED Labs 2.0](https://seedsecuritylabs.org). A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
+I have attempted to shed light on whys and hows regarding the [Spectre]({{ site.baseurl }}/posts/seedlabs/march-attacks) and [Meltdown]({{ site.baseurl }}/posts/seedlabs/meltdown) attacks with materials drawn from [SEED Labs 2.0](https://seedsecuritylabs.org). A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
 
 <!-- excerpt-end -->
 

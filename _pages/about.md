@@ -32,7 +32,7 @@ CS-related coursework with links:
   - [**CSE 330/503S: Rapid Prototype Development and Creative Programming**](https://classes.engineering.wustl.edu/cse330), taught by [Dr. Todd Sproull](https://research.engineering.wustl.edu/~todd/)
   - **CSE 467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich
   - [**CSE 433S: Introduction to Computer Security**, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html) (CTF exercises explained in [Kaplan et al. (2022)](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153) and [Cole (2022)](https://dl.acm.org/doi/pdf/10.1145/3502718.3524806))
-  - **CSE 433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (find resources page [here](https://xingjianxuanyuan.github.io/posts/cse433r-resources))
+  - **CSE 433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (find resources page [here]({{ site.baseurl }}/posts/cse433r-resources))
   - [**CSE 425S: Programming Languages and Systems**, taught by Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/) (complemented with CSE 341 course materials developed by [Dr. Dan Grossman](https://homes.cs.washington.edu/~djg/teachingMaterials/spl/) at [University of Washington](https://www.washington.edu/))
   - **CSE 422S: Operating Systems Organization**, taught by Dr. James Orr (originally developed by Dr. David Ferry and subsequently revised and extended by Dr. Christopher D. Gill, Dr. Brian Kocoloski, Dr. James Orr, and Dr. Marion Sudvarg)
   - **ECON 558: Matching and Assignment**, taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
