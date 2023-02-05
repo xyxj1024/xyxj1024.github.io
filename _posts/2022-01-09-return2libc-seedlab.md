@@ -15,7 +15,7 @@ For general overview and the setup package for this lab, please go to [SEED Labs
 * TOC 
 {:toc}
 
-```console
+```text
      Non-Executable Stack
 +---------------------------+
 |                      <--  |
