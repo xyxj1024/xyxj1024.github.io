@@ -2,7 +2,7 @@
 layout:             post
 title:              "Configure and Cross-Compile a Linux Kernel for a Raspberry Pi"
 category:           "Computing Systems, Systems Security"
-tags:               operating-system raspberry-pi
+tags:               linux-kernel raspberry-pi
 permalink:          /posts/configure-compile-linux-kernel
 ---
 

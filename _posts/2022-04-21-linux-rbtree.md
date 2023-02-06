@@ -2,7 +2,7 @@
 layout:           post
 title:            "Linux Red-Black Tree Data Structure"
 category:         "Computing Systems, Systems Security"
-tags:		      operating-system kernel-memory tree
+tags:		      linux-kernel tree
 permalink:        /posts/linux-plumbing/rbtree
 last_modified_at: "2022-12-30"
 ---

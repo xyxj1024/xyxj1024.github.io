@@ -2,9 +2,9 @@
 layout:             post
 title:              "Linux Filesystem Forensics"
 category:           "Computing Systems, Systems Security"
-tags:               unix operating-system filesystem namespace
+tags:               unix filesystem namespace
 permalink:          /posts/linux-plumbing/filesystem
-last_modified_at:   "2023-01-26"
+last_modified_at:   "2023-02-06"
 ---
 
 Some writeup for
@@ -72,9 +72,9 @@ cd /path/to/studio4/subdir1
 ln ../subdir0/myfile
 ```
 
-I gave a quick recap on hard links in Linux [here]({{ site.baseurl }}/posts/seedlabs/race-condition#linux-filesystem-hard-links-vs-soft-links).
+(I gave a brief recap on hard links in Linux [here]({{ site.baseurl }}/posts/seedlabs/race-condition#linux-filesystem-hard-links-vs-soft-links).)
 
-We can write a userspace C program that emulates (some of) the behavior of the `ln` utility making use of the `link()` system call:
+We can write a userspace C program that emulates some of the behavior of the `ln` utility making use of the `link()` system call:
 
 ```c
 #include <unistd.h>
@@ -116,7 +116,6 @@ int main(int argc, char *argv[])
 Compile and run the program:
 
 ```console
-Compile and run the program:
 pi@xingjian:~/Documents/userspace/cse522s $ gcc link.c -o link
 pi@xingjian:~/Documents/userspace/cse522s $ ./link
 Usage: ./link <first-arg> <second-arg>(optional)
@@ -259,6 +258,56 @@ struct nsproxy {
     struct time_namespace   *time_ns_for_children;
     struct cgroup_namespace *cgroup_ns;
 };
+```
+
+The `nsproxy` structure holds the eight namespace data structures. We use namespaces to restrict the visibility of resources for processes (by putting the processes in separate namespaces). The missing one is the user namespace, which is part of the `cred` data structure in the `task_struct` (i.e., the security context of a task):
+
+```c
+// In: include/linux/cred.h
+struct cred {
+	atomic_t	usage;
+#ifdef CONFIG_DEBUG_CREDENTIALS
+	atomic_t	subscribers;	/* number of processes subscribed */
+	void		*put_addr;
+	unsigned	magic;
+#define CRED_MAGIC	0x43736564
+#define CRED_MAGIC_DEAD	0x44656144
+#endif
+	kuid_t		uid;		/* real UID of the task */
+	kgid_t		gid;		/* real GID of the task */
+	kuid_t		suid;		/* saved UID of the task */
+	kgid_t		sgid;		/* saved GID of the task */
+	kuid_t		euid;		/* effective UID of the task */
+	kgid_t		egid;		/* effective GID of the task */
+	kuid_t		fsuid;		/* UID for VFS ops */
+	kgid_t		fsgid;		/* GID for VFS ops */
+	unsigned	securebits;	/* SUID-less security management */
+	kernel_cap_t	cap_inheritable; /* caps our children can inherit */
+	kernel_cap_t	cap_permitted;	/* caps we're permitted */
+	kernel_cap_t	cap_effective;	/* caps we can actually use */
+	kernel_cap_t	cap_bset;	/* capability bounding set */
+	kernel_cap_t	cap_ambient;	/* Ambient capability set */
+#ifdef CONFIG_KEYS
+	unsigned char	jit_keyring;	/* default keyring to attach requested
+					 * keys to */
+	struct key	*session_keyring; /* keyring inherited over fork */
+	struct key	*process_keyring; /* keyring private to this process */
+	struct key	*thread_keyring; /* keyring private to this thread */
+	struct key	*request_key_auth; /* assumed request_key authority */
+#endif
+#ifdef CONFIG_SECURITY
+	void		*security;	/* LSM security */
+#endif
+	struct user_struct *user;	/* real user ID subscription */
+	struct user_namespace *user_ns; /* user_ns the caps and keyrings are relative to. */
+	struct ucounts *ucounts;
+	struct group_info *group_info;	/* supplementary groups for euid/fsgid */
+	/* RCU deletion */
+	union {
+		int non_rcu;			/* Can we skip RCU deletion? */
+		struct rcu_head	rcu;		/* RCU deletion hook */
+	};
+} __randomize_layout;
 ```
 
 The kernel module code I used:

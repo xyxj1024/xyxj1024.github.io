@@ -2,7 +2,7 @@
 layout:     post
 title:      "Concurrent Stacks in Java"
 category:   "Data Structures, Algorithms, Programming Languages"
-tags:       object-oriented-programming concurrency tree stack
+tags:       object-oriented-programming concurrency tree
 permalink:  /posts/concurrent-stacks
 ---
 

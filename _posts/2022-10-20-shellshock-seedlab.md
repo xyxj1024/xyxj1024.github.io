@@ -2,7 +2,7 @@
 layout:       post
 title:        "SEED Labs 2.0: Shellshock Attack Lab Writeup"
 category:     "Computing Systems, Systems Security"
-tags:         software-security docker reverse-shell
+tags:         software-security reverse-shell
 permalink:    /posts/seedlabs/shellshock
 ---
 
