@@ -93,24 +93,32 @@ def weather(lat, lon):
         temp = int((int(temp) - 32) * (5 / 9))
         temp = str(str(temp) + " \u00B0C")
         temps[i] = temp
+    # Shorten weather descriptions
+    for j, desc in enumerate(descs):
+        new_desc = ""
+        for k, char in enumerate(desc):
+            if k > 20 and char == " ":
+                new_desc += "..."
+                break
+            new_desc += char
+        descs[j] = new_desc
     # Print results
-    print("".join(f'{times[i]:^24}' for i in range(4)))
-    print("".join(f'{descs[i]:^24}' for i in range(4)))
-    print("".join(f'{temps[i]:^24}' for i in range(4)))
+    print("".join(f'{times[i]:^30}' for i in range(4)))
+    print("".join(f'{descs[i]:^30}' for i in range(4)))
+    print("".join(f'{temps[i]:^30}' for i in range(4)))
     print("\n")
 ```
 
 Finally, I got my daily weather checker working:
 
 ```console
-Last login: Sun Jan 29 21:52:20 on ttys000
+Last login: Mon Feb  6 12:14:17 on ttys000
+Another beautiful day in St. Louis, Missouri, US:
 
-	大雨落幽燕，白浪滔天，秦皇岛外打鱼船。一片汪洋都不见，知向谁边？
-	往事越千年，魏武挥鞭，东临碣石有遗篇。萧瑟秋风今又是，换了人间。
+大雨落幽燕，白浪滔天，秦皇岛外打鱼船。一片汪洋都不见，知向谁边？
+往事越千年，魏武挥鞭，东临碣石有遗篇。萧瑟秋风今又是，换了人间。
 
-Another beautiful day in University City, Missouri, US:
-
-         Today                  Tonight                 Tuesday              Tuesday Night      
-         Cloudy              Mostly Cloudy           Mostly Cloudy           Mostly Cloudy      
-         -4 °C                   -8 °C                   -3 °C                   -7 °C
+        This Afternoon                   Tonight                       Tuesday                    Tuesday Night         
+   Mostly Cloudy and Breezy     Cloudy and Breezy then...      Slight Chance Showers...            Chance Rain          
+            15 °C                          8 °C                          9 °C                          3 °C             
 ```
