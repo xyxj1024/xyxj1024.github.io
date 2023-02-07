@@ -222,7 +222,7 @@ Declared in <code>/include/linux/binfmts.h</code>, the <code>linux_binprm</code>
 
 ### Fork Bomb
 
-A fork bomb attack can be thought of as a DoS (Denial of Service) attack that tries to create as many processes as possible until the targted system does not have anymore resources left, like this:
+A program can induce more memory usage than its corresponding process, allowing it to bypass traditional resource limit mechanisms, e.g., by forking several child processes (a classic fork bomb attack). A fork bomb attack can be thought of as a DoS (Denial of Service) attack that tries to create as many processes as possible until the targted system does not have anymore resources left, like this:
 
 ```c
 for (; ;)
@@ -233,13 +233,9 @@ or in Bash:
 
 ```bash
 # 1. ":()" defines the function that accepts no arguments, named as ":".
-# 2. The function loads itself in memory, pipe its own output to another
-#    copy of itself, which is also loaded in memory as well.
-# 3. "&" will execute the whole function in the background so that no
-#    child process is killed.
-# 4. ";" separates each child function from the chain of multiple
-#    executions, and ":" runs recently created function, hence the chain
-#    reaction begins.
+# 2. The function loads itself in memory, pipe its own output to another copy of itself, which is also loaded in memory as well.
+# 3. "&" will execute the whole function in the background so that no child process is killed.
+# 4. ";" separates each child function from the chain of multiple executions, and ":" runs recently created function, hence the chain reaction begins.
 :(){ :|:& };:
 ```
 
@@ -260,8 +256,7 @@ for (; ;)
 To protect a session from fork bomb, the user might want to lower the maximum number of runnable processes:
 
 ```bash
-# Set the soft limit on the number of processes in the current
-# shell session to 400.
+# Set the soft limit on the number of processes in the current shell session to 400.
 ulimit -S -u 400
 ```
 

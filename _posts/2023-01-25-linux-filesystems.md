@@ -2,7 +2,7 @@
 layout:             post
 title:              "Linux Filesystem Forensics"
 category:           "Computing Systems, Systems Security"
-tags:               unix filesystem namespace
+tags:               linux-kernel filesystem namespace
 permalink:          /posts/linux-plumbing/filesystem
 last_modified_at:   "2023-02-06"
 ---
