@@ -222,7 +222,7 @@ Declared in <code>/include/linux/binfmts.h</code>, the <code>linux_binprm</code>
 
 ### Fork Bomb
 
-A program can induce more memory usage than its corresponding process, allowing it to bypass traditional resource limit mechanisms, e.g., by forking several child processes (a classic fork bomb attack). A fork bomb attack can be thought of as a DoS (Denial of Service) attack that tries to create as many processes as possible until the targted system does not have anymore resources left, like this:
+A program can induce more memory usage than its corresponding process, allowing it to bypass traditional resource limit mechanisms, e.g., by forking several child processes (a classic **fork bomb attack**). A fork bomb attack can be thought of as a DoS (Denial of Service) attack that tries to create as many processes as possible until the targted system does not have anymore resources left, like this:
 
 ```c
 for (; ;)
@@ -239,11 +239,11 @@ or in Bash:
 :(){ :|:& };:
 ```
 
-According to Dan Cross's recount of his experience with a Sun2 computer with a SPARC processor running SunOS (Sun's BSD-based version of Unix) in the late 90's:
+According to Dan Cross's recount of his experience with a Sun2 computer running SunOS (Sun's BSD-based version of Unix) on a SPARC processor in the late 90's:
 
-> This would drag the poor Sun machine to its knees; even setting up per-user process limits, it was nearly impossible to clean up unless you rebooted the system, which often had upwards of 70 people logged in: an issue here was that, in this version of Unix, you could not send a `SIGKILL` to a process that was `fork`'ing.
+> This would drag the poor Sun machine to its knees; even setting up per-user process limits, it was nearly impossible to clean up unless you rebooted the system, which often had upwards of 70 people logged in: an issue here was that, in this version of Unix, you could not send a `SIGKILL` to a process that was `fork`&prime;ing.
 
-Someone came up with an in-kernel fork bomb killer that took advantage of SunOS's support for loadable kernel modules and was implemented as a device driver. The `sysadmin` allocated a major number, and created a device node under `/dev` for the thing. When the driver module was loaded, it caused initialization code to run that overwrote the system call table's entry for `fork()` with a pointer to a wrapper function (unloading the module copied the real `fork()` back into the table). The wrapper function would try to invoke `fork()` normally; if it failed, it would increment a per-user counter. If the user had more than 50 `fork()` failures in 2 seconds, a function would walk the `proc` table and send `SIGKILL` to anything owned by the user, side-stepping the problem that a `fork`'ing child could not be killed. A callout ran every few milliseconds that would decay the per-user failure counter, so a small number of legit `fork` failures under load would not accumulate until the user booted off.
+Someone came up with an in-kernel fork bomb killer that took advantage of SunOS's support for loadable kernel modules and was implemented as a device driver. The `sysadmin` allocated a major number, and created a device node under `/dev` for the thing. When the driver module was loaded, it caused initialization code to run that overwrote the system call table's entry for `fork()` with a pointer to a wrapper function (unloading the module copied the real `fork()` back into the table). The wrapper function would try to invoke `fork()` normally; if it failed, it would increment a per-user counter. If the user had more than 50 `fork()` failures in 2 seconds, a function would walk the `proc` table and send `SIGKILL` to anything owned by the user, side-stepping the problem that a `fork`&prime;ing child could not be killed. A callout ran every few milliseconds that would decay the per-user failure counter, so a small number of legit `fork` failures under load would not accumulate until the user booted off.
 
 But the writer of this fork bomb killer did not understand the semantics of `vfork()`, and mistakenly believed that the system call prevented the parent from running at all while the child was running, and did not consider the case where an attacker would simply execute the fork bomb killer in the child, like this:
 
@@ -259,6 +259,14 @@ To protect a session from fork bomb, the user might want to lower the maximum nu
 # Set the soft limit on the number of processes in the current shell session to 400.
 ulimit -S -u 400
 ```
+
+The `ulimit` command makes use of the `pam_limits` PAM ("Pluggable Authentication Module") module that sets limits on the system resources that can be obtained in a user-session. Note that users of `uid=0` are affected by this limits as well. By default, limits are taken from the `/etc/security/limits.conf` config file. The syntax of the lines inside the file is as follows:
+
+```text
+<domain> <type> <item> <value>
+```
+
+All items support the values `-1`, `unlimited` or `infinity`, except for `priority`, `nice`, and `nonewprivs`. The Linux manual page is [here](https://www.man7.org/linux/man-pages/man5/limits.conf.5.html).
 
 ## A Simple User-Space Program: <code>execve_cat.c</code>
 
