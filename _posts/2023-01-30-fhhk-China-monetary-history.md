@@ -115,7 +115,20 @@ The *tael* was the unit of account when payment in silver was expected; the *ch'
 
 $$1 \text{ 两} = 1 \text{ 川} \equiv 1000 \text{ 钱}$$
 
+重量单位和支付结算单位不同：
+
+$$1 \text{ 两} \equiv 10 \text{ 钱} \equiv 100 \text{ 分} \equiv 1000 { 厘}$$
+
 The ideal nature of one *tael* being satisfied by one liang of monetary silver is based on the fact that "liang" in Chinese was used both for the unit of account (*tael*) and for the weight of silver (Chinese ounce or liang) used to satisfy it. Similarly, *ch'ien* refers both to a unit of account (*ch'ien*) and a weight ($$0.1$$ liang), again requiring a $$1:1$$ relationship between the unit of account and its money.
+{: style="font-family:Gill Sans"}
+
+Some of these variations might offset one another, but, given the possibility of variation at so many points, it was unlikely that the ideal model would last long despite the attempts of the Chinese government to maintain it.
+{: style="font-family:Gill Sans"}
+
+The particular evolution of China's bimetallism may be a function of the metals involved. In Europe silver and gold both served the wholesale sector, and silver could be used for large transactions, although obviously at a relatively increased cost. Should the official ratio be so far incorrect that despite this cost it paid to export gold and import silver, the bimetallism would become *de facto* monometallism. But in China copper could not serve the wholesale market, and since copper and silver served different functions there was no likelihood of replacing one metal with the other. When the market ratio differed from the official ratio, the undervalued metal was not, on this account alone, exported.
+{: style="font-family:Gill Sans"}
+
+The specific problems which the foreigners chose not to comprehend or selected for negative valuation were: (1) the changing relationship of the copper coins to the silver bullion; (2) the failure of coins to pass at par with their unit of account; (3) the variety of weights, coins, and consequent exchange rates which increased the risk of doing business; and (4) the apparent lack not only of official standards but of any official supervision of the monetary system.
 {: style="font-family:Gill Sans"}
 
 银币经济学：
@@ -131,6 +144,36 @@ If the approved coin is to have a fixed relationship with the unit of account, t
 
 If the demand for bullion for non-coinage purposes increases so that the market price of bullion is raised above the mint price, because (for example) of an outflow of bullion to meet a trade deficit, bullion will cease to be brought to the mint. Not only will the minting of new coins be interrupted but the established coins will be in danger, for although coins have retained their fixed relation to the unit of account, bullion has not. The market value of the silver in the coins when melted into bullion is greater than the value assigned the silver in the coins plus the premium people place on coins. To save the coinage the government may either cry up the coinage or devalue the unit of account. In the former case it decrees, for example, that a coin formerly worth one unit of account is now worth two. In the latter case it recoins so that there is appropriately less metal in the new coin, its relation to the unit of account being maintained. Inherent in both methods is a change in the mint price of bullion. Crying up the coinage is impractical in a system in which the coins have names identical to the unit of account, although it is logically possible and can certainly be attempted as a temporary measure while new coins are being issued.
 {: style="font-family:Gill Sans"}
+
+The price of bullion in the markets can also be a reflection of increased cost of production. Old sources of supply may become exhausted or more costly to exploit. New sources of supply may suddenly be discovered. Rebellion may cut off supplies. These factors can all affect the market price of bullion unless the demand of the mint suceeds in remaining dominant. If the interruption is thought to be temporary and if the people will place an unusually high premium on coins during this temporary period, the coinage can be saved. But the conclusion must be that constant vigilance is one heavy cost of coinage in a metallic system.
+{: style="font-family:Gill Sans"}
+
+### 中国货币系统概述
+
+这里实际上探讨的是近代中国经济的货币化问题：
+
+The Chinese economy is the nineteenth century was undoubtedly a monetary economy. &hellip; There is no economic validity or usefulness in the "dual economy" approach to the study of China; the difference between peasant and city life is rather that, in the former, exchange was more limited. But when exchange occurred it was, with the exceptions noted, a monetary transaction. &hellip; With the institution of the "single-whip" method of taxation in the Ming dynasty (1368-1643), commutation of the land tax to silver payments had been a consistent policy of the imperial government, so that it appears safe to conclude that by the Ch'ing dynasty (1644-1911) monetary payments were the usual method of meeting tax obligations[^9]. Until early Republican times, however, part of the grain tribute was paid in kind, but in the nineteenth century, owing to the continual trouble the Ch'ing administration had in keeping open the Grand Canal, temporary commutation became increasingly frequent[^10]. Money was used for payment of licenses and fines, and for the purchase of official rank; similarly, with the exception of the disposal of the tribute grain, the government paid out in money.
+{: style="font-family:Gill Sans"}
+
+在货币领域，中央政府制定基本的政策原则并负有监管之责，而将执行权下放到地方，于是乎不同地方的货币政策各具特色，区域货币系统之间甚至无法做到协调。因此，作者说：
+
+China had neither a unified economy nor a unified monetary system. If China is said to have had an empire-wide monetary system, it is in the sense of possessing certain basic common features established by edict, by a common source of monetary ideas, by similar training of officials, and by the frequent transfer of officials from one post to another. &hellip; A rough European parallel can be made by comparing the initial monetary edicts of the Ch'ing dynasty with the currency reform of Charlemagne. The local European variations which later developed, and especially the degree to which they developed in the Italian city states, are indications that the origiinal model had broken down.
+{: style="font-family:Gill Sans"}
+
+在对外关系领域，中国特色的央地关系较难被外国人理解：
+
+A study of the Chinese monetary system &hellip; must both recount the numerous local variations in content and policy and direct itself primarily to the imperial aspects of policy. The local details were not, as foreign observers thought, the aberrations of a national system permitted by a weak central authority, but were rather natural and integral parts of a system in an empire in which the local economies had not been, and probably could not be, integrated immediately into a national economy. **The disagreements between the Chinese government and the foreign powers in monetary matters were based on this misunderstanding---foreign insistence that China act as if the monetary system were or ought to be a single unified system, and Chinese unwillingness or inability to do so.**
+{: style="font-family:Gill Sans"}
+
+中央政府没有能力维持币值稳定，一方面，伪造、仿制货币难以禁绝，另一方面，来自外贸收入的银币超出了政府管制范围：
+
+Governments in premodern times generally found it difficult to enforce their currency laws, but if one single feature of the Chinese monetary system were to be selected as unusual, it would be the complete inability of the imperial government to maintain the standard of its coins or prevent counterfeiting and general tampering with the coinage. This ineffectiveness was only partly the result of the political system. The method of casting the copper coin was primitive and less accurate than European methods. The resulting faults in the legal coinage encouraged imitators and led to a progressive deterioration which the imperial government proved powerless to check. The currency of substandard coins encouraged officials themselves to issue substandard coins from the provincial mints, a practice which made the legal coins suspect and later hindered the acceptance of a Chinese dollar coin. The legal inflexibility of the tax system forced the government to tamper with its own copper-silver exchange rates; the shortage of revenue encouraged the government to initiate token currency plans which failed. Unable to enforce its currency regulations except where economic conditions alone guaranteed their success, the government's range of maneuver in monetary policy was curtailed to an extent unusual in a metallic monetary system.
+{: style="font-family:Gill Sans"}
+
+In the traditional system the Chinese government undertook responsibility only for the coining of copper. Silver circulated in bullion form until the introduction through foreign trade of the Spanish dollar. Typical of the Chinese monetary system, therefore, was the existence of a silver coinage over which China itself had no control, the supplies of which depended upon the policies of foreign governments, especially of Mexico. The design and sometimes the content of dollar coins varied with a change of reigns, the need for currency reform in the issuing country, or a change of government in the South American republics. The French occupation of Mexico, for example, resulted in changes in the design of the Mexican dollar. The new "Eagle dollar" was assayed officially in Shanghai and found $$1.5\%$$ better than the old, and was then accepted by the Customs in 1872.
+{: style="font-family:Gill Sans"}
+
+## 现金部门
 
 ## 脚注
 
@@ -149,3 +192,7 @@ If the demand for bullion for non-coinage purposes increases so that the market 
 [^7]: 参见Edwin G. Beal, Jr., *The Origin of Likin (1853-1864)* (Cambridge, Mass., 1957).
 
 [^8]: 可以参考这里的讨论：[John Parke Young, "The Shanghai Tael," *The American Economic Review*, Dec., 1931, Vol. 21, No. 4, pp. 682-684](https://www.jstor.org/stable/pdf/498.pdf)。
+
+[^9]: 参见Fang-chung Liang, *The Single-Whip Method of Taxation in China*, Harvard University Asia Center, Harvard University, 1956.
+
+[^10]: 参见Harold C. Hinton, *The Grain Tribute System of China (1845-1911)*, Harvard University Asia Center, Harvard University, 1956.
