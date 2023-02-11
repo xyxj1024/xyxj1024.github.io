@@ -4,7 +4,7 @@ title:              "Linux Filesystem Forensics"
 category:           "Computing Systems, Systems Security"
 tags:               linux-kernel filesystem namespace
 permalink:          /posts/linux-plumbing/filesystem
-last_modified_at:   "2023-02-06"
+last_modified_at:   "2023-02-11"
 ---
 
 Some writeup for
@@ -49,7 +49,7 @@ struct vfsmount {
 } __randomize_layout;
 ```
 
-All mounts form a tree-like structure, with a child mount structure holding a reference to the parent mount structure. Whenever a mount operation is invoked, a `vfsmount` structure is created and the `dentry` of the mount point as well as the `dentry` of the mounted tree is populated.
+All mounts form a tree-like structure, with a child mount structure holding a reference to the parent mount structure. Whenever a mount operation is invoked, (1) a `vfsmount` structure is created which holds a reference to a new superblock structure created from the filesystem to be mounted on the disk, and (2) the `dentry` of the mount point as well as the `dentry` of the mounted tree is populated. The `dentry` has a reference to the `vfsmount`. This is where the Linux's virtual filesystem (VFS) distinguishes between a directory and a mount point. During a traversal, the `vfsmount` is found in a dentry, the the `inode` number 2 on the mounted device is used. Next section provides a more detailed discussion about VFS.
 
 Now, on the Raspberry Pi, let's create a directory tree that looks something like this:
 
@@ -210,6 +210,13 @@ To support various native filesystem and, at the same time, to allow access to f
 <p style="color:gray; font-size:80%;">
 Source: Wolfgang Mauerer, "Professional Linux Kernel Architecture," Wiley Publishing, Inc., 2008.
 </p>
+
+The VFS has the following important data structures:
+
+- **File**: This represents the open file and captures the information, like offset, and so on. The userspace has a handle to an opened file via a structure called the **file descriptor**. This is the handle used to interface with the filesystem.
+- **Inode**: This is mapped $$1:1$$ to the file. The inode is one of the most critical structures and holds the metadata about the file. As an example, it includes in which data blocks the file data is stored and which access permissions are on the file. This information is part of the inode. Inodes are also stored on disk by the specific filesystem, but there is a representation in memory that is part of the VFS layer. The filesystem is responsible for enumerating the VFS inode structure.
+- **Dentry**: This is the mapping between filename and inode. This is an in-memory structure and is not stored on disk. This is mainly relevant to lookup and path traversal.
+- **Superblock**: This structure holds all the information about the filesystem, including how many blocks are there, the device name, and so on. This structure is enumerated and brought into memory during a mount operation.
 
 First, let's write a kernel module that spawns a single kernel thread. That thread should use the `current` macro to access its own process descriptor (`struct task_struct` declared in [include/linux/sched.h](https://elixir.bootlin.com/linux/v5.4.42/source/include/linux/sched.h)) and print out the values (i.e., the addresses) of three of its `task_struct`'s fields to the system log: `fs_struct` (filesystem structure), `files_struct` (open file table structure), and `nsproxy` (namespace proxy structure). [The latest Linux version](https://elixir.bootlin.com/linux/latest/source) implements `fs_struct`, `files_struct`, `nsproxy` structures as:
 
@@ -534,7 +541,7 @@ In comparison to using the command `ls -l /`, the contents of the root directory
 
 ### Exploring File-Related Structures
 
-A *file descriptor* is an unsigned integer used by a process to identify an open file. File descriptors are indices to the *file descriptor table* in the userspace and the file descriptor table takes kernel memory for each process because it is stored in the kernel's data structure for the process image.
+A file descriptor is an unsigned integer used by a process to identify an open file. File descriptors are indices to the file descriptor table in the userspace and the file descriptor table takes kernel memory for each process because it is stored in the kernel's data structure for the process image.
 
 ```c
 // In: include/linux/fdtable.h
