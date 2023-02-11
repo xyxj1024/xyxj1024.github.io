@@ -64,7 +64,7 @@ We can see that the filesystem type is `cgroup2`. In control groups version one,
 
 Memory is a unique resource in the sense that it is present in a limited amount. If a task requires a lot of CPU processing, the task can spread its processing over a period of hours, days, months or years, but with memory, the same physical memory needs to be reused to accomplish the task.
 
-A request for comments for the memory controller was posted by Balbir Singh[^1]. In that RFC, two types of memory were discussed:
+The memory controller *isolates* the memory behavior of a group of tasks from the rest of the system. A request for comments for the memory controller was posted by Balbir Singh[^1]. In that RFC, two types of memory were discussed:
 
 - Non-Reclaimable memory: this memory is not reclaimable until it is explicitly released by the allocator. Examples of such memory include slab allocated memory and memory allocated by the kernel components in process context.
 - Reclaimable memory:
@@ -72,9 +72,20 @@ A request for comments for the memory controller was posted by Balbir Singh[^1].
   - File-mapped pages - pages that map a portion of a file
   - Page cache pages - consist of pages used during IPC using `shmfs`; pages of a user mode process that are swapped out; pages from block read/write operations; pages from file read/write operations
 
-The first RSS ("resident set size", the portion of memory occupied by a process that is held in main memory) controller was posted by Balbir Singh in February 2007[^2].
+The first RSS ("resident set size", the portion of memory occupied by a process that is held in main memory) controller was posted by Balbir Singh in February 2007[^2]. According to Jonathan Corbet[^3], the memory controller can be used to:
 
-To enable memory `cgroups`, add the following commands to the `/boot/cmdline.txt` file:
+1. Isolate an application or a group of applications; Memory hungry applications can be isolated and limited to a smaller amount of memory,
+2. Create a `cgroup` with limited amount of memory, this can be used as a good alternative to booting with `mem=XXXX`,
+3. Virtualization solutions can control the amount of memory they want to assign to a virtual machine instance,
+4. A CD/DVD burner could control the amount of memory used by the rest of the system to ensure that burning does not fail due to lack of available memory . . .
+
+Currently, the following types of memory usages are tracked:
+
+- Userland memory: page cache and anonymous memory;
+- Kernel data structures such as dentries and inodes;
+- TCP socket buffers.
+
+To enable memory `cgroups` (actually, `cgroups` with memory controller), add the following commands to the `/boot/cmdline.txt` file:
 
 ```text
 cgroup_memory=1 cgroup_enable=memory
@@ -98,12 +109,178 @@ net_prio    0   87  1
 pids    0   87  1
 ```
 
-### Fork Bomb Revisited
+## Fork Bomb Revisited
 
-[here]({{ site.baseurl }}/posts/linux-plumbing/fork-execve#fork-bomb) I rediscovered some history episode about fork bomb attack. In this section, I would like to use a fork bomb together with `malloc()` function calls that generate significant memory usage for a control group.
+[Here]({{ site.baseurl }}/posts/linux-plumbing/fork-execve#fork-bomb) I rediscovered some history episode about fork bomb attack. In this section, I would like to use a fork bomb together with `malloc()` function calls that generate significant memory usage for a control group:
+
+```c
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#define PAGE_SIZE   4096
+
+int main()
+{
+    unsigned int counter = 0;
+
+    while (1) {
+        printf("%d. Allocating an entire page...\n", ++counter);
+        void *p = malloc(PAGE_SIZE);
+        memset(p, 0, PAGE_SIZE);
+        sleep(1);
+
+        printf("%d. Forking a child...\n", counter);
+        fork();
+        sleep(1);
+    }
+
+    return 0;
+}
+```
+
+First, before running the fork bomb, open a terminal window and obtain root privileges with `sudo su` or `sudo bash`. Go to the child control group directory we just created: `/sys/fs/cgroup/child`. Open another terminal window, which we will use to run the fork bomb program, and check its PID:
+
+```bash
+echo $$
+```
+
+Write this value into our child `cgroup`&prime;s `cgroup.procs` file. This file should be empty before we modify it. Remember that when writing a PID into the `cgroup.procs` file of certain control group, all threads in the corresponding process are moved into that control group at once. Let's take a look at some files:
+
+```console
+root@xingjian:/sys/fs/cgroup/child# cat cgroup.procs
+root@xingjian:/sys/fs/cgroup/child# echo "912" > cgroup.procs
+root@xingjian:/sys/fs/cgroup/child# cat cgroup.procs
+912
+root@xingjian:/sys/fs/cgroup/child# cat memory.current
+0
+root@xingjian:/sys/fs/cgroup/child# cat memory.stat
+anon 0
+file 0
+kernel_stack 0
+percpu 0
+sock 0
+shmem 0
+file_mapped 0
+file_dirty 0
+file_writeback 0
+inactive_anon 0
+active_anon 0
+inactive_file 0
+active_file 0
+unevictable 0
+slab_reclaimable 0
+slab_unreclaimable 0
+slab 0
+...
+```
+
+Note that at the current stage all the fields inside the `memory.stat` file have value zero. So does `memory.current`. Then, in the second terminal window, we can verify control group membership:
+```console
+$ cat /proc/self/cgroup
+0::/child
+```
+
+Compile and run the fork bomb inside the second terminal window with `PID=912`. When it is still running, in the first terminal window, open the `cgroup.procs`, `memory.current`, and `memory.stat` files:
+
+```console
+root@xingjian:/sys/fs/cgroup/child# cat cgroup.procs
+912
+926
+927
+929
+928
+930
+931
+932
+933
+root@xingjian:/sys/fs/cgroup/child# cat memory.current
+4374528
+root@xingjian:/sys/fs/cgroup/child# cat memory.stat
+anon 11489280
+file 0
+kernel_stack 2048000
+...
+inactive_anon 11354112
+...
+slab_unreclaimable 2904812
+slab 2904812
+...
+pgfault 10395
+```
+
+After terminating the fork bomb, check those three files again:
+
+```console
+root@xingjian:/sys/fs/cgroup/child# cat cgroup.procs
+912
+root@xingjian:/sys/fs/cgroup/child# cat memory.current
+122880
+root@xingjian:/sys/fs/cgroup/child# cat memory.stat
+anon 270336
+...
+inactive_anon 270336
+...
+slab_unreclaimable 143656
+slab 143656
+...
+pgfault 20427
+```
+
+Our `malloc()` function calls do consume a large amount of anonymous memory. However, the sum of `inactive_anon` and `active_anon` is not always equal to `anon`, since the `anon` counter is type-based, not list-based. It is also easy to observe that when the fork bomb program is running, the amount of memory allocated to kernel stacks (`kernel_stack`) is nonzero.
+
+### Setting Hard Limit on Memory Usage
+
+The `cgroups` memory controller provides a way to enforce a hard limit on memory usage through the `memory.max` interface. According to the Linux kernel documentation, this is a read-write single value file which exists on non-root control groups. The default is "`max`":
+
+```console
+root@xingjian:/sys/fs/cgroup/child# cat memory.max
+max
+```
+
+In the first terminal window (running as root), write a value that is sufficiently larger than the current value of `memory.current` such that the fork bomb will cause this limit to be exceeded relatively quickly[^4]:
+
+```console
+root@xingjian:/sys/fs/cgroup/child# echo "409600" > memory.max
+root@xingjian:/sys/fs/cgroup/child# cat memory.max
+409600
+```
+
+In the second terminal window, which is a member of the child `cgroup`, modify the fork bomb program so that it no longer delays before each call to `fork()`. Compile and run the fork bomb. The second terminal window closes automatically soon after I launch the fork bomb. Then, open the `memory.events` file in the first terminal window:
+
+```console
+root@xingjian:/sys/fs/cgroup/child# cat memory.events
+low 0
+high 0
+max 24
+oom 1
+oom_kill 1
+```
+
+It is clear that our fork bomb was killed by the out-of-memory killer as its memory usage exceeded the hard limit of $$409600$$ bytes.
+
+### Monitoring Memory Usage Using Inotify API
+
+The `cgroups` memory controller also supplies the `memory.high` controller. This allows an administrator to define a memory usage threshold beyond which (1) a "high" event, in the `memory.events` file, is triggered, which subsequently (2) signals to the Linux kernel that it should begin aggressively reclaiming memory from the processes in the `cgroup` (though those processes will not be killed).
+
+```c
+// In: include/uapi/linux/inotify.h
+struct inotify_event {
+    __s32   wd;         /* watch descriptor */
+    __u32   mask;       /* watch mask */
+    __u32   cookie;     /* cookie to synchronize two events */
+    __u32   len;        /* length (including nulls) of name */
+    char    name[];     /* stub for possible name */
+};
+```
 
 ## Footnotes
 
-[^1]: Balbir Singh, "RFC: Memory Controller", 30 Oct 2006, [https://lwn.net/Articles/206697/](https://lwn.net/Articles/206697/).
+[^1]: Balbir Singh, "RFC: Memory Controller," 30 Oct 2006, [https://lwn.net/Articles/206697/](https://lwn.net/Articles/206697/).
 
-[^2]: Balbir Singh, "Memory Controller (RSS Control)", 19 Feb 2007, [https://lwn.net/Articles/222762/](https://lwn.net/Articles/222762/).
+[^2]: Balbir Singh, "Memory Controller (RSS Control)," 19 Feb 2007, [https://lwn.net/Articles/222762/](https://lwn.net/Articles/222762/).
+
+[^3]: Jonathan Corbet, "Controlling Memory Use in Containers," 31 Jul 2007, [https://lwn.net/Articles/243795/](https://lwn.net/Articles/243795/).
+
+[^4]: Note that all memory amounts are in bytes. If a value which is not aligned to `PAGE_SIZE` is written, the value may be rounded up to the closest `PAGE_SIZE` multiple when read back.

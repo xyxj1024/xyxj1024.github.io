@@ -24,13 +24,16 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 
 自然灾害和地方叛乱是重要时代背景：
 
-> During the Ch'ing dynasty (1644-1911), but excluding the periods 1847-1861 and 1901-1911, there were, on an average, $$27$$ droughts and $$44$$ floods per century in the home province of Chihli alone. &hellip; In the great drought of 1876-1879, affecting $$300,000$$ square miles in the provinces of Shensi, Shansi, Chihli, Honan, and part of Shantung, some $$9$$ to $$13$$ million people are supposed to have perished[^1]. The Yellow River, which tended to break its dikes even in periods of relatively moderate discharge by simply redirecting the impact of its current against them---the river lay, it has been said, on top of the plains, not in them---changed its course in 1852 and flowed north of the Shantung peninsula to discharge into the Gulf of Chihli[^2], with resulting calamitous floods. From 1887 to 1889 it abandoned this course temporarily to flow south again, but now into the Hwai River and the already overtaxed Hungtze Lake. Not only did rivers flood, but the waters were slow to drain from the level plains, and the dikes impeded the natural flow of flood water to the sea.
->
-> &hellip; Coupled with these natural disasters came rebellion and foreign wars. The greatest was the Taiping rebellion, 1850-1864, but the Muslim rising in Yunnan in 1856 and the Nien rebellion[^3] in the north which followed hard upon the victories of the Taipings required vast expenditures of funds. With the Taipings defeated, the extent of the destruction of China's richest provices was revealed, prompting a great resettlement migration by a race which had only just moved into the fertile plateau country of Szechuan.
+During the Ch'ing dynasty (1644-1911), but excluding the periods 1847-1861 and 1901-1911, there were, on an average, $$27$$ droughts and $$44$$ floods per century in the home province of Chihli alone. &hellip; In the great drought of 1876-1879, affecting $$300,000$$ square miles in the provinces of Shensi, Shansi, Chihli, Honan, and part of Shantung, some $$9$$ to $$13$$ million people are supposed to have perished[^1]. The Yellow River, which tended to break its dikes even in periods of relatively moderate discharge by simply redirecting the impact of its current against them---the river lay, it has been said, on top of the plains, not in them---changed its course in 1852 and flowed north of the Shantung peninsula to discharge into the Gulf of Chihli[^2], with resulting calamitous floods. From 1887 to 1889 it abandoned this course temporarily to flow south again, but now into the Hwai River and the already overtaxed Hungtze Lake. Not only did rivers flood, but the waters were slow to drain from the level plains, and the dikes impeded the natural flow of flood water to the sea.
+{: style="font-family:verdana"}
+
+&hellip; Coupled with these natural disasters came rebellion and foreign wars. The greatest was the Taiping rebellion, 1850-1864, but the Muslim rising in Yunnan in 1856 and the Nien rebellion[^3] in the north which followed hard upon the victories of the Taipings required vast expenditures of funds. With the Taipings defeated, the extent of the destruction of China's richest provices was revealed, prompting a great resettlement migration by a race which had only just moved into the fertile plateau country of Szechuan.
+{: style="font-family:verdana"}
 
 对外战争和对内平叛让各级政府背上巨额外债：
 
-> A recent estimate of the external loans contracted by the Imperial and provincial governments from 1853 to 1890 shows that of a total of $$45.3$$ million *Kuping* or *Treasury taels*[^4], all but $$10.9$$ million *taels* or $$24$$ per cent were for external wars ($$14.5$$ million *taels*) or internal rebellion ($$19.9$$ million *taels*)[^5].
+A recent estimate of the external loans contracted by the Imperial and provincial governments from 1853 to 1890 shows that of a total of $$45.3$$ million *Kuping* or *Treasury taels*[^4], all but $$10.9$$ million *taels* or $$24$$ per cent were for external wars ($$14.5$$ million *taels*) or internal rebellion ($$19.9$$ million *taels*)[^5].
+{: style="font-family:verdana"}
 
 一项1926-1936年期间针对中国定县的社会调查揭示了$$515$$个家庭共$$1282$$名$$14$$岁以上男性的从业分布情况。以下数字或许同样可以代表1895年的中国社会：
 
@@ -50,11 +53,14 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 
 清代中国的税收严重依赖地税：
 
-> The basis of the taxation system was the land tax, which before 1850 furnished probably more than $$75$$ percent of total imperial revenue[^6]. The land tax was usually collected in legal tender in an amount fixed in 1723 by the K'ang-hsi Emperor. Thus the most important source of revenue appeared inflexible, although the amount actually collected exceeded the specified amount more than threefold by the end of the nineteenth century. Such excess sums went to collectors, local and provincial authorities, but not directly to the imperial treasury in Peking. In 1853 the revenue requirements of the governments were so great that the *likin* tax, a tax on goods in transit, was first levied, accounting by 1900 for $$18$$ per cent of the total revenue[^7]. With the growth of foreign trade and the efficient administration of the customs under the foreign-staffed Imperial Maritime Customs, import and export duties on general cargo and foreign opium accounted for $$26$$ per cent of the national revenue, and the native customs, for duties on trade carried in native-type craft, accounted for another $$2$$ per cent.
->
-> &hellip; *Likin* could not be increased indefinitely, not only for purely economic considerations relative to the disruption of trade, but also due to the complications involved with foreign goods which under the treaties had paid their full duty. And foreigners objected to the tax in principle. The import and export duties were fixed by treaty and could not be increased unilaterally. As they were based on an *ad valorem* intent but actually set down as specific duties denominated in a silver unit of account, the revenues suffered from a decrease in the gold price of silver, although the full effects of this were not felt until after 1895 when the external gold debt of China was significant.
->
-> &hellip; During the Taiping rebellion the government issued token coins and paper money in an effort to meet the requirements of the military budget and yet maintain vital public works, but more extensive use of this obvious fiscal device was impossible due to the hyperinflation which it produced and the traditional reluctance of the Chinese, a reluctance well justified by experience, to accept government fiat money.
+The basis of the taxation system was the land tax, which before 1850 furnished probably more than $$75$$ percent of total imperial revenue[^6]. The land tax was usually collected in legal tender in an amount fixed in 1723 by the K'ang-hsi Emperor. Thus the most important source of revenue appeared inflexible, although the amount actually collected exceeded the specified amount more than threefold by the end of the nineteenth century. Such excess sums went to collectors, local and provincial authorities, but not directly to the imperial treasury in Peking. In 1853 the revenue requirements of the governments were so great that the *likin* tax, a tax on goods in transit, was first levied, accounting by 1900 for $$18$$ per cent of the total revenue[^7]. With the growth of foreign trade and the efficient administration of the customs under the foreign-staffed Imperial Maritime Customs, import and export duties on general cargo and foreign opium accounted for $$26$$ per cent of the national revenue, and the native customs, for duties on trade carried in native-type craft, accounted for another $$2$$ per cent.
+{: style="font-family:verdana"}
+
+&hellip; *Likin* could not be increased indefinitely, not only for purely economic considerations relative to the disruption of trade, but also due to the complications involved with foreign goods which under the treaties had paid their full duty. And foreigners objected to the tax in principle. The import and export duties were fixed by treaty and could not be increased unilaterally. As they were based on an *ad valorem* intent but actually set down as specific duties denominated in a silver unit of account, the revenues suffered from a decrease in the gold price of silver, although the full effects of this were not felt until after 1895 when the external gold debt of China was significant.
+{: style="font-family:verdana"}
+
+&hellip; During the Taiping rebellion the government issued token coins and paper money in an effort to meet the requirements of the military budget and yet maintain vital public works, but more extensive use of this obvious fiscal device was impossible due to the hyperinflation which it produced and the traditional reluctance of the Chinese, a reluctance well justified by experience, to accept government fiat money.
+{: style="font-family:verdana"}
 
 上海、香港，及其他通商口岸的情况：
 
@@ -67,37 +73,55 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 *表二：上交所总股份数及市值统计*
 {:.table-caption}
 
-> In the thirty years between 1865 and 1895 some $$90$$ companies were at one time or another listed on the Shanghai share market. (In considering the companies listed on the Shanghai stock market a few cautions should be noted. First, some of the companies had their head offices outside China, may have operated mainly in other countries, and may have been listed on several other exchanges from which they derived most of their capital. Second, there are no reliable figure as to the percentage of capital invested by Chinese in these companies, although figures as high as $$40$$ per cent may be found. Finally, wholly Chinese joint-stock companies having no foreign shareholders were not listed and are considered later.) In addition there were at least $$74$$ other companies in Shanghai using foreign machinery or techniques to some degree.
->
-> &hellip; Despite the unsatisfactory scope of the statistics, several further facts emerge. First, the companies were not conspicuous for success. Of the $$90$$ companies listed, $$72$$ either failed or at some time showed the market value of their shares below paid-up capital. This is consistent with the existence of speculative periods followed by failures of many more concerns than were listed on the stock exchange. These fluctuations were caused by many factors---China's relations with the Powers, the speculative move of funds from the interior and the resulting land speculation during periods of refugee movements to the treaty ports, the course of the exchanges and other speculative aspects of foreign trade which affected the native money market, and business fluctuations in the United Kingdom, especially the collapse of Baring Brothers and the depression of the early 1890's.
->
-> &hellip; If institutional factors were the key to China's slow acceptance of modernization, Hong Kong, a British crown colony, should have been able to set the pace. That it failed to do so despite such obvious advantages as the right of incorporation with limited liability and the protection of a government sympathetic to enterprise suggests that Hong Kong was subject to economic forces similar to those operating in China and that these were unfavorable. The timing of Hong Kong's industrial revolution, which began during the trade depression following the Korean War-United Nations embargo, emphasizes the importance of the economic factors.
->
-> &hellip; Economic modernization in China prior to 1895 hardly extended beyond the treaty ports. Even in the treaty ports modern industry was restricted to those fields ancillary to the China trade---shipbuilding and processing of exports---while foreign participation in manufacturing industry was hindered by the difficulty of importing machinery over the protests of officials and the desire of the more progressive Chinese to keep modern-style companies in wholly Chinese hands.
+In the thirty years between 1865 and 1895 some $$90$$ companies were at one time or another listed on the Shanghai share market. (In considering the companies listed on the Shanghai stock market a few cautions should be noted. First, some of the companies had their head offices outside China, may have operated mainly in other countries, and may have been listed on several other exchanges from which they derived most of their capital. Second, there are no reliable figure as to the percentage of capital invested by Chinese in these companies, although figures as high as $$40$$ per cent may be found. Finally, wholly Chinese joint-stock companies having no foreign shareholders were not listed and are considered later.) In addition there were at least $$74$$ other companies in Shanghai using foreign machinery or techniques to some degree.
+{: style="font-family:verdana"}
+
+&hellip; Despite the unsatisfactory scope of the statistics, several further facts emerge. First, the companies were not conspicuous for success. Of the $$90$$ companies listed, $$72$$ either failed or at some time showed the market value of their shares below paid-up capital. This is consistent with the existence of speculative periods followed by failures of many more concerns than were listed on the stock exchange. These fluctuations were caused by many factors---China's relations with the Powers, the speculative move of funds from the interior and the resulting land speculation during periods of refugee movements to the treaty ports, the course of the exchanges and other speculative aspects of foreign trade which affected the native money market, and business fluctuations in the United Kingdom, especially the collapse of Baring Brothers and the depression of the early 1890's.
+{: style="font-family:verdana"}
+
+&hellip; If institutional factors were the key to China's slow acceptance of modernization, Hong Kong, a British crown colony, should have been able to set the pace. That it failed to do so despite such obvious advantages as the right of incorporation with limited liability and the protection of a government sympathetic to enterprise suggests that Hong Kong was subject to economic forces similar to those operating in China and that these were unfavorable. The timing of Hong Kong's industrial revolution, which began during the trade depression following the Korean War-United Nations embargo, emphasizes the importance of the economic factors.
+{: style="font-family:verdana"}
+
+&hellip; Economic modernization in China prior to 1895 hardly extended beyond the treaty ports. Even in the treaty ports modern industry was restricted to those fields ancillary to the China trade---shipbuilding and processing of exports---while foreign participation in manufacturing industry was hindered by the difficulty of importing machinery over the protests of officials and the desire of the more progressive Chinese to keep modern-style companies in wholly Chinese hands.
+{: style="font-family:verdana"}
 
 ## 中国货币系统的主要特征
 
-> The confusions by which the Chinese monetary system appears to have been characterized are of two general kinds, those common to all metallic monetary systems and those peculiar to the Chinese.
+The confusions by which the Chinese monetary system appears to have been characterized are of two general kinds, those common to all metallic monetary systems and those peculiar to the Chinese.
+{: style="font-family:verdana"}
 
 ### 定义与问题
 
 金属货币制度下，货币可以是任何被人们接受的支付媒介。
 
-> A metallic currency system may be defined as one in which the assigned value of the commodity used as money is thought to be essentially derived from its market value as non-money.
+A metallic currency system may be defined as one in which the assigned value of the commodity used as money is thought to be essentially derived from its market value as non-money.
+{: style="font-family:verdana"}
 
 记账单位和货币是两个不同的概念：
 
-> In China the rates for receiving and paying out the same dollar coin were notoriously different. However, originally derived, a unit of account must be considered at any one time to be given datum, that is, to exist independently of any means of payment. &hellip; A debt expressed in terms of the unit of account says nothing more than that at the time of repayment some sum of money valued at the number of units of account equal to the debt shall be repaid.
->
-> &hellip; Although governments or merchants' associations were often successful in keeping money fixed in terms of the unit of account, the relationship eventually broke down. The conclusion must be that in a metallic monetary system every monetary transaction is potentially an exchange transaction. The price of the commodity being purchased having been settled, the price of money must be decided. Contrary to our present-day expectations, people did haggle over money's price.
+In China the rates for receiving and paying out the same dollar coin were notoriously different. However, originally derived, a unit of account must be considered at any one time to be given datum, that is, to exist independently of any means of payment. &hellip; A debt expressed in terms of the unit of account says nothing more than that at the time of repayment some sum of money valued at the number of units of account equal to the debt shall be repaid.
+{: style="font-family:verdana"}
+
+&hellip; If the unit of account is an abstract unit of value and money is but a means of settling debts so expressed, then the debt is not to be settled by a fixed quantity of bullion or a fixed number of coins. The amounts to be paid will depend upon the relationship of money to the unit of account at the time of actual payment. &hellip; To avoid being repaid less metal or fewer coins owing to appreciation of the metal in terms of the unit of account, the lender could specify repayment by weight rather than value of bullion.
+{: style="font-family:verdana"}
+
+&hellip; Although governments or merchants' associations were often successful in keeping money fixed in terms of the unit of account, the relationship eventually broke down. The conclusion must be that in a metallic monetary system every monetary transaction is potentially an exchange transaction. The price of the commodity being purchased having been settled, the price of money must be decided. Contrary to our present-day expectations, people did haggle over money's price.
+{: style="font-family:verdana"}
+
+银币经济学：
+
+The very existence of coins depends upon a suitable mint policy or a favorable international trade
+{: style="font-family:verdana"}
 
 “银铜复本位”：
 
-> The *tael* was the unit of account when payment in silver was expected; the *ch'uan*, when payment was to be in copper coin, or "cash." A *tael* could be satisfied by tender of one liang, or Chinese ounce, of monetary silver. The *ch'uan* was divided into $$1000$$ units referred to as *ch'ien*, and one *ch'ien* unit of account could be satisfied by payment of one cash coin.
+The *tael* was the unit of account when payment in silver was expected; the *ch'uan*, when payment was to be in copper coin, or "cash." A *tael* could be satisfied by tender of one liang, or Chinese ounce, of monetary silver. The *ch'uan* was divided into $$1000$$ units referred to as *ch'ien*, and one *ch'ien* unit of account could be satisfied by payment of one cash coin.
+{: style="font-family:verdana"}
 
 $$1 \text{ 两} = 1 \text{ 川} \equiv 1000 \text{ 钱}$$
 
-> The ideal nature of one *tael* being satisfied by one liang of monetary silver is based on the fact that "liang" in Chinese was used both for the unit of account (*tael*) and for the weight of silver (Chinese ounce or liang) used to satisfy it. Similarly, *ch'ien* refers both to a unit of account (*ch'ien*) and a weight ($$0.1$$ liang), again requiring a $$1:1$$ relationship between the unit of account and its money.
+The ideal nature of one *tael* being satisfied by one liang of monetary silver is based on the fact that "liang" in Chinese was used both for the unit of account (*tael*) and for the weight of silver (Chinese ounce or liang) used to satisfy it. Similarly, *ch'ien* refers both to a unit of account (*ch'ien*) and a weight ($$0.1$$ liang), again requiring a $$1:1$$ relationship between the unit of account and its money.
+{: style="font-family:verdana"}
 
 ## 脚注
 
