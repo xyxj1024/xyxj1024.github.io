@@ -25,15 +25,15 @@ China was neither primitive nor was its economy simple; rather it was vital, cha
 自然灾害和地方叛乱是重要时代背景：
 
 During the Ch'ing dynasty (1644-1911), but excluding the periods 1847-1861 and 1901-1911, there were, on an average, $$27$$ droughts and $$44$$ floods per century in the home province of Chihli alone. &hellip; In the great drought of 1876-1879, affecting $$300,000$$ square miles in the provinces of Shensi, Shansi, Chihli, Honan, and part of Shantung, some $$9$$ to $$13$$ million people are supposed to have perished[^1]. The Yellow River, which tended to break its dikes even in periods of relatively moderate discharge by simply redirecting the impact of its current against them---the river lay, it has been said, on top of the plains, not in them---changed its course in 1852 and flowed north of the Shantung peninsula to discharge into the Gulf of Chihli[^2], with resulting calamitous floods. From 1887 to 1889 it abandoned this course temporarily to flow south again, but now into the Hwai River and the already overtaxed Hungtze Lake. Not only did rivers flood, but the waters were slow to drain from the level plains, and the dikes impeded the natural flow of flood water to the sea.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 &hellip; Coupled with these natural disasters came rebellion and foreign wars. The greatest was the Taiping rebellion, 1850-1864, but the Muslim rising in Yunnan in 1856 and the Nien rebellion[^3] in the north which followed hard upon the victories of the Taipings required vast expenditures of funds. With the Taipings defeated, the extent of the destruction of China's richest provices was revealed, prompting a great resettlement migration by a race which had only just moved into the fertile plateau country of Szechuan.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 对外战争和对内平叛让各级政府背上巨额外债：
 
 A recent estimate of the external loans contracted by the Imperial and provincial governments from 1853 to 1890 shows that of a total of $$45.3$$ million *Kuping* or *Treasury taels*[^4], all but $$10.9$$ million *taels* or $$24$$ per cent were for external wars ($$14.5$$ million *taels*) or internal rebellion ($$19.9$$ million *taels*)[^5].
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 一项1926-1936年期间针对中国定县的社会调查揭示了$$515$$个家庭共$$1282$$名$$14$$岁以上男性的从业分布情况。以下数字或许同样可以代表1895年的中国社会：
 
@@ -54,13 +54,13 @@ A recent estimate of the external loans contracted by the Imperial and provincia
 清代中国的税收严重依赖地税：
 
 The basis of the taxation system was the land tax, which before 1850 furnished probably more than $$75$$ percent of total imperial revenue[^6]. The land tax was usually collected in legal tender in an amount fixed in 1723 by the K'ang-hsi Emperor. Thus the most important source of revenue appeared inflexible, although the amount actually collected exceeded the specified amount more than threefold by the end of the nineteenth century. Such excess sums went to collectors, local and provincial authorities, but not directly to the imperial treasury in Peking. In 1853 the revenue requirements of the governments were so great that the *likin* tax, a tax on goods in transit, was first levied, accounting by 1900 for $$18$$ per cent of the total revenue[^7]. With the growth of foreign trade and the efficient administration of the customs under the foreign-staffed Imperial Maritime Customs, import and export duties on general cargo and foreign opium accounted for $$26$$ per cent of the national revenue, and the native customs, for duties on trade carried in native-type craft, accounted for another $$2$$ per cent.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 &hellip; *Likin* could not be increased indefinitely, not only for purely economic considerations relative to the disruption of trade, but also due to the complications involved with foreign goods which under the treaties had paid their full duty. And foreigners objected to the tax in principle. The import and export duties were fixed by treaty and could not be increased unilaterally. As they were based on an *ad valorem* intent but actually set down as specific duties denominated in a silver unit of account, the revenues suffered from a decrease in the gold price of silver, although the full effects of this were not felt until after 1895 when the external gold debt of China was significant.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 &hellip; During the Taiping rebellion the government issued token coins and paper money in an effort to meet the requirements of the military budget and yet maintain vital public works, but more extensive use of this obvious fiscal device was impossible due to the hyperinflation which it produced and the traditional reluctance of the Chinese, a reluctance well justified by experience, to accept government fiat money.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 上海、香港，及其他通商口岸的情况：
 
@@ -74,54 +74,63 @@ The basis of the taxation system was the land tax, which before 1850 furnished p
 {:.table-caption}
 
 In the thirty years between 1865 and 1895 some $$90$$ companies were at one time or another listed on the Shanghai share market. (In considering the companies listed on the Shanghai stock market a few cautions should be noted. First, some of the companies had their head offices outside China, may have operated mainly in other countries, and may have been listed on several other exchanges from which they derived most of their capital. Second, there are no reliable figure as to the percentage of capital invested by Chinese in these companies, although figures as high as $$40$$ per cent may be found. Finally, wholly Chinese joint-stock companies having no foreign shareholders were not listed and are considered later.) In addition there were at least $$74$$ other companies in Shanghai using foreign machinery or techniques to some degree.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 &hellip; Despite the unsatisfactory scope of the statistics, several further facts emerge. First, the companies were not conspicuous for success. Of the $$90$$ companies listed, $$72$$ either failed or at some time showed the market value of their shares below paid-up capital. This is consistent with the existence of speculative periods followed by failures of many more concerns than were listed on the stock exchange. These fluctuations were caused by many factors---China's relations with the Powers, the speculative move of funds from the interior and the resulting land speculation during periods of refugee movements to the treaty ports, the course of the exchanges and other speculative aspects of foreign trade which affected the native money market, and business fluctuations in the United Kingdom, especially the collapse of Baring Brothers and the depression of the early 1890's.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 &hellip; If institutional factors were the key to China's slow acceptance of modernization, Hong Kong, a British crown colony, should have been able to set the pace. That it failed to do so despite such obvious advantages as the right of incorporation with limited liability and the protection of a government sympathetic to enterprise suggests that Hong Kong was subject to economic forces similar to those operating in China and that these were unfavorable. The timing of Hong Kong's industrial revolution, which began during the trade depression following the Korean War-United Nations embargo, emphasizes the importance of the economic factors.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 &hellip; Economic modernization in China prior to 1895 hardly extended beyond the treaty ports. Even in the treaty ports modern industry was restricted to those fields ancillary to the China trade---shipbuilding and processing of exports---while foreign participation in manufacturing industry was hindered by the difficulty of importing machinery over the protests of officials and the desire of the more progressive Chinese to keep modern-style companies in wholly Chinese hands.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 ## 中国货币系统的主要特征
 
 The confusions by which the Chinese monetary system appears to have been characterized are of two general kinds, those common to all metallic monetary systems and those peculiar to the Chinese.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 ### 定义与问题
 
 金属货币制度下，货币可以是任何被人们接受的支付媒介。
 
 A metallic currency system may be defined as one in which the assigned value of the commodity used as money is thought to be essentially derived from its market value as non-money.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 记账单位和货币是两个不同的概念：
 
 In China the rates for receiving and paying out the same dollar coin were notoriously different. However, originally derived, a unit of account must be considered at any one time to be given datum, that is, to exist independently of any means of payment. &hellip; A debt expressed in terms of the unit of account says nothing more than that at the time of repayment some sum of money valued at the number of units of account equal to the debt shall be repaid.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 &hellip; If the unit of account is an abstract unit of value and money is but a means of settling debts so expressed, then the debt is not to be settled by a fixed quantity of bullion or a fixed number of coins. The amounts to be paid will depend upon the relationship of money to the unit of account at the time of actual payment. &hellip; To avoid being repaid less metal or fewer coins owing to appreciation of the metal in terms of the unit of account, the lender could specify repayment by weight rather than value of bullion.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 &hellip; Although governments or merchants' associations were often successful in keeping money fixed in terms of the unit of account, the relationship eventually broke down. The conclusion must be that in a metallic monetary system every monetary transaction is potentially an exchange transaction. The price of the commodity being purchased having been settled, the price of money must be decided. Contrary to our present-day expectations, people did haggle over money's price.
-{: style="font-family:verdana"}
-
-银币经济学：
-
-The very existence of coins depends upon a suitable mint policy or a favorable international trade
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 “银铜复本位”：
 
 The *tael* was the unit of account when payment in silver was expected; the *ch'uan*, when payment was to be in copper coin, or "cash." A *tael* could be satisfied by tender of one liang, or Chinese ounce, of monetary silver. The *ch'uan* was divided into $$1000$$ units referred to as *ch'ien*, and one *ch'ien* unit of account could be satisfied by payment of one cash coin.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
 
 $$1 \text{ 两} = 1 \text{ 川} \equiv 1000 \text{ 钱}$$
 
 The ideal nature of one *tael* being satisfied by one liang of monetary silver is based on the fact that "liang" in Chinese was used both for the unit of account (*tael*) and for the weight of silver (Chinese ounce or liang) used to satisfy it. Similarly, *ch'ien* refers both to a unit of account (*ch'ien*) and a weight ($$0.1$$ liang), again requiring a $$1:1$$ relationship between the unit of account and its money.
-{: style="font-family:verdana"}
+{: style="font-family:Gill Sans"}
+
+银币经济学：
+
+The very existence of coins depends upon a suitable mint policy or a favorable international trade position, implying an ability on the part of the state to recognize relevant changes in the economic situation and to make appropriate adjustments. To maintain the coins in circulation requires enforcement of the laws relative to counterfeiting, melting, and tampering, while the suer must guard against the tendency of the state to alter the content of the coin for fiscal purposes. To implement its policies the premodern state had but an imperfect police system, inaccurate measures, little relevant econommic information, and no body of generally accepted theory to assist in determining the need for correction of the monetary system. Not surprisingly therefore, maintenance of the coinage taxed the abilities of the most conscientious premodern state, and the coins in the metallic monetary system were subject to chaotic forces inadequately controlled.
+{: style="font-family:Gill Sans"}
+
+A government committed to providing coins will be concerned with shifting the cost to the user. This can be done if the user is willing to pay a premium for the coin, that is, accept the coin in payment for a debt requiring a slightly higher weight of metal tendered in bullion form. The same can be accomplished by requiring a specific payment for the minting process, or seignorage. If the public is unwilling to pay the premium, the government is forced to subsidize the coinage. Thus the very existence of the coins depends upon the availability of funds to meet the subsidy, and in times of crisis the subsidy may be withdrawn, throwing the coinage into confusion and perhaps worsening the crisis.
+{: style="font-family:Gill Sans"}
+
+If the approved coin is to have a fixed relationship with the unit of account, the government must also set a fixed price at which it is willing to accept precious metal at the mint. The establishment of this mint price represents an attempt to keep money fixed in terms of the unit of account by controlling the price of bullion entering into coins. For this policy to be effective the demand for bullion for coinage must dominate the market and thus indirectly set the price for all bullion. The monetary authority may have sufficient political control to set the price of bullion without regard to economic forces, but historical evidence suggests that purely political measures are only temporarily effective. If then the mint price is able to dominate the market price and if the mint charges are not greater than the premium people place on coins, the coinage can be maintained, providing the authority is willing to replace worn coinage, and providing laws relative to counterfeiting and tampering can be enforced.
+{: style="font-family:Gill Sans"}
+
+If the demand for bullion for non-coinage purposes increases so that the market price of bullion is raised above the mint price, because (for example) of an outflow of bullion to meet a trade deficit, bullion will cease to be brought to the mint. Not only will the minting of new coins be interrupted but the established coins will be in danger, for although coins have retained their fixed relation to the unit of account, bullion has not. The market value of the silver in the coins when melted into bullion is greater than the value assigned the silver in the coins plus the premium people place on coins. To save the coinage the government may either cry up the coinage or devalue the unit of account. In the former case it decrees, for example, that a coin formerly worth one unit of account is now worth two. In the latter case it recoins so that there is appropriately less metal in the new coin, its relation to the unit of account being maintained. Inherent in both methods is a change in the mint price of bullion. Crying up the coinage is impractical in a system in which the coins have names identical to the unit of account, although it is logically possible and can certainly be attempted as a temporary measure while new coins are being issued.
+{: style="font-family:Gill Sans"}
 
 ## 脚注
 
