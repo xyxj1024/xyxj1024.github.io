@@ -9,7 +9,7 @@ last_modified_at:   "2022-12-14"
 
 **This post guides through some background knowledge required in the SEED Meltdown and Spectre Attack Labs**.
 
-The security of user-space applications and the operating system kernel is essentially dependent upon memory protection. Security patches have been applied to prevent address information leakage. But address information can still be exploited *on the microarchitectural level* even if the operating system does its job.
+The security of userspace applications and the operating system kernel is essentially dependent upon memory protection. Security patches have been applied to prevent address information leakage. But address information can still be exploited *on the microarchitectural level* even if the operating system does its job.
 
 In 2017, it was discovered that many modern processors are vulnerable to attacks called **Meltdown**{: style="color: red"} (CVE-2017-5754) and **Spectre**{: style="color: red"} (CVE-2017-5753 and CVE-2017-5715). Meltdown allows a user-level program to read data stored inside the kernel memory, which causes a trap. But before the trap is issued, the instructions that follow the access leak the contents of the accessed memory through a cache covert channel. Meltdown vulnerability affects Intel x86 microprocessors and some ARM-based microprocessors. Spectre exploits a race condition vulnerability in the design of the speculative execution implemented in *most* CPUs, which allows a malicious program to read the data from the area that is not accessible to it. Unlike the Meltdown attack, the restricted area does not need to be inside the kernel; it can be in the same process space as the malicious program, making defending the Spectre attack much more difficult.
 
@@ -206,7 +206,7 @@ T_{3}[b] &= (S[b], S[b], S[b] \oplus S'[b], S'[b]).
 \end{align}
 $$
 
-where $\oplus$ means exclusive-or. What is the consequence? Consider calculating $T_{0}[k[0] \oplus n[0]]$ near the beginning of the AES computation. It is reasonable to speculate that the time for this lookup depends on the array index and the AES timing might leak information about $k[0] \oplus n[0]$. How to exploit this? A simple idea is to watch the time taken by a victim program, total the AES times for each possible $n[13]$, and track the value of $n[13]$ when the overall AES time reaches maximum (e.g. $n[13] = 147$). If we already know that when $k[13] \oplus n[13] = 8$ the overall AES time reaches maximum, we can directly compute $k[13] = 147 \oplus 8 = 155$[^3].
+where $\oplus$ means "exclusive-or". What is the consequence? Consider calculating $T_{0}[k[0] \oplus n[0]]$ near the beginning of the AES computation. It is reasonable to speculate that the time for this lookup depends on the array index and the AES timing might leak information about $k[0] \oplus n[0]$. How to exploit this? A simple idea is to watch the time taken by a victim program, total the AES times for each possible $n[13]$, and track the value of $n[13]$ when the overall AES time reaches maximum (e.g. $n[13] = 147$). If we already know that when $k[13] \oplus n[13] = 8$ the overall AES time reaches maximum, we can directly compute $k[13] = 147 \oplus 8 = 155$[^3].
 
 [Gullasch et al. (2011)](https://ieeexplore.ieee.org/document/5958048) shows the timing measurement procedure from which we can infer whether an accessed table entry had already been in the cache before[^4]:
 
@@ -849,7 +849,7 @@ Reading at secret = 0x10ce24f02... Unclear: 0x2E='.' score=907  ( second best: 0
 
 [^3]: Daniel J. Bernstein, "Cache-Timing Attacks on AES," [https://cr.yp.to/antiforgery/cachetiming-20050414.pdf](https://cr.yp.to/antiforgery/cachetiming-20050414.pdf), April 2005.
 
-[^4]: David Gullasch, Endre Bangerter, and Stephen Krenn, "Cache Games -- Bringing Access-Based Cache Attacks on AES to Practice," In *2011 IEEE Symposium on Security and Privacy*, May 22-25, 2011, Oakland, CA, USA.
+[^4]: David Gullasch, Endre Bangerter, and Stephen Krenn, "Cache Games &mdash; Bringing Access-Based Cache Attacks on AES to Practice," In *2011 IEEE Symposium on Security and Privacy*, May 22-25, 2011, Oakland, CA, USA.
 
 [^5]: [Eran Tromer](http://www.cs.tau.ac.il/~tromer/cache/), Dag Arne Osvik, and Adi Shamir, "Efficient Cache Attacks on AES, and Countermeasures," *Journal of Cryptology*, Vol. 23, No. 1, 37-71, Springer, 2010.
 

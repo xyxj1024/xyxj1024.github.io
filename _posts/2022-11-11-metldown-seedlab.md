@@ -144,7 +144,7 @@ int main()
 }
 ```
 
-Compile and run the simple user-space program:
+Compile and run the simple userspace program:
 ```console
 $ gcc get-secret-test.c -o get-secret-test
 $ ./get-secret-test

@@ -24,7 +24,7 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 ### Education
 
-#### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis (Aug. 2021 -- Present)
+#### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis (Aug. 2021 &mdash; Present)
 
 CS-related coursework with links:
   - **CSE 523S: Systems Security**, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/) (complemented with [SEED Labs](https://seedsecuritylabs.org/) developed by [Dr. Wenliang Du](https://web.ecs.syr.edu/~wedu/) from [Syracuse University](https://www.syracuse.edu/))
@@ -38,7 +38,7 @@ CS-related coursework with links:
   - **ECON 558: Matching and Assignment**, taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
   - [**MATH 4351: Number Theory and Cryptography**, taught by Dr. Ben Wormleighton](https://sites.google.com/view/benw/teaching/math-4351-spring-22) (following lecture notes from [Dr. Matt Kerr](https://www.math.wustl.edu/~matkerr/))
 
-#### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 -- Jul. 2021)
+#### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 &mdash; Jul. 2021)
 
 Thesis Title: "The U.S. Tri­-Party Repo Market During the Global Financial Crisis"
 
@@ -66,7 +66,7 @@ Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
 Washington University CSE 523S: "Systems Security"
 
-#### Tsinghua University Student Orchestra (Aug. 2016 -- Aug. 2020)
+#### Tsinghua University Student Orchestra (Aug. 2016 &mdash; Aug. 2020)
 
 Principal Second Violin
 

