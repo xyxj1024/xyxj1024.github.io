@@ -60,7 +60,7 @@ cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,relatime,nsdelegate)
 
 We can see that the filesystem type is `cgroup2`. In control groups version one, the filesystem type is `cgroup`.
 
-### Memory Resource Controller
+### The Memory Resource Controller
 
 Memory is a unique resource in the sense that it is present in a limited amount. If a task requires a lot of CPU processing, the task can spread its processing over a period of hours, days, months or years, but with memory, the same physical memory needs to be reused to accomplish the task.
 
@@ -108,6 +108,11 @@ perf_event  0   87  1
 net_prio    0   87  1
 pids    0   87  1
 ```
+
+### The CPU and CPU Set Controllers
+
+The management of large computer systems, with many processors (CPUs)[^5], complex memory cache hierarchies and multiple memory nodes[^6] having non-uniform access times presents additional challenges for the efficient scheduling and memory placement of processes. Large computer systems can benefit from explicitly placing jobs on properly sized subsets of the system. These subsets, or "soft partitions" must be able to be dynamically adjusted, as the job mix changes, without impacting other concurrently executing jobs. The location of the running jobs pages may also be moved when the memory locations are changed. `cpuset` provides a Linux kernel mechanism to constrain which CPUs and memory nodes are used by a process or set of processes.
+
 
 ## Fork Bomb Revisited
 
@@ -264,6 +269,8 @@ It is clear that our fork bomb was killed by the out-of-memory killer as its mem
 
 The `cgroups` memory controller also supplies the `memory.high` controller. This allows an administrator to define a memory usage threshold beyond which (1) a "high" event, in the `memory.events` file, is triggered, which subsequently (2) signals to the Linux kernel that it should begin aggressively reclaiming memory from the processes in the `cgroup` (though those processes will not be killed).
 
+According to the Linux kernel documentation, each non-root `cgroup` has a "`cgroup.events`" file containing "populated" field indicating whether the `cgroup`&prime;s sub-hierarchy has live processes in it. If there is no live process in the `cgroup` and its descendants, its value is zero; otherwise, `1`. `poll` and `inotify` events are triggered when the value changes.
+
 ```c
 // In: include/uapi/linux/inotify.h
 struct inotify_event {
@@ -275,6 +282,244 @@ struct inotify_event {
 };
 ```
 
+Rewrite and recompile our fork bomb program so that it again delays before each call to `fork()`. Next, let's write a monitor program that does the following:
+1. Take exactly two command-line arguments (and print a helpful usage message if more or fewer are given) which are the paths to the files named `cgroup.events` and `memory.events` within the `child` control group, respectively.
+2. Attempt to open both files, read-only, using the `open()` system call. If either file cannot be opened, it should print a helpful error message and exit.
+3. Create an `inotify` instance, then subsequently add watches for both files, watching for `IN_MODIFY` events.
+4. In a loop, watch for events on these files by reading from the file descriptor returned by the `inotify_init()` function. Your program should associate the watch descriptors with the file descriptors returned by the opened files, so that, if either file has been changed, your program knows which is the corresponding opened file descriptor.
+5. If the `cgroup.events` file has been changed, the monitor program should print a message indicating whether the `cgroup` is populated or not.
+6. If the `memory.events` file has been changed, the monitor program should print the current value of its "`high`" field.
+
+Compile the C program shown below:
+
+```c
+#include <sys/inotify.h>
+#include <limits.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <poll.h>
+#include <unistd.h>
+#include <string.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#define MAX_EVENTS      1024
+#define EVENT_SIZE      (sizeof(struct inotify_event))
+#define BUF_LEN         (MAX_EVENTS * (EVENT_SIZE + NAME_MAX))
+
+#define errExit(msg)    do { perror(msg); exit(EXIT_FAILURE); } while (0)
+
+int fd_inotify;
+int *fd;
+int *wd;
+char *p;
+
+void signal_handler(int signum)
+{
+    inotify_rm_watch(fd_inotify, wd[1]);
+    inotify_rm_watch(fd_inotify, wd[2]);
+    free(wd);
+
+    close(fd_inotify);
+
+    close(fd[1]);
+    close(fd[2]);
+    free(fd);
+
+    exit(EXIT_SUCCESS);
+}
+
+static void handle_events()
+{
+    char *pos1;
+    char *pos2;
+    char *tmp;
+    char buffer[BUF_LEN] __attribute__ ((aligned(__alignof__(struct inotify_event))));
+    char fileln[BUF_LEN];
+    ssize_t l1;
+    ssize_t l2;
+    const struct inotify_event *event;
+
+    while (1) {
+        l1 = read(fd_inotify, buffer, BUF_LEN);
+        if (l1 == -1 && errno != EAGAIN) {
+            errExit("Read inotify fd");
+        }
+        if (l1 <= 0) break;
+        printf("Read %ld bytes from inotify fd...\n", (long)l1);
+            
+        for (p = buffer; p < buffer + l1; p += sizeof(struct inotify_event) + event->len) {
+            event = (const struct inotify_event *)p;
+            if (event->mask & IN_MODIFY) {
+                if (wd[1] == event->wd) {
+                    l2 = read(fd[1], fileln, BUF_LEN);
+                    if (l2 == -1 && errno != EAGAIN) {
+                        errExit("Read inotify fd");
+                    }
+                    // printf("%s\n", fileln);
+                    pos1 = strstr(fileln, "populated");
+                    pos2 = strstr(fileln, "frozen");
+                    for (tmp = pos1; tmp != pos2; ) {
+                        putchar(*tmp++);
+                    }
+                    printf("\n");
+                    lseek(fd[1], 0, SEEK_SET); // places the current position at the first byte
+                }
+
+                if (wd[2] == event->wd) {
+                    l2 = read(fd[2], fileln, BUF_LEN);
+                    if (l2 == -1 && errno != EAGAIN) {
+                        errExit("Read inotify fd");
+                    }
+                    // printf("%s\n", fileln);
+                    pos1 = strstr(fileln, "high");
+                    pos2 = strstr(fileln, "max");
+                    for (tmp = pos1; tmp != pos2; ) {
+                        putchar(*tmp++);
+                    }
+                    printf("\n");
+                    lseek(fd[2], 0, SEEK_SET);
+                }
+            }
+        }
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    int poll_num;
+    nfds_t nfds = 1;
+    struct pollfd fds[1];
+
+    if (argc != 3) {
+        printf("Usage: %s <path/to/cgroup.events> <path/to/memory.events>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    signal(SIGINT, signal_handler);
+
+    /* Open files */
+    fd = calloc(argc, sizeof(int));
+    if (fd == NULL) {
+        errExit("Calloc file descriptors");
+    }
+    fd[1] = open(argv[1], O_RDONLY);
+    if (fd[1] == -1) {
+        errExit("Open cgroup.events");
+    }
+    fd[2] = open(argv[2], O_RDONLY);
+    if (fd[2] == -1) {
+        errExit("Open memory.events");
+    }
+
+    /* Initialize inotify */
+    fd_inotify = inotify_init();
+    if (fd_inotify == -1) {
+        errExit("Inotify init");
+    }
+
+    /* Add watches */
+    wd = calloc(argc, sizeof(int));
+    if (wd == NULL) {
+        errExit("Calloc watch descriptors");
+    }
+    wd[1] = inotify_add_watch(fd_inotify, argv[1], IN_MODIFY);
+    if (wd[1] == -1) {
+        errExit("Inotify add watch cgroup.events");
+    }
+    wd[2] = inotify_add_watch(fd_inotify, argv[2], IN_MODIFY);
+    if (wd[2] == -1) {
+        errExit("Inotify add watch memory.events");
+    }
+
+    fds[0].fd = fd_inotify;
+    fds[0].events = POLLIN;
+
+    while (1) {
+        poll_num = poll(fds, nfds, -1);
+        if (poll_num == -1) {
+            if (errno == EINTR) continue;
+            errExit("poll");
+        }
+        if (poll_num > 0) {
+            if (fds[0].revents & POLLIN) {
+                handle_events();
+            }
+        }
+    }
+
+    exit(EXIT_SUCCESS);
+}
+```
+
+Open three terminal windows, the first running as root, the second running the monitor program, and the third to be added to the `cgroup`. In the third terminal window, again, print its PID using `echo $$`. In the second terminal window, launch our monitor program. In the first terminal window, write the PID of the third terminal window into `cgroup.procs`. Then, also in the first terminal window, print the content of `memory.current`. Write a value into `memory.high` that is sufficiently larger than the current value of `memory.current` such that the fork bomb will cause this limit to be exceeded relatively quickly. Finally, in the third terminal window, launch the fork bomb, allowing it to run until the monitor program begins to give outputs. Let the monitor program print a few messages, then kill the fork bomb, and close the third terminal window.
+
+This is what I have done in the root shell before launching the fork bomb:
+
+```console
+root@xingjian:/sys/fs/cgroup# cd child
+root@xingjian:/sys/fs/cgrou/child# cat memory.current
+0
+root@xingjian:/sys/fs/cgrou/child# cat memory.high
+max
+root@xingjian:/sys/fs/cgrou/child# echo "911" > cgroup.procs
+root@xingjian:/sys/fs/cgrou/child# cat cgroup.procs
+911
+root@xingjian:/sys/fs/cgrou/child# echo "81920" > memory.high
+root@xingjian:/sys/fs/cgrou/child# cat memory.high
+81920
+root@xingjian:/sys/fs/cgrou/child# cat cgroup.events
+populated 1
+frozen 0
+root@xingjian:/sys/fs/cgrou/child# cat memory.events
+low 0
+high 0
+max 0
+oom 0
+oom_kill 0
+```
+
+After launching the fork bomb, the monitor program's window begins to print out the changing values of the `high` field of `memory.events`. After I close the fork bomb's window, the monitor program's window looks like this:
+
+```console
+...
+Read 16 bytes from inotify fd...
+high 122
+
+Read 16 bytes from inotify fd...
+high 123
+
+Read 16 bytes from inotify fd...
+high 125
+
+Read 16 bytes from inotify fd...
+populated 0
+frozen 0
+oom 0
+oom_kill 0
+
+populated 0
+
+^C
+```
+
+Check the two files in the root shell:
+
+```console
+root@xingjian:/sys/fs/cgroup/child# cat cgroup.events
+populated 0
+frozen 0
+root@xingjian:/sys/fs/cgroup/child# cat memory.events
+low 0
+high 125
+max 0
+oom 0
+oom_kill 0
+```
+
+The results are just as expected. First of all, after the shell process that ran the fork bomb became a member of our `child` control group, the `populated` field of the `cgroup.events` file obtained value `1`. As our fork bomb was running, the monitor program kept printing out the `high` field of the `memory.events` file, reporting its changes. The final value matched the `memory.events` file shown in the root shell. After I closed the third terminal window (thereby killed the shell process that ran the fork bomb), a change to the `populated` field was reported by the monitor program.
+
 ## Footnotes
 
 [^1]: Balbir Singh, "RFC: Memory Controller," 30 Oct 2006, [https://lwn.net/Articles/206697/](https://lwn.net/Articles/206697/).
@@ -284,3 +529,7 @@ struct inotify_event {
 [^3]: Jonathan Corbet, "Controlling Memory Use in Containers," 31 Jul 2007, [https://lwn.net/Articles/243795/](https://lwn.net/Articles/243795/).
 
 [^4]: Note that all memory amounts are in bytes. If a value which is not aligned to `PAGE_SIZE` is written, the value may be rounded up to the closest `PAGE_SIZE` multiple when read back.
+
+[^5]: The CPUs of a system include all the logical processing units on which a process can execute, including, if present, multiple processor cores within a package and Hyper-Threads within a processor core.
+
+[^6]: Memory nodes include all distinct banks of main memory; small and SMP systems typically have just one memory node that contains all the system's main memory, while NUMA (non-uniform memory access) systems have multiple memory nodes.
