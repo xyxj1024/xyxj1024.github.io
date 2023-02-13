@@ -1,70 +1,20 @@
 ---
 layout:             post
-title:              "Linux Resource Controls"
+title:              "Linux Control Groups: Observing CPU Contention"
 category:           "Computing Systems, Systems Security"
-tags:               linux-kernel process-thread namespace cgroup container
-permalink:          /posts/linux-plumbing/resource-control
-last_modified_at:   "2023-02-06"
+tags:               linux-kernel process-thread cgroup
+permalink:          /posts/linux-plumbing/cgroups/cpu-contention
 ---
 
-Some writeup for Washington University CSE 522S studios, which closely follow the [LWN](https://lwn.net/) article series "Namespaces in operation".
+Some writeup for Washington University CSE 522S: Studio 9 "CPU Control and Timing Events".
+
+The `parallel_dense_mm.c` program shown below, using the OpenMP library to run in parallel,
+1. takes a single command-line argument,
+2. creates two dense matrices of size specified by the command-line argument,
+3. fills them with randomly-generated values, and then
+4. multiplies them.
 
 <!-- excerpt-end -->
-
-## Table of Contents
-{:.no_toc}
-* TOC 
-{:toc}
-
-## Isolation with Namespaces
-
-There are three system calls that can be used to put tasks into specific namespaces. These are `clone`, `unshare`, and `setns`. The `clone` and `setns` syscalls result in creating a `nsproxy` object and then adding the specific namespaces needed for the task.
-
-## Within-Namespace Resource Controls
-
-The Linux kernel makes use of a resource management feature called "control groups" (`cgroups`) to apply limits on the amount of system resources a process (or group of processes) can acquire. `cgroups` form a tree structure and every process in the system belongs to one and only one `cgroup`. All threads of a process belong to the same `cgroup`.
-
-The `cgroups` feature consists of several subsystems (or *resource controllers*), each of which is responsible for a particular resource type, such as CPUs, memory, I/O, or networks. `cgroups` provide an API (via a pseudo-filesystem) through which users can get and set parameters and limits associated with its subsystems. All controller behaviors are **hierarchical** &mdash; if a controller is enabled on a `cgroup`, it affects all processes which belong to the `cgroups` consisting the inclusive sub-hierarchy of the `cgroup`.
-
-There are two versions of `cgroups` in Linux: [`cgroup v1`](https://docs.kernel.org/admin-guide/cgroup-v1/index.html#cgroup-v1) and [`cgroup v2`](https://docs.kernel.org/admin-guide/cgroup-v2.html). `cgroup v2` is the new generation of the `cgroup` API. Some Linux distributions still use `cgroup v1` by default. Since we cannot simultaneously use a resource controller in both version one and two, we need to reboot the system if the following command shows a value greater than $$1$$:
-
-```bash
-# Count cgroup mounts
-grep -c cgroup /proc/mounts
-```
-
-Unlike version one, `cgroup v2` has only single hierarchy. Initially, only the root `cgroup` exists to which all processes belong. A child `cgroup` can be created by creating a subdirectory in `/sys/fs/cgroup`:
-
-```bash
-mkdir child
-```
-
-If this `child` control group no longer has any children or live processes, it can be destroyed by removing the directory:
-
-```bash
-rmdir child
-```
-
-The Raspberry Pi OS launches the `systemd` daemon during system startup. This utility is responsible for configuring much of the kernel and userspace functionality of the Raspberry Pi, including mounting the appropriate `cgroup` pseudo-filesystem(s). Certain commands can be issued to `systemd` to change its boot-time behavior via the `/boot/cmdline.txt` file. Note that commands in that file are separated by spaces. To disable the `cgroups v1` subsystem, add the following command to the end of the file:
-
-```text
-cgroup_no_v1=all
-```
-
-After rebooting the Raspberry Pi, we can check that only the `cgroup v2` subsystem is mounted by issuing the following command:
-
-```console
-pi@xingjian:~ $ mount | grep cgroup
-cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,relatime,nsdelegate)
-```
-
-We can see that the filesystem type is `cgroup2`. In control groups version one, the filesystem type is `cgroup`.
-
-### The CPU and CPU Set Controllers
-
-CPU utilization is another area where implementing `cgroup2` architecture can make major resource control improvements. When enabled, the CPU controller regulates distribution of CPU cycles and enforces CPU limits for its child `cgroups`. It implements both weight and absolute bandwidth limit models for normal scheduling policy, and an absolute bandwidth allocation model for realtime scheduling policy.
-
-The following C program, using the OpenMP library to run in parallel, takes a single command-line argument, creates two dense matrices of size specified by the command-line argument, fills them with randomly-generated values, and then multiplies them:
 
 ```c
 /******************************************************************************
@@ -168,21 +118,25 @@ int main( int argc, char* argv[] ){
 }
 ```
 
-Compile it against the OpenMP library:
+Later, we will use this program to generate heavy CPU usage on all available cores of the Raspberry Pi. To compile it against the OpenMP library, issue the following command:
 
 ```bash
 gcc -Wall -o parallel_dense_mm parallel_dense_mm.c -fopenmp
 ```
 
-The program, while running, generates heavy CPU usage on all available cores.
+## Table of Contents
+{:.no_toc}
+* TOC 
+{:toc}
 
-Let's write another program (call it "`exec_time`") that:
+## The CPU Resource Controller
 
+CPU utilization is another area where implementing `cgroup2` architecture can make major resource control improvements. When enabled, the CPU controller regulates distribution of CPU cycles and enforces CPU limits for its child `cgroups`. It implements both weight and absolute bandwidth limit models for normal scheduling policy, and an absolute bandwidth allocation model for realtime scheduling policy.
+
+Let's write a C program (call it "`exec_time`") that:
 1. prints its own PID,
 2. blocks on input from `stdin`,
 3. once it receives any input, proceeds to execute the command: `time ./parallel_dense_mm 500`.
-
-Compile and run this `exec_time` program:
 
 ```c
 #include <unistd.h>
@@ -211,7 +165,7 @@ int main()
 }
 ```
 
-After it prints its PID, but before pressing a key to proceed, write its PID into the `cgroup.procs` file in the CPU `cgroup`'s directory. Then, allow the program to proceed:
+Compile and run this `exec_time` program. After it prints its PID, but before pressing a key to proceed, write its PID into the `cgroup.procs` file in the CPU `cgroup`'s directory. Then, allow the program to proceed:
 
 ```console
 $ ./exec_time
@@ -255,7 +209,7 @@ where:
 
 Here we shall notice that, in the `cpu.stat` file, `system_usec` plus `user_usec` equals `usage_usec`. The total number of CPU-seconds that the process spent in user mode reported by the `time` utility matches `user_usec`.
 
-#### Observing CPU Contention with Concurrent Tasks
+## Observing CPU Contention with Concurrent Tasks
 
 This time, use this modified version of `exec_time`:
 
@@ -324,7 +278,7 @@ Multiplication done!
 
 For the instance that processed matrix size $$n = 500$$, with the presence of CPU contention, both the total number of CPU-seconds spent in user mode and the elapsed real time are greater than those of the previous exercise; CPU utilization decreases $$20\%$$.
 
-#### Assigning Larger `cpu.weight`
+## Assigning Larger Weight
 
 The initial contents of the `cpu,weight` file:
 
@@ -342,10 +296,83 @@ This time, proceed as follows:
 5. Press `<enter>` in the first terminal window to kick off the larger matrix multiply, then immediately press `<enter>` in the second terminal window to kick off the smaller instance that we will time.
 6. Once the second, smaller instance completes, use `<CTRL+C>` to terminate the first instance of the matrix multiplication.
 
-The management of large computer systems, with many processors (CPUs)[^1], complex memory cache hierarchies and multiple memory nodes[^2] having non-uniform access times presents additional challenges for the efficient scheduling and memory placement of processes. Large computer systems can benefit from explicitly placing jobs on properly sized subsets of the system. These subsets, or "soft partitions" must be able to be dynamically adjusted, as the job mix changes, without impacting other concurrently executing jobs. The location of the running jobs pages may also be moved when the memory locations are changed. `cpuset` provides a Linux kernel mechanism to constrain which CPUs and memory nodes are used by a process or set of processes.
+Below is my console outputs with `cpu.weight` modified into `500`:
 
-## Footnotes
+```console
+(First terminal window)
+$ ./exec_time 5000
+PID: 1988
+Wait for user input to proceed...
 
-[^1]: The CPUs of a system include all the logical processing units on which a process can execute, including, if present, multiple processor cores within a package and Hyper-Threads within a processor core.
+Generating matrices...
+^CCommand terminated by signal 2
+3.17user 1.20system 0:05.09elapsed 85%CPU (0avgtext+0avgdata 392996maxresident)k
+0inputs+0outputs (0major+97986minor)pagefaults 0swaps
 
-[^2]: Memory nodes include all distinct banks of main memory; small and SMP systems typically have just one memory node that contains all the system's main memory, while NUMA (non-uniform memory access) systems have multiple memory nodes.
+(Second terminal window)
+$ ./exec_time 500
+PID: 1989
+Wait for user input to proceed...
+
+Generating matrices...
+Multiplying matrices...
+Multiplication done!
+8.84user 0.00system 0:02.88elapsed 306%CPU (0avgtext+0avgdata 7324maxresident)k
+0inputs+0outputs (0major+1563minor)pagefaults 0swaps
+```
+
+For the instance that processed matrix size $$n = 500$$, both the total number of CPU-seconds spent in user mode and the elapsed real time are greater than that in the first section but smaller than that in the second section. The total number of CPU-seconds spent in kernel mode is the smallest so far. By assigning higher weights, the CPU `cgroups` can access more CPU resources and thereby ensure performance.
+
+## Applying Bandwidth Constraint
+
+First, reset the value of the `cpu.weight` controller file to its original, default value. Next, apply a bandwidth limit by writing into the `cpu.max` interface file. This file takes the format:
+
+```text
+MAX PERIOD
+```
+
+Where `MAX` indicate the maximum total time (in microseconds) that processes in the `cgroup` can execute on contended CPUs for every `PERIOD` of elapsed time. This restricts the bandwidth of processes in that `cgroup` to `MAX/PERIOD`. The initial content of the `cpu.max` file is as follows:
+
+```console
+# cat cpu.max
+max 100000
+```
+
+Use values that are sufficiently small so that we will be able to see throttling behavior. For example, if our `exec_time` program measured an elapsed time of $$t$$ seconds to run `parallel_dense_mm` with matrices of size $$500 \times 500$$, then use a `MAX` of $$t/5$$ seconds (converted to microseconds) and a `PERIOD` at least twice the `MAX` value. Note that `PERIOD` cannot be set to a value exceeding $$1,000,000$$. Here, I would like to use this new value pair:
+
+```console
+# echo "400000 1000000" > cpu.max
+# cat cpu.max
+400000 1000000
+```
+
+i.e., a bandwidth constraint of $0.4$.
+
+Now, proceed to measure the execution time the same way we did in the previous section, running an instance of our program with large matrices, and a second instance with $$500 \times 500$$ matrices, which is added to the `cgroup` to constrain its bandwidth.
+
+Below is my console outputs:
+
+```console
+(First terminal window)
+$ ./exec_time 5000
+PID: 2142
+Wait for user input to proceed...
+
+Generating matrices...
+^CCommand terminated by signal 2
+71.98user 1.81system 0:25.55elapsed 288%CPU (0avgtext+0avgdata 587380maxresident)k
+0inputs+0outputs (0major+158484minor)pagefaults 0swaps
+
+(Second terminal window)
+$ ./exec_time 500
+PID: 2144
+Wait for user input to proceed...
+
+Generating matrices...
+Multiplying matrices...
+Multiplication done!
+9.06user 0.04system 0:21.80elapsed 41%CPU (0avgtext+0avgdata 7304maxresident)k
+0inputs+0outputs (0major+2021minor)pagefaults 0swaps
+```
+
+We can see that the total number of CPU-seconds spent in user mode is slightly greater than that in the second section; the CPU-seconds spent in kernel mode is smaller than that in the second section; the elapsed real time is significantly greater than all of the experiments we have run. The bandwidth constraint takes effect on the elapsed real time value rather than the total number of CPU-seconds spent in user mode.

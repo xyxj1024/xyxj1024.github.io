@@ -3,14 +3,12 @@ layout:             post
 title:              "Linux Control Groups: Fork Bomb Revisited"
 category:           "Computing Systems, Systems Security"
 tags:               linux-kernel process-thread cgroup
-permalink:          /posts/linux-plumbing/malloc-forkbomb
+permalink:          /posts/linux-plumbing/cgroups/forkbomb
 ---
 
-Some writeup for Washington University CSE 522S Studio 8 Exercise 4 through 6.
+Some writeup for Washington University CSE 522S: Studio 8 "Observing Memory Events", Exercise 4 through 6.
 
-[Here]({{ site.baseurl }}/posts/linux-plumbing/fork-execve#fork-bomb) I rediscovered some history episode about fork bomb attack. In this post, I would like to test a fork bomb program which additionally makes `malloc()` function calls that generate significant memory usage for a control group:
-
-<!-- excerpt-end -->
+[Here]({{ site.baseurl }}/posts/linux-plumbing/fork-execve#fork-bomb) I rediscovered some history episode about fork bomb attack. In this post, I would like to test a fork bomb program which additionally makes `malloc()` function calls that generate significant memory usage for Linux **control groups**{: style="color: red"}:
 
 ```c
 #include <unistd.h>
@@ -38,6 +36,46 @@ int main()
     return 0;
 }
 ```
+
+<!-- excerpt-end -->
+
+The Linux kernel makes use of a resource management feature called "control groups" (`cgroups`) to apply limits on the amount of system resources a process (or group of processes) can acquire. `cgroups` form a tree structure and every process in the system belongs to one and only one `cgroup`. All threads of a process belong to the same `cgroup`.
+
+The `cgroups` feature consists of several subsystems (or *resource controllers*), each of which is responsible for a particular resource type, such as CPUs, memory, I/O, or networks. `cgroups` provide an API (via a pseudo-filesystem) through which users can get and set parameters and limits associated with its subsystems. All controller behaviors are **hierarchical** &mdash; if a controller is enabled on a `cgroup`, it affects all processes which belong to the `cgroups` consisting the inclusive sub-hierarchy of the `cgroup`.
+
+There are two versions of `cgroups` in Linux: [`cgroup v1`](https://docs.kernel.org/admin-guide/cgroup-v1/index.html#cgroup-v1) and [`cgroup v2`](https://docs.kernel.org/admin-guide/cgroup-v2.html). `cgroup v2` is the new generation of the `cgroup` API. Some Linux distributions still use `cgroup v1` by default. Since we cannot simultaneously use a resource controller in both version one and two, we need to reboot the system if the following command shows a value greater than $$1$$:
+
+```bash
+# Count cgroup mounts
+grep -c cgroup /proc/mounts
+```
+
+Unlike version one, `cgroup v2` has only single hierarchy. Initially, only the root `cgroup` exists to which all processes belong. A child `cgroup` can be created by creating a subdirectory in `/sys/fs/cgroup`:
+
+```bash
+mkdir child
+```
+
+If this `child` control group no longer has any children or live processes, it can be destroyed by removing the directory:
+
+```bash
+rmdir child
+```
+
+The Raspberry Pi OS launches the `systemd` daemon during system startup. This utility is responsible for configuring much of the kernel and userspace functionality of the Raspberry Pi, including mounting the appropriate `cgroup` pseudo-filesystem(s). Certain commands can be issued to `systemd` to change its boot-time behavior via the `/boot/cmdline.txt` file. Note that commands in that file are separated by spaces. To disable the `cgroups v1` subsystem, add the following command to the end of the file:
+
+```text
+cgroup_no_v1=all
+```
+
+After rebooting the Raspberry Pi, we can check that only the `cgroup v2` subsystem is mounted by issuing the following command:
+
+```console
+pi@xingjian:~ $ mount | grep cgroup
+cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,relatime,nsdelegate)
+```
+
+We can see that the filesystem type is `cgroup2`. In control groups version one, the filesystem type is `cgroup`.
 
 ## Table of Contents
 {:.no_toc}
@@ -100,7 +138,7 @@ net_prio    0   87  1
 pids    0   87  1
 ```
 
-## Launch the Attack
+## Launching the Attack
 
 Before running the above fork bomb program, open a terminal window and obtain root privileges with `sudo su` or `sudo bash`. Go to the child `cgroup` directory we just created. Open another terminal window, which we will use to run the fork bomb program, and check its PID:
 
