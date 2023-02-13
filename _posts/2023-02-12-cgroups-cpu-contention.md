@@ -16,6 +16,8 @@ The `parallel_dense_mm.c` program shown below, using the OpenMP library to run i
 
 <!-- excerpt-end -->
 
+Full credit to [Dr. David Ferry](https://cs.slu.edu/people/ferry):
+
 ```c
 /******************************************************************************
 * 
@@ -131,14 +133,12 @@ gcc -Wall -o parallel_dense_mm parallel_dense_mm.c -fopenmp
 
 ## The CPU Resource Controller
 
-CPU utilization is another area where implementing `cgroup2` architecture can make major resource control improvements. When enabled, the CPU controller regulates distribution of CPU cycles and enforces CPU limits for its child `cgroups`. It implements both weight and absolute bandwidth limit models for normal scheduling policy, and an absolute bandwidth allocation model for realtime scheduling policy.
+CPU utilization is another area where implementing `cgroup2` architecture can make major resource control improvements. When enabled, the CPU controller regulates distribution of CPU cycles and enforces CPU limits for its child `cgroups`. It implements both weight (through `cpu.max` API) and absolute bandwidth limit (through `cpu.weight` API) models for normal scheduling policy, and an absolute bandwidth allocation model for real-time scheduling policy.
 
-Let's write a C program (call it "`exec_time`") that:
-1. prints its own PID,
-2. blocks on input from `stdin`,
-3. once it receives any input, proceeds to execute the command: `time ./parallel_dense_mm 500`.
+`cgroup v1` allowed threads to be in any `cgroups` which created an interesting problem where threads belonging to a parent `cgroup` and its children `cgroups` competed for resources. This was nasty as two different types of entities competed and there was no obvious way to settle it. Different controllers did different things. The CPU controller considered threads and `cgroups` as equivalents and mapped nice levels to `cgroup` weights. This worked for some cases but fell flat when children wanted to be allocated specific ratios of CPU cycles and the number of internal threads fluctuated &mdash; the ratios constantly changed as the number of competing entities fluctuated. There also were other issues. The mapping from nice level to weight was not obvious or universal, and there were various other knobs which simply were not available for threads. Tejun Heo summarized current discussions around the CPU controller on `cgroups v2` in [this document](https://git.kernel.org/cgit/linux/kernel/git/tj/cgroup.git/tree/Documentation/cgroup-v2-cpu.txt?h=cgroup-v2-cpu).
 
 ```c
+/* exec_time.c */
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -165,7 +165,12 @@ int main()
 }
 ```
 
-Compile and run this `exec_time` program. After it prints its PID, but before pressing a key to proceed, write its PID into the `cgroup.procs` file in the CPU `cgroup`'s directory. Then, allow the program to proceed:
+The above `exec_time.c` program
+1. prints its own PID,
+2. blocks on input from `stdin`,
+3. once it receives any input, proceeds to execute the command: `time ./parallel_dense_mm 500`.
+
+Compile and run this program. After it prints its PID, but before pressing a key to proceed, write its PID into the `cgroup.procs` file in the CPU `cgroup`'s directory. Then, allow the program to proceed:
 
 ```console
 $ ./exec_time
@@ -346,7 +351,7 @@ Use values that are sufficiently small so that we will be able to see throttling
 400000 1000000
 ```
 
-i.e., a bandwidth constraint of $0.4$.
+i.e., an expected CPU utilization of $$40\%$$.
 
 Now, proceed to measure the execution time the same way we did in the previous section, running an instance of our program with large matrices, and a second instance with $$500 \times 500$$ matrices, which is added to the `cgroup` to constrain its bandwidth.
 

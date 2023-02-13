@@ -39,9 +39,16 @@ int main()
 
 <!-- excerpt-end -->
 
+## Table of Contents
+{:.no_toc}
+* TOC 
+{:toc}
+
+## A Brief Introduction to Control Groups
+
 The Linux kernel makes use of a resource management feature called "control groups" (`cgroups`) to apply limits on the amount of system resources a process (or group of processes) can acquire. `cgroups` form a tree structure and every process in the system belongs to one and only one `cgroup`. All threads of a process belong to the same `cgroup`.
 
-The `cgroups` feature consists of several subsystems (or *resource controllers*), each of which is responsible for a particular resource type, such as CPUs, memory, I/O, or networks. `cgroups` provide an API (via a pseudo-filesystem) through which users can get and set parameters and limits associated with its subsystems. All controller behaviors are **hierarchical** &mdash; if a controller is enabled on a `cgroup`, it affects all processes which belong to the `cgroups` consisting the inclusive sub-hierarchy of the `cgroup`.
+The `cgroups` architecture consists of several subsystems (or *resource controllers*), each of which is responsible for a particular resource type, such as CPUs, memory, I/O, or networks. `cgroups` provide an API (via a pseudo-filesystem) through which users can get and set parameters and limits associated with its subsystems. All controller behaviors are *hierarchical* &mdash; if a controller is enabled on a `cgroup`, it affects all processes which belong to the `cgroups` consisting the inclusive sub-hierarchy of the `cgroup`.
 
 There are two versions of `cgroups` in Linux: [`cgroup v1`](https://docs.kernel.org/admin-guide/cgroup-v1/index.html#cgroup-v1) and [`cgroup v2`](https://docs.kernel.org/admin-guide/cgroup-v2.html). `cgroup v2` is the new generation of the `cgroup` API. Some Linux distributions still use `cgroup v1` by default. Since we cannot simultaneously use a resource controller in both version one and two, we need to reboot the system if the following command shows a value greater than $$1$$:
 
@@ -62,7 +69,7 @@ If this `child` control group no longer has any children or live processes, it c
 rmdir child
 ```
 
-The Raspberry Pi OS launches the `systemd` daemon during system startup. This utility is responsible for configuring much of the kernel and userspace functionality of the Raspberry Pi, including mounting the appropriate `cgroup` pseudo-filesystem(s). Certain commands can be issued to `systemd` to change its boot-time behavior via the `/boot/cmdline.txt` file. Note that commands in that file are separated by spaces. To disable the `cgroups v1` subsystem, add the following command to the end of the file:
+The Raspberry Pi OS launches the [`systemd`](https://systemd.io) daemon during system startup. This utility is responsible for configuring much of the kernel and userspace functionality of the Raspberry Pi, including mounting the appropriate `cgroup` pseudo-filesystem(s). Certain commands can be issued to `systemd` to change its boot-time behavior via the `/boot/cmdline.txt` file. Note that commands in that file are separated by spaces. To disable the `cgroups v1` subsystem, add the following command to the end of the file:
 
 ```text
 cgroup_no_v1=all
@@ -76,11 +83,6 @@ cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,relatime,nsdelegate)
 ```
 
 We can see that the filesystem type is `cgroup2`. In control groups version one, the filesystem type is `cgroup`.
-
-## Table of Contents
-{:.no_toc}
-* TOC 
-{:toc}
 
 ## The Memory Resource Controller
 
@@ -110,9 +112,9 @@ The first RSS ("resident set size", the portion of memory occupied by a process 
 
 Currently, the following types of memory usages are tracked:
 
-- Userland memory: page cache and anonymous memory;
-- Kernel data structures such as dentries and inodes;
-- TCP socket buffers.
+1. Userland memory: page cache and anonymous memory,
+2. Kernel data structures such as dentries and inodes,
+3. TCP socket buffers.
 
 To enable memory `cgroups` (actually, `cgroups` with memory controller), add the following commands to the `/boot/cmdline.txt` file:
 
