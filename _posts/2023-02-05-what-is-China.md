@@ -11,18 +11,15 @@ last_modified_at:   "2023-02-06"
 所以过去这些年我们一直在建议说我们是不是可以接受一种理论&#xFF0C;就是说把文化和文明做一点区分&#xFF0C;文化是与生俱来的习惯&#xFF0C;是使不同的民族保持不同面貌的东西&#xFF0C;是不怎么会变化的东西&#x3002;而文明是一种需要学习得来的&#xFF0C;社会群体交往的规则&#xFF0C;是使不同的人群差异越来越少的东西&#xFF0C;是不断进步的&#x3001;是大家遵循的一种交往的理性&#x3002;假定我们能在意识中区分文化和文明&#xFF0C;我们就知道文化没有好坏之别&#xFF0C;文明才有进步和落后的区别&#x3002;如果在这样的意义上来理解&#xFF0C;那么我们就可以既拥抱文明&#xFF0C;又守护文化&#x3002;
 </em></p>
 
-读书摘记：第一部分 &mdash;&mdash; 葛兆光著《宅兹中国：重建有关“中国”的历史论述》，中华书局2011年简体中文版。英文版由Jesse Field和秦方翻译，荷兰Koninklijke Brill出版社2017年出版。关于书名，1963年出土于中国陕西省宝鸡市金台区贾村的何尊内底铸有[铭文](https://zh.wikisource.org/zh-hans/%E4%BD%95%E5%B0%8A%E9%8A%98%E6%96%87)：
+【读书摘记】第一部分 &mdash;&mdash; 葛兆光著《宅兹中国：重建有关“中国”的历史论述》，中华书局2011年简体中文版。英文版由Jesse Field和秦方翻译，荷兰Koninklijke Brill出版社2017年出版。关于书名，1963年出土于中国陕西省宝鸡市金台区贾村的何尊内底铸有[铭文](https://zh.wikisource.org/zh-hans/%E4%BD%95%E5%B0%8A%E9%8A%98%E6%96%87)：
 
 > 余其宅兹中国，自兹乂民。
 
-这是目前发现的最早的“中国”一词的用例。第二部分 &mdash;&mdash; 葛兆光著《何为中国：疆域、民族、文化与历史》，牛津大学出版社2014年繁体中文版。英文版由Michael Gibbs Hill翻译，The Belknap Press of Harvard University Press 2018年出版。
+这是目前发现的最早的“中国”一词的用例。
+
+第二部分 &mdash;&mdash; 葛兆光著《何为中国：疆域、民族、文化与历史》，牛津大学出版社2014年繁体中文版。英文版由Michael Gibbs Hill翻译，The Belknap Press of Harvard University Press 2018年出版。
 
 <!-- excerpt-end -->
-
-![northeast-asia-1850s](/assets/images/northeast-asia.png){:class="img-responsive"}
-<p style="color:gray; font-size:80%;">
-图片来源：Li Narangoa and Robert Cribb, <i>Historical Atlas of Northeast Asia, 1590-2010</i>, Columbia University Press, 2014, pp. 125.
-</p>
 
 ## Table of Contents
 {:.no_toc}
@@ -139,6 +136,12 @@ last_modified_at:   "2023-02-06"
 由于淡化甚至超越民族国家的现实边界和政治领土，隐含了欧洲与日本对于重新界定“中国”的疆域，重新书写中国的“历史”的政治意图。尽管古代王朝以及现代中国，确实因为天朝大国的自大，遗留了“朝贡体制”或“册封体制”的想象，但是，近代以来中国的落后与衰败，不仅导致了日本对于满洲与朝鲜、俄人对于蒙古与回疆、英人对于西藏、法人对于安南的领土要求，也特别容易引发对于“中国”的重新界定。
 
 我们应当看到，首先，与“地中海”不同，在“东海”这个同样依赖海路彼此联系的空间里，尽管有着类似佛教和儒家这样共同尊奉的宗教与思想，但是，却始终缺乏一个类似基督教那样，超越国家（王朝）、皇权（君主）之上，作为彼此认同基础和联系纽带的共同宗教，因此，这个区域很难在国家之外，形成超越国家的文化共同体；其次，与“西域”也不同，“东海”也不是一个各种民族、宗教和语言的边界时常移动，因而成为彼此混融、互相冲突的空间，由于各个民族、宗教和语言大体各守边界，加上它们原本就有一些共享的典籍、文字和宗教，因此，历史学家应当关注的文化变迁，却是这些文化认同基础的崩溃。这倒是西域甚至地中海都没有的历史变化，也正是这一现象的延续，导致了近代东亚各国认同与文化的变迁。
+
+<br />
+![northeast-asia-1850s](/assets/images/northeast-asia.png){:class="img-responsive"}
+<p style="color:gray; font-size:80%;">
+图片来源：Li Narangoa and Robert Cribb, <i>Historical Atlas of Northeast Asia, 1590-2010</i>, Columbia University Press, 2014, pp. 125.
+</p><br />
 
 ## 《何為中國：疆域、民族、文化與歷史》
 
