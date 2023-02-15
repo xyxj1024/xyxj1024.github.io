@@ -57,6 +57,8 @@ There are two versions of `cgroups` in Linux: [`cgroup v1`](https://docs.kernel.
 grep -c cgroup /proc/mounts
 ```
 
+It might be helpful to mention here: `procfs` is a virtual filesystem, usually mounted on `/proc`, that allows the kernel to export internal information to userspace in the form of files. The files do not actually exist on disk, but they can be read through `cat` or `more` and written to with the `>` shell redirector; they can even be assigned permission like real files. Therefore, it is also called a "pseudo-filesystem". The components of the kernel that create these files can therefore say who can read from or write to any file. Directories cannot be written (i.e., no user can add or remove a file or a directory to or from any directory in `/proc`).
+
 Unlike version one, `cgroup v2` has only single hierarchy. Initially, only the root `cgroup` exists to which all processes belong. A child `cgroup` can be created by creating a subdirectory in `/sys/fs/cgroup`:
 
 ```bash
