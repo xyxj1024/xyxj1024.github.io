@@ -150,7 +150,7 @@ Before running the above fork bomb program, open a terminal window and obtain ro
 echo $$
 ```
 
-Write this value into our child `cgroup`&prime;s `cgroup.procs` file. This file should be empty before we modify it. Remember that when writing a PID into the `cgroup.procs` file of certain control group, all threads in the corresponding process are moved into that control group at once. Let's take a look at some files:
+Write this value into our child `cgroup`&apos;s `cgroup.procs` file. This file should be empty before we modify it. Remember that when writing a PID into the `cgroup.procs` file of certain control group, all threads in the corresponding process are moved into that control group at once. Let's take a look at some files:
 
 ```console
 root@xingjian:/sys/fs/cgroup/child# cat cgroup.procs
@@ -270,7 +270,7 @@ It is clear that our fork bomb program was killed by the out-of-memory killer as
 
 The `cgroup2` memory controller also supplies the `memory.high` controller. This allows an administrator to define a memory usage threshold beyond which (1) a "`high`" event, in the `memory.events` file, is triggered, which subsequently (2) signals to the Linux kernel that it should begin aggressively reclaiming memory from the processes in the `cgroup` (though those processes will not be killed).
 
-According to the Linux kernel documentation, each non-root `cgroup` has a "`cgroup.events`" file containing "`populated`" field indicating whether the `cgroup`&prime;s sub-hierarchy has live processes in it. If there is no live process in the `cgroup` and its descendants, its value is zero; otherwise, `1`. `poll` and `inotify` events are triggered when the value changes.
+According to the Linux kernel documentation, each non-root `cgroup` has a "`cgroup.events`" file containing "`populated`" field indicating whether the `cgroup`&apos;s sub-hierarchy has live processes in it. If there is no live process in the `cgroup` and its descendants, its value is zero; otherwise, `1`. `poll` and `inotify` events are triggered when the value changes.
 
 Below is the definition of the `inotify_event` data structure:
 
