@@ -11,7 +11,7 @@ last_modified_at:   "2023-03-10"
 If consciousness is based on language, then it follows that only humans are conscious, and that we became so at some historical epoch after language was evolved.
 </em></p>
 
-【读书摘记】《朱利安·杰恩斯文集》（*The Julian Jaynes Collection*），朱利安·杰恩斯学会2019年英文电子版。部分地方的标点和分段较原文有修改。附脚注以方便阅读。
+【读书摘记】《朱利安·杰恩斯文集》（*The Julian Jaynes Collection*），朱利安·杰恩斯学会2019年英文电子版。部分地方的标点和分段较原文有修改。必要的名词解释以脚注形式作出以方便阅读。
 
 文集收录了朱利安·杰恩斯此前未发表的文稿、讲稿、访谈稿。朱利安·杰恩斯（1920-1997）在其1976年出版的*The Origin of Consciousness in the Breakdown of the Bicameral Mind*一书中提出了“二分心智”理论，这一理论在心理学界颇具争议，批评主要来自遵循行为主义方法论的学者，我们可以看到杰恩斯的讲座中有这样的开场白：“ &hellip; to confess such an involvement with such a taboo subject as consciousness in a world of successful behaviorism was to court its dismissal and scorn”。
 
