@@ -31,3 +31,12 @@ Subjective conscious mind is an analog of what we call the *real* world. It is b
 
 A metaphor in its most general sense is a comparison between two things that already exist. In attempting to describe $$a$$, we say it is like $$b$$ (what in other places I have called respectively the metaphrand and the metaphier). But metaphors are really much more than that. There are associations of $$b$$ that can project back and become the associations of $$a$$, creating a very different $$a$$ than we started with. Metaphor is thus generative. Supposing after puzzling over a problem, I suddenly exclaim that I "see" the solution. On analysis, this statement breaks down into a metaphor where $$a$$ is the sudden solving of the problem, and $$b$$ is seeing some object. I am expressing $$a$$ by saying it is similar to $$b$$. But seeing an object has many associations, such as the space of the external world and the multiplicity of objects of which one is being selected. These associations project back into $$a$$, giving a spatial quality to the act of solving a problem. By this trivial example I mean to indicate the way in which language and metaphor can generate the kind of mind-space and the mental metaphor-objects with which consciousness works.
 {: style="font-family:Gill Sans"}
+
+A theory of consciousness along these lines results in several features that are testable in everyday introspection. These include:
+1. *spatialization*, the quality of things thought on of being spatially separated, even time, where we have to spread out a before and after into a spatial succession;
+2. *excerption*, where we "see" only single aspects or parts of a thing in consciousness at any one time, just as in behavioral attention;
+3. *conciliation*, where we reconcile disparate things consciouscized into a recognizable unity that can be recognized as past experience or future plans;
+4. *the analog 'I,'* the metaphor we have of our volitional selves which can "move about" vicarially in our "imagination," "doing" things that we are not actually doing;
+5. *the metaphor 'me,'* or ourselves as objects;
+6. *narratization*, how our analog 'I's' are always "seeing" our metaphor 'me's' as the main figures in the ongoing spatialized stories of our lives.
+{: style="font-family:Gill Sans"}
