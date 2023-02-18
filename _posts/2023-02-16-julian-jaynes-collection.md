@@ -13,9 +13,11 @@ If consciousness is based on language, then it follows that only humans are cons
 
 【读书摘记】《朱利安·杰恩斯文集》（*The Julian Jaynes Collection*），朱利安·杰恩斯学会2019年英文电子版。部分地方的标点和分段较原文有修改。必要的名词解释以脚注形式作出以方便阅读。
 
-文集收录、整理了一部分朱利安·杰恩斯的文稿、讲稿、访谈稿。朱利安·杰恩斯（1920-1997）在其1976年出版的*The Origin of Consciousness in the Breakdown of the Bicameral Mind*一书中提出了“二分心智”理论，这一理论在心理学界颇具争议，批评主要来自遵循行为主义方法论的学者，我们可以看到杰恩斯的讲座中有这样的开场白：“ &hellip; to confess such an involvement with such a taboo subject as consciousness in a world of successful behaviorism was to court its dismissal and scorn”。
+文集收录、整理了朱利安·杰恩斯的文稿、讲稿、访谈稿共计35篇。朱利安·杰恩斯（1920-1997）在其1976年出版的*The Origin of Consciousness in the Breakdown of the Bicameral Mind*一书中提出了“二分心智”理论，这一理论在心理学界颇具争议，批评主要来自遵循行为主义方法论的学者，我们可以看到杰恩斯的讲座中有这样的开场白：
+> &hellip; to confess such an involvement with such a taboo subject as consciousness in a world of successful behaviorism was to court its dismissal and scorn.
 
-然而正如编者Marcel Kuijsten在序言中所说：“Given the pervasiveness of an emotionally-based hostility toward the unfamiliar, coupled with the tendency to unconsciously form strong opinions based on limited information, we must learn to withhold judgment on new ideas until they can be properly evaluated”。
+然而正如本文集编者、朱利安·杰恩斯学会创始人及执行董事Marcel Kuijsten在序言中所说：
+> Given the pervasiveness of an emotionally-based hostility toward the unfamiliar, coupled with the tendency to unconsciously form strong opinions based on limited information, we must learn to withhold judgment on new ideas until they can be properly evaluated.
 
 <!-- excerpt-end -->
 
@@ -69,15 +71,15 @@ In thinking about the evolution of language, we na&iuml;vely assume that languag
 
 [^2]: This Reed College Humanities 110 [web page](https://www.reed.edu/humanities/110Tech/Iliad.html) is very informative.
 
-[^3]: [aoidoi.org](http://www.aoidoi.org/) - "Aoidoi" is classical Greek for "bards," like Homer, or just "poets."
+[^3]: [aoidoi.org](http://www.aoidoi.org/) - "*Aoidoi*" is classical Greek for "bards," like Homer, or just "poets."
 
-[^4]: Psyche was the goddess of the soul and the wife of Eros (Roman Cupid) god of love. Psyche though was a relatively unusual goddess in the Greek pantheon, for Psyche was not born immortal but was transformed into one.
+[^4]: *Psyche* was the goddess of the soul and the wife of *Eros* (Roman Cupid) god of love. *Psyche* though was a relatively unusual goddess in the Greek pantheon, for *Psyche* was not born immortal but was transformed into one.
 
-[^5]: After Homer, the word is usually is written in its contracted form as *nous*. It is the mind or an act of mind, a thought or a purpose. Whatever Patroclus may do, "the *noos* of Zeus is always more powerful than that of men" (&#8553;&#8549;.688); Nausica&auml; "laid the lash on her mules with *noos*" (6.320), so that her maids and Odysseus could follow her on foot; Zeus reproaches Athena: "Did you not yourself devise that *noos*?" (5.23). Yet the *noos* is not exclusively intellectual. Agamemnon "rejoiced in his *noos*" (8.78); Paris says of Hector that "the *noos* in his chest is fearless" (&#8546;.63). The intellectual meaning is, however, much more prominent. See Jan Bremmer, *The Early Greek Concept of the Soul*, Princeton University Press, 1987, pp. 56-57.
+[^5]: After Homer, the word is usually written in its contracted form as "*nous*". It is the mind or an act of mind, a thought or a purpose. Whatever Patroclus may do, "the *noos* of Zeus is always more powerful than that of men" (&#8553;&#8549;.688); Nausica&auml; "laid the lash on her mules with *noos*" (6.320), so that her maids and Odysseus could follow her on foot; Zeus reproaches Athena: "Did you not yourself devise that *noos*?" (5.23). Yet the *noos* is not exclusively intellectual. Agamemnon "rejoiced in his *noos*" (8.78); Paris says of Hector that "the *noos* in his chest is fearless" (&#8546;.63). The intellectual meaning is, however, much more prominent. See Jan Bremmer, *The Early Greek Concept of the Soul*, Princeton University Press, 1987, pp. 56-57.
 
-[^6]: Oxford Classical Dictionary - Thymos (or thumos), cognate with Indo-European words meaning "smoke," is one of a number of terms in Greek which associate psychological activity with air and breath. In the Homeric poems, thymos is one of a family of terms associated with internal psychological process of thought, emotion, volition, and motivation.
+[^6]: Oxford Classical Dictionary - *Thumos* (or *thymos*), cognate with Indo-European words meaning "smoke," is one of a number of terms in Greek which associate psychological activity with air and breath. In the Homeric poems, *thumos* is one of a family of terms associated with internal psychological process of thought, emotion, volition, and motivation.
 
-[^7]: [kosmossociety.chs.harvard.edu](https://kosmossociety.chs.harvard.edu/core-vocab-phren-phrenes) - Physical localization of the thumos. In modern English we refer to the mind as residing in the brain, and emotion is often referred to in connection with the heart and sometimes the gut; in ancient Greek both functions are referred to as residing in the phrenes which equates to the midriff.
+[^7]: [kosmossociety.chs.harvard.edu](https://kosmossociety.chs.harvard.edu/core-vocab-phren-phrenes) - Physical localization of the *thumos*. In modern English we refer to the mind as residing in the brain, and emotion is often referred to in connection with the heart and sometimes the gut; in ancient Greek both functions are referred to as residing in the *phrenes* which equates to the midriff.
 
 [^8]: While it is recognized that *dike* has several other meanings, such as "custom, law, trial," etc., "justice" is the most common translation. It is largely on the strength of his long praise of *dike* in the *Works and Days* that Hesiod is often considered the first Greek "moralist," though it is sometimes argued that Homer too believed in and portrayed a moral or just universe. See Michael Gagarin, "Dike in the Works and Days," *Classical Philology*, Vol. 68, No. 2 (Apr., 1973), pp. 81-94.
 
@@ -89,4 +91,4 @@ In thinking about the evolution of language, we na&iuml;vely assume that languag
 
 [^12]: The [United States Conference of Catholic Bishops](bible.usccb.org/bible) - Ecclesiastes is an approximate translation into Greek of the Hebrew word "Qoheleth", which is actually a title perhaps meaning "assembler" (of students, listeners) or "collector" (of wisdom sayings). The book comprises an extended reflective essay employing autobiographical narrative, proverbs, parables, and allegories. An almost unrelenting skepticism characterizes the tone or outlook. The issues with which the author deals and the questions he raises are aimed at those who would claim any absolute values in this life, including possessions, fame, success, or pleasure. Wisdom itself is challenged, but folly is condemned.
 
-[^13]: The area where a lesion will cause language comprehension deficit. See J. E. Bogen and G. M. Bogen, "Wernicke's Region&mdash;Where Is It?" *Ann NY Acad Sci* 1976;290:834-843.
+[^13]: The area where a lesion will cause language comprehension deficit. See J. E. Bogen and G. M. Bogen, "Wernicke's Region&mdash;Where Is It?" *Annals of the New York Academy of Sciences*, October 1976, Volume 280, Issue 1, Pages 834-843.
