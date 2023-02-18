@@ -2,7 +2,7 @@
 layout:             post
 title:              "心智起源"
 category:           "Miscellaneous"
-tags:               psychology philosophy western-history
+tags:               psychology language
 permalink:          /posts/julian-jaynes-collection
 last_modified_at:   "2023-02-18"
 ---
@@ -13,7 +13,7 @@ If consciousness is based on language, then it follows that only humans are cons
 
 【读书摘记】《朱利安·杰恩斯文集》（*The Julian Jaynes Collection*），朱利安·杰恩斯学会2019年英文电子版。部分地方的标点和分段较原文有修改。必要的名词解释以脚注形式作出以方便阅读。
 
-文集收录、整理了朱利安·杰恩斯的文稿、讲稿、访谈稿共计35篇。朱利安·杰恩斯（1920-1997）在其1976年出版的*The Origin of Consciousness in the Breakdown of the Bicameral Mind*一书中提出了“二分心智”理论，这一理论在心理学界颇具争议，批评主要来自遵循行为主义方法论的学者，我们可以看到杰恩斯的讲座中有这样的开场白：
+文集收录、整理了朱利安·杰恩斯的文稿、讲稿、访谈稿共计35篇。朱利安·杰恩斯（1920-1997）在其1976年出版的*The Origin of Consciousness in the Breakdown of the Bicameral Mind*一书中提出了“二分心智”理论，结合神经科学、考古学、人类学、古典学等多个领域的研究成果，杰恩斯对人类历史进行了再诠释，尤其强调了语言在人类演化过程中发挥的关键作用。这一理论在心理学界颇具争议，批评主要来自遵循行为主义方法论的学者，我们可以看到杰恩斯的讲座中有这样的开场白：
 > &hellip; to confess such an involvement with such a taboo subject as consciousness in a world of successful behaviorism was to court its dismissal and scorn.
 
 然而正如本文集编者、朱利安·杰恩斯学会创始人及执行董事Marcel Kuijsten在序言中所说：
@@ -89,7 +89,7 @@ Two further developments possibly occurred during this long period I have called
 Just as the stage of modifiers coincided with the making of much superior tools, so the **stage of nouns** for animals coincides with the beginning of drawing animals on the walls of caves or on horns and tools carved from horns. Once animals &mdash;&mdash; particularly those that were hunted &mdash;&mdash; had nouns that could designate them, they had a kind of extra being, one indeed that could be taken far back into the caves and drawn upon its walls. And from this time on the first animal silhouettes develop into the well known cave paintings of bison and reindeer, which I suggest, could only occur after the beginning of life nouns. The fact that such paintings rarely include men drawn with the same life-like similitude may suggest a lack of words for different men. &hellip; Just as life nouns began animal drawings, so nouns for things beget new things: the invention of pottery, of pendants, and ornaments, bone carvings, harpoons, and most important the invention of the barb for harpoons and spearheads. It corresponds perhaps in parts of Europe to the Magdalenian culture. By this time, the brain has the modern language areas. &hellip; We are now in the Mesolithic period, about 10,000 B.C. to 8000 B.C. It is the period of man's adaptation to the modern postglacial environment, keying in to specific environmental situations, to grassland hunting, to life in the forest, to shellfish collecting, or to the exploitation of marine resources combined with terrestrial hunting. Such living is characterized by a much greater stability of population, rather than the mobility of the hunting groups with their large mortality which preceded them. And thus with these more fixed populations, with more fixed relationships, and probably larger numbers in the group, we have the carry-over of nouns into names for individual persons.
 {: style="font-family:Gill Sans"}
 
-(The **Baldwin Effect** in evolutionary theory) When some new ecological pressure or species demand forces individuals to learn a particular thing to survive, and this is repeated generation after generation, there will be a continuous selection for those biologically best able to learn that particular thing. Thus what was purely learned in one millennium can become partly innate in the next.
+The **Baldwin Effect** in evolutionary theory &mdash;&mdash; When some new ecological pressure or species demand forces individuals to learn a particular thing to survive, and this is repeated generation after generation, there will be a continuous selection for those biologically best able to learn that particular thing. Thus what was purely learned in one millennium can become partly innate in the next.
 {: style="font-family:Gill Sans"}
 
 ## Footnotes
