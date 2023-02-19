@@ -26,7 +26,7 @@ struct trie_node {
 
 By storing common prefixes of keys (e.g., in the form of text strings) just once, tries provide a way to reduce redundancy. Consider a tree data structure (e.g., a binary search tree) that is constructed based on the assumption that the keys to be stored are either integers or can be checked in constant time and require a constant space. This time, each node has to store a generic string with unbounded length. The total memory $$S(n)$$ needed to store an $$n$$-node tree will become the sum of all the keys' lengths:
 
-$$\mathbb{E}[S(n)] = \mathbb{E} \big[ \sum\limits_{i = 0}^{n - 1}|k_{i}| \big] = \sum\limits_{i = 0}^{n - 1} \mathbb{E}[k_{i}] \approx \sum\limits_{i = 0}^{n - 1} L = n \cdot L,$$
+$$\mathbb{E}[S(n)] = \mathbb{E} \biggl[ \sum\limits_{i = 0}^{n - 1}|k_{i}| \biggr] = \sum\limits_{i = 0}^{n - 1} \mathbb{E}[k_{i}] \approx \sum\limits_{i = 0}^{n - 1} L = n \cdot L,$$
 
 where $$k_{i}, i = 0, 1, \dots , n - 1$$ are the keys, $$L$$ is the average length of the strings held by the tree. Quite a lot of memory consumption, isn't it?
 
@@ -93,7 +93,7 @@ The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org
 - Grow/shrink, but never rebalanced
 - RCU-safe
 
-He described the radix tree as a "great data structure but really hard to use."
+He described the radix tree as a "great data structure but really hard to use." What does radix trees look like before the advent of XArray?
 
 ## Genradix
 
@@ -113,6 +113,6 @@ IPv6 route lookup
 
 [^2]: See [Linux Weekly News](lwn.net): "Trees I: Radix Trees" by Jonathan Corbet, March 13, 2006.
 
-[^3]: Also, an example from Jonathan Corbet states that addition of an item to a tree has been called "insertion" for decades (since at least 1968), but an "insert" operation does not really describe what happens with a radix tree, especially if an item with the given key is already present there. See [Linux Weekly News](lwn.net): "The XArray Data Structure" by Jonathan Corbet, January 24, 2018.
+[^3]: The video recording is [here](https://archive.org/details/lca2018-The_design_and_implementation_of_the_XArray). In an LWN article, Jonathan Corbet added that addition of an item to a tree has been called "insertion" for decades (since at least 1968), but an "insert" operation does not really describe what happens with a radix tree, especially if an item with the given key is already present there. See [Linux Weekly News](lwn.net): "The XArray Data Structure" by Jonathan Corbet, January 24, 2018.
 
 [^4]: *Examining Linux 2.6 Page-Cache Performance* by Sonny Rao, Dominique Heger, and Steven Pratt, [landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf](https://landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf)
