@@ -7,6 +7,8 @@ permalink:        /posts/linux-plumbing/rbtree
 last_modified_at: "2022-12-30"
 ---
 
+The [previous post]({{ site.baseurl }}/posts/linux-plumbing/radix-tree) gives a broad-brush overview of radix tree data structure in Linux. The red-black tree is another useful API, especially for memory management.
+
 **Definition 1.** A **red-black tree**{: style="color: red"} is a binary search tree which has the following *red-black properties*:
 1. Every node is either red or black.
 2. Every leaf (<code>NULL</code>) is black.
