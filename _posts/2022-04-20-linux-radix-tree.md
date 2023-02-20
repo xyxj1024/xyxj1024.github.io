@@ -8,10 +8,10 @@ last_modified_at: "2023-02-18"
 ---
 
 <p lang="en" class="message"><em>
-On SOSP 2015 History Day, Peter J. Denning in his slides listed six patterns he learned from operating systems research &mdash; there is never certainty; occasionally an insight charts a new direction; technology inflection points may trigger avalanches; searching for what works: building, experimenting, tinkering; always in a social network; theory follows practice.
+On SOSP 2015 History Day, Peter J. Denning in his presentation slides listed six patterns he learned from operating systems research &mdash; there is never certainty; occasionally an insight charts a new direction; technology inflection points may trigger avalanches; searching for what works: building, experimenting, tinkering; always in a social network; theory follows practice.
 </em></p>
 
-This post deals with Linux's **radix tree**{: style="color: red"} API. The most complex and important user of it is the page cache: every time we look up a page in a file, we consult the corresponding radix tree to see if the page is already in the cache. As the first step, our inquiry of radix tree should start with **trie**{: style="color: red"}[^1]. A trie, also known as *prefix tree*, is a binary tree (or generally, a $$k$$-ary tree where $$k$$ is the radix or "branching factor") where the root represents the empty bit sequence and the two children of a node representing sequence $$x$$ represent the extended sequences $$x_{0}$$ and $$x_{1}$$ (or generally, $$x_{0}, x_{1}, \dots , x_{k-1}$$). In this way, a key is not stored at a particular node but is instead represented *bit-by-bit* (or digit-by-digit) along some path. Children of a trie node have a common "prefix" of the key associated with that parent node. A trie node may be defined as follows in C:
+This post deals with Linux's **radix tree**{: style="color: red"} API. The most complex and important user of it is the page cache: every time we look up a page in a file, we consult the corresponding radix tree to see if the page is already in the cache. As the first step, our inquiry of radix tree should start with **trie**{: style="color: red"}[^1]. A trie, also known as *prefix tree*, is a binary tree (or generally, a $$k$$-ary tree where $$k$$ is the *radix* or *branching factor*) where the root represents the empty bit sequence and the two children of a node representing sequence $$x$$ represent the extended sequences $$x_{0}$$ and $$x_{1}$$ (or generally, $$x_{0}, x_{1}, \dots , x_{k-1}$$). In this way, a key is not stored at a particular node but is instead represented *bit-by-bit* (or digit-by-digit) along some path. Children of a trie node have a common "prefix" of the key associated with that parent node. A trie node may be defined as follows in C:
 
 ```c
 #define TRIE_BASE   (2)
@@ -84,16 +84,52 @@ static inline void xa_init_flags(struct xarray *xa, gfp_t flags)
 
 In either case, a `gfp_mask` must be provided to tell the code how memory allocations are to be performed[^2]. Note that the above listings are copied from Linux source code version 6.1.12, which is the latest version at the time of writing.
 
-It surprised me that the radix tree data structure has already been converted to something called "[XArray](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt)." In [this email](https://lkml.iu.edu/hypermail/linux/kernel/1810.2/06430.html), kernel developer Matthew Wilcox introduced XArray for Linux version 4.20:
+It surprised me that something called "[XArray](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt)" is actually behind the radix tree data structure right now. In [this email](https://lkml.iu.edu/hypermail/linux/kernel/1810.2/06430.html), kernel developer Matthew Wilcox introduced XArray ("eXtensible Array") for Linux version 4.20 and explained its advantages over radix tree:
 
 > The XArray provides an improved interface to the radix tree data structure, providing locking as part of the API, specifying GFP flags at allocation time, eliminating preloading, less re-walking the tree, more efficient iterations and not exposing RCU-protected pointers to its users.
 
-The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org/2018-Wilcox-Replacing-the-Radix-Tree.pdf) during the 2018 linux.conf.au Kernel miniconf summarized main characteristics of the Linux kernel's radix tree implementation[^3]:
+Out of curiosity, I checked the `radix-tree.h` file in version 4.10.17 and found the following definitions:
+
+```c
+struct radix_tree_node {
+	unsigned char	shift;			/* Bits remaining in each slot */
+	unsigned char	offset;				/* Slot offset in parent */
+	unsigned char	count;				/* Total entry count */
+	unsigned char	exceptional;		/* Exceptional entry count */
+	struct radix_tree_node *parent;		/* Used when ascending tree */
+	void *private_data;					/* For tree user */
+	union {
+		struct list_head private_list;	/* For tree user */
+		struct rcu_head	rcu_head;		/* Used when freeing node */
+	};
+	void __rcu	*slots[RADIX_TREE_MAP_SIZE];
+	unsigned long	tags[RADIX_TREE_MAX_TAGS][RADIX_TREE_TAG_LONGS];
+};
+
+struct radix_tree_root {
+	gfp_t					gfp_mask;
+	struct radix_tree_node	__rcu *rnode;
+};
+```
+
+where:
+
+```c
+#ifndef RADIX_TREE_MAP_SHIFT
+#define RADIX_TREE_MAP_SHIFT	(CONFIG_BASE_SMALL ? 4 : 6)
+#endif
+
+#define RADIX_TREE_MAP_SIZE	(1UL << RADIX_TREE_MAP_SHIFT)
+```
+
+Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Consequently, a tree of height $$N$$ can contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3].
+
+The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org/2018-Wilcox-Replacing-the-Radix-Tree.pdf) during the 2018 linux.conf.au Kernel miniconf summarized main characteristics of the Linux kernel's radix tree implementation[^4]:
 - Implicit keys (like a trie), but not a bitwise trie
 - Grow/shrink, but never rebalanced
 - RCU-safe
 
-He described the radix tree as a "great data structure but really hard to use." What does radix trees look like before the advent of XArray?
+He described the radix tree as a "great data structure but really hard to use."
 
 ## Genradix
 
@@ -103,7 +139,7 @@ idr, ida, Andrew Morton
 
 assoc_array
 
-[^4]
+[^5]
 
 IPv6 route lookup
 
@@ -113,6 +149,8 @@ IPv6 route lookup
 
 [^2]: See [Linux Weekly News](lwn.net): "Trees I: Radix Trees" by Jonathan Corbet, March 13, 2006.
 
-[^3]: The video recording is [here](https://archive.org/details/lca2018-The_design_and_implementation_of_the_XArray). In an LWN article, Jonathan Corbet added that addition of an item to a tree has been called "insertion" for decades (since at least 1968), but an "insert" operation does not really describe what happens with a radix tree, especially if an item with the given key is already present there. See [Linux Weekly News](lwn.net): "The XArray Data Structure" by Jonathan Corbet, January 24, 2018.
+[^3]: Most users of the radix tree store pointers but `shmem`/`tmpfs` stores swap entries in the same tree. They are marked as exceptional entries to distinguish them from pointers to `struct page`. The internal entry may be a pointer to the next level in the tree, a sibling entry, or an indicator that the entry in this `slot` has been moved to another location in the tree and the lookup should be restarted. Sibling `slots` point directly to another `slot` in the same node. The bottom two bits of the `slot` determine how the remaining bits in the slot are interpreted: `00` (data pointer); `01` (internal entry); `10` (exceptional entry); `11` (unused/reserved).
 
-[^4]: *Examining Linux 2.6 Page-Cache Performance* by Sonny Rao, Dominique Heger, and Steven Pratt, [landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf](https://landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf)
+[^4]: The video recording is [here](https://archive.org/details/lca2018-The_design_and_implementation_of_the_XArray). In an LWN article, Jonathan Corbet added that addition of an item to a tree has been called "insertion" for decades (since at least 1968), but an "insert" operation does not really describe what happens with a radix tree, especially if an item with the given key is already present there. See [Linux Weekly News](lwn.net): "The XArray Data Structure" by Jonathan Corbet, January 24, 2018.
+
+[^5]: *Examining Linux 2.6 Page-Cache Performance* by Sonny Rao, Dominique Heger, and Steven Pratt, [landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf](https://landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf)
