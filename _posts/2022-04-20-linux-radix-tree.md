@@ -63,16 +63,16 @@ performs the initialization at run time, where:
 ```c
 // In: include/linux/xarray.h
 struct xarray {
-	spinlock_t      xa_lock;
-	gfp_t           xa_flags;
-	void __rcu *    xa_head;
+    spinlock_t      xa_lock;
+    gfp_t           xa_flags;
+    void __rcu *    xa_head;
 };
 
 static inline void xa_init_flags(struct xarray *xa, gfp_t flags)
 {
-	spin_lock_init(&xa->xa_lock);
-	xa->xa_flags = flags;
-	xa->xa_head = NULL;
+    spin_lock_init(&xa->xa_lock);
+    xa->xa_flags = flags;
+    xa->xa_head = NULL;
 }
 
 // In: include/linux/radix-tree.h
@@ -92,23 +92,23 @@ Out of curiosity, I checked the `radix-tree.h` file in version 4.10.17 and found
 
 ```c
 struct radix_tree_node {
-	unsigned char	shift;				/* Bits remaining in each slot */
-	unsigned char	offset;				/* Slot offset in parent */
-	unsigned char	count;				/* Total entry count */
-	unsigned char	exceptional;		/* Exceptional entry count */
-	struct radix_tree_node *parent;		/* Used when ascending tree */
-	void *private_data;					/* For tree user */
-	union {
-		struct list_head private_list;	/* For tree user */
-		struct rcu_head	rcu_head;		/* Used when freeing node */
-	};
-	void __rcu	*slots[RADIX_TREE_MAP_SIZE];
-	unsigned long	tags[RADIX_TREE_MAX_TAGS][RADIX_TREE_TAG_LONGS];
+    unsigned char   shift;              /* Bits remaining in each slot */
+    unsigned char   offset;             /* Slot offset in parent */
+    unsigned char   count;              /* Total entry count */
+    unsigned char   exceptional;        /* Exceptional entry count */
+    struct radix_tree_node *parent;     /* Used when ascending tree */
+    void *private_data;                 /* For tree user */
+    union {
+        struct list_head private_list;  /* For tree user */
+        struct rcu_head	rcu_head;       /* Used when freeing node */
+    };
+    void __rcu	*slots[RADIX_TREE_MAP_SIZE];
+    unsigned long	tags[RADIX_TREE_MAX_TAGS][RADIX_TREE_TAG_LONGS];
 };
 
 struct radix_tree_root {
-	gfp_t					gfp_mask;
-	struct radix_tree_node	__rcu *rnode;
+    gfp_t                   gfp_mask;
+    struct radix_tree_node  __rcu *rnode;
 };
 ```
 
