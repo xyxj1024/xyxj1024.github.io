@@ -189,6 +189,12 @@ last_modified_at:   "2023-02-06"
 
 ### 第三章 <small>民族：納「四裔」入「中華」</small>
 
+<br />
+![kunlun](/assets/images/kunlun.jpg){:class="img-responsive"}
+<p style="color:gray; font-size:80%;">
+<a href="https://www.nasa.gov/image-feature/a-portion-of-the-kunlun-mountains-in-southwestern-china">NASA<a>: A portion of the Kunlun Mountains pictured from the International Space Station as it orbited 262 miles above.
+</p><br />
+
 ## 《看澜集》
 
 ### 一九七八 <small>开学琐记 &mdash;&mdash; 回忆1978年的春天</small>

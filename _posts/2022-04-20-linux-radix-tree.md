@@ -11,7 +11,7 @@ last_modified_at: "2023-02-18"
 On SOSP 2015 History Day, Peter J. Denning in his presentation slides listed six patterns he learned from operating systems research &mdash; there is never certainty; occasionally an insight charts a new direction; technology inflection points may trigger avalanches; searching for what works: building, experimenting, tinkering; always in a social network; theory follows practice.
 </em></p>
 
-This post deals with Linux's **radix tree**{: style="color: red"} API. The most complex and important user of it is the page cache: every time we look up a page in a file, we consult the corresponding radix tree to see if the page is already in the cache. As the first step, our inquiry of radix tree should start with **trie**{: style="color: red"}[^1]. A trie, also known as *prefix tree*, is a binary tree (or generally, a $$k$$-ary tree where $$k$$ is the *radix* or *branching factor*) where the root represents the empty bit sequence and the two children of a node representing sequence $$x$$ represent the extended sequences $$x_{0}$$ and $$x_{1}$$ (or generally, $$x_{0}, x_{1}, \dots , x_{k-1}$$). In this way, a key is not stored at a particular node but is instead represented *bit-by-bit* (or digit-by-digit) along some path. Children of a trie node have a common "prefix" of the key associated with that parent node. A trie node may be defined as follows in C:
+This post deals with Linux's **radix tree**{: style="color: red"} API. The most complex and important user of it is the page cache: every time we look up a page in a file, we consult the corresponding radix tree to see if the page is already in the cache. As the first step, our inquiry of radix tree should start with **trie**{: style="color: red"}[^1]. A trie, also known as *prefix tree*, is a binary tree (or generally, a $$k$$-ary tree where $$k$$ is the *radix* or *branching factor*) where the root represents the empty bit sequence and the two children of a node representing sequence $$x$$ represent the extended sequences $$x_{0}$$ and $$x_{1}$$ (or generally, $$x_{0}, x_{1}, \dots , x_{k-1}$$). In this way, a key is not stored at a particular node but is instead represented *bit-by-bit* (or *digit-by-digit*) along some path. Children of a trie node have a common "prefix" of the key associated with that parent node. A trie node may be defined as follows in C:
 
 ```c
 #define TRIE_BASE   (2)
@@ -88,6 +88,8 @@ It surprised me that something called "[XArray](https://www.kernel.org/doc/html/
 
 > The XArray provides an improved interface to the radix tree data structure, providing locking as part of the API, specifying GFP flags at allocation time, eliminating preloading, less re-walking the tree, more efficient iterations and not exposing RCU-protected pointers to its users.
 
+### Outdated Radix Tree API
+
 Out of curiosity, I checked the `radix-tree.h` file in version 4.10.17 and found the following definitions:
 
 ```c
@@ -124,7 +126,7 @@ where:
 
 Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Consequently, a tree of height $$N$$ can contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3].
 
-Each slot is indexed by a portion of an integer key of type `unsigned long`:
+Each slot is indexed by a portion of an integer key of type `unsigned long`.
 
 ```c
 struct radix_tree_iter {
@@ -138,7 +140,7 @@ struct radix_tree_iter {
 };
 ```
 
-The above radix tree iterator works in terms of "chunks" of slots. A chunk is a sub-interval of slots contained within one radix tree leaf node. It is described by a pointer to its first slot and a `struct radix_tree_iter` which holds the chunk's position in the tree and its size. The chunk size is calculated by:
+The radix tree iterator shown above works in terms of "chunks" of slots. A chunk is a sub-interval of slots contained within one radix tree leaf node. It is described by a pointer to its first slot and a `struct radix_tree_iter` which holds the chunk's position in the tree and its size. The chunk size is calculated by:
 
 ```c
 static __always_inline long
@@ -154,6 +156,26 @@ The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org
 - RCU-safe
 
 He described the radix tree as a "great data structure but really hard to use."
+
+### XArray API
+
+Similar to the original radix tree, an XArray interprets each entry (or slot) based on its bottom two bits: `00` (pointer entry); `10` (internal entry); `x1` (value entry or tagged pointer). Most internal entries are pointers to the next node in the XArray, except the following: `0`-`62` (sibling entries); `256` (retry entry); `257` (zero entry). To determine if an entry is a value:
+
+```c
+static inline bool xa_is_value(const void *entry)
+{
+    return (unsigned long)entry & 1;
+}
+```
+
+To determine if an entry is internal:
+
+```c
+static inline bool xa_is_internal(const void *entry)
+{
+    return ((unsigned long)entry & 3) == 2;
+}
+```
 
 ## Genradix
 
