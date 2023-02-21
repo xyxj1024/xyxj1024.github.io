@@ -92,7 +92,7 @@ Out of curiosity, I checked the `radix-tree.h` file in version 4.10.17 and found
 
 ```c
 struct radix_tree_node {
-	unsigned char	shift;			/* Bits remaining in each slot */
+	unsigned char	shift;				/* Bits remaining in each slot */
 	unsigned char	offset;				/* Slot offset in parent */
 	unsigned char	count;				/* Total entry count */
 	unsigned char	exceptional;		/* Exceptional entry count */
@@ -124,6 +124,30 @@ where:
 
 Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Consequently, a tree of height $$N$$ can contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3].
 
+Each slot is indexed by a portion of an integer key of type `unsigned long`:
+
+```c
+struct radix_tree_iter {
+    unsigned long	index;
+    unsigned long	next_index;
+    unsigned long	tags;
+    struct radix_tree_node *node;
+#ifdef CONFIG_RADIX_TREE_MULTIORDER
+    unsigned int	shift;
+#endif
+};
+```
+
+The above radix tree iterator works in terms of "chunks" of slots. A chunk is a sub-interval of slots contained within one radix tree leaf node. It is described by a pointer to its first slot and a `struct radix_tree_iter` which holds the chunk's position in the tree and its size. The chunk size is calculated by:
+
+```c
+static __always_inline long
+radix_tree_chunk_size(struct radix_tree_iter *iter)
+{
+    return (iter->next_index - iter->index) >> iter_shift(iter);
+}
+```
+
 The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org/2018-Wilcox-Replacing-the-Radix-Tree.pdf) during the 2018 linux.conf.au Kernel miniconf summarized main characteristics of the Linux kernel's radix tree implementation[^4]:
 - Implicit keys (like a trie), but not a bitwise trie
 - Grow/shrink, but never rebalanced
@@ -147,9 +171,9 @@ IPv6 route lookup
 
 [^1]: The name *trie* comes from the phrase "information re*trie*val." Despite the etymology, trie is now almost always pronounced like *try* instead of *tree* to avoid confusion with other tree data structures. See [course notes](http://www.cs.yale.edu/homes/aspnes/classes/223/notes.html) written by Dr. James Aspnes from Yale University. Another good source for trie-based data structures is Peter Brass, *Advanced Data Structures*, Cambridge University Press, 2008.
 
-[^2]: See [Linux Weekly News](lwn.net): "Trees I: Radix Trees" by Jonathan Corbet, March 13, 2006.
+[^2]: See [Linux Weekly News](https://www.lwn.net): "Trees I: Radix Trees" by Jonathan Corbet, March 13, 2006.
 
-[^3]: Most users of the radix tree store pointers but `shmem`/`tmpfs` stores swap entries in the same tree. They are marked as exceptional entries to distinguish them from pointers to `struct page`. The internal entry may be a pointer to the next level in the tree, a sibling entry, or an indicator that the entry in this `slot` has been moved to another location in the tree and the lookup should be restarted. Sibling `slots` point directly to another `slot` in the same node. The bottom two bits of the `slot` determine how the remaining bits in the slot are interpreted: `00` (data pointer); `01` (internal entry); `10` (exceptional entry); `11` (unused/reserved).
+[^3]: Most users of the radix tree store pointers but `shmem`/`tmpfs` stores swap entries in the same tree. They are marked as exceptional entries to distinguish them from pointers to `struct page`. The internal entry may be a pointer to the next level in the tree, a sibling entry, or an indicator that the entry in this slot has been moved to another location in the tree and the lookup should be restarted. Sibling slots point directly to another `slot` in the same node. The bottom two bits of the slot determine how the remaining bits in the slot are interpreted: `00` (data pointer); `01` (internal entry); `10` (exceptional entry); `11` (unused/reserved).
 
 [^4]: The video recording is [here](https://archive.org/details/lca2018-The_design_and_implementation_of_the_XArray). In an LWN article, Jonathan Corbet added that addition of an item to a tree has been called "insertion" for decades (since at least 1968), but an "insert" operation does not really describe what happens with a radix tree, especially if an item with the given key is already present there. See [Linux Weekly News](lwn.net): "The XArray Data Structure" by Jonathan Corbet, January 24, 2018.
 
