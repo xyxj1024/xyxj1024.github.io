@@ -125,7 +125,7 @@ If one plots the brain volume of fossil skulls over time, there is evidently a t
 
 [^12]: The [United States Conference of Catholic Bishops](bible.usccb.org/bible) - Ecclesiastes is an approximate translation into Greek of the Hebrew word "Qoheleth", which is actually a title perhaps meaning "assembler" (of students, listeners) or "collector" (of wisdom sayings). The book comprises an extended reflective essay employing autobiographical narrative, proverbs, parables, and allegories. An almost unrelenting skepticism characterizes the tone or outlook. The issues with which the author deals and the questions he raises are aimed at those who would claim any absolute values in this life, including possessions, fame, success, or pleasure. Wisdom itself is challenged, but folly is condemned.
 
-[^13]: The area where a lesion will cause language comprehension deficit. See J. E. Bogen and G. M. Bogen, "Wernicke's Region&mdash;Where Is It?" *Annals of the New York Academy of Sciences*, October 1976, Volume 280, Issue 1, Pages 834-843.
+[^13]: The area where a lesion will cause language comprehension deficit. See J. E. Bogen and G. M. Bogen, "Wernicke's Region &mdash; Where Is It?" *Annals of the New York Academy of Sciences*, October 1976, Volume 280, Issue 1, Pages 834-843.
 
 [^14]: [APA Dictionary of Psychology](https://dictionary.apa.org) - Sequela is a residual effect of a disease, injury or mental condition, often (but not necessarily) in the form of persistent or permanent impairment.
 

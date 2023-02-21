@@ -192,7 +192,7 @@ last_modified_at:   "2023-02-06"
 <br />
 ![kunlun](/assets/images/kunlun.jpg){:class="img-responsive"}
 <p style="color:gray; font-size:80%;">
-<a href="https://www.nasa.gov/image-feature/a-portion-of-the-kunlun-mountains-in-southwestern-china">NASA</a>: A portion of the Kunlun Mountains pictured from the International Space Station as it orbited 262 miles above.
+国际空间站在262英里高空拍摄到的昆仑山画面（图片来源：<a href="https://www.nasa.gov/image-feature/a-portion-of-the-kunlun-mountains-in-southwestern-china">NASA</a>）
 </p><br />
 
 ## 《看澜集》

@@ -855,7 +855,7 @@ Reading at secret = 0x10ce24f02... Unclear: 0x2E='.' score=907  ( second best: 0
 
 [^6]: Fangfei Liu, Yuval Yarom, Qian Ge, Gernot Heiser, Ruby B. Lee, "Last-Level Cache Side-Channel Attacks are Practical," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
 
-[^7]: Gorka Irazoqui, Thomas Eisenbarth, and Berk Sunar, "S&dollar;A: A Shared Cache Attack that Works Across Cores and Defies VM Sandboxing&mdash;and its Application to AES," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
+[^7]: Gorka Irazoqui, Thomas Eisenbarth, and Berk Sunar, "S&dollar;A: A Shared Cache Attack that Works Across Cores and Defies VM Sandboxing &mdash;&mdash; and its Application to AES," In *2015 IEEE Symposium on Security and Privacy*, May 17-21, 2015, San Jose, CA, USA.
 
 [^8]: Yuval Yarom and Katrina Falkner, "Flush+Reload: A High Resolution, Low Noise, L3 Cache Side-Channel Attack," In *Proceedings of the 23rd USENIX Security Symposium*, August 20-22, 2014, San Diego, CA, USA.
 
