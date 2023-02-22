@@ -11,7 +11,9 @@ last_modified_at: "2023-02-18"
 On SOSP 2015 History Day, Peter J. Denning in his presentation slides listed six patterns he learned from operating systems research &mdash; there is never certainty; occasionally an insight charts a new direction; technology inflection points may trigger avalanches; searching for what works: building, experimenting, tinkering; always in a social network; theory follows practice.
 </em></p>
 
-This post deals with Linux's **radix tree**{: style="color: red"} API. The most complex and important user of it is the page cache: every time we look up a page in a file, we consult the corresponding radix tree to see if the page is already in the cache. As the first step, our inquiry of radix tree should start with **trie**{: style="color: red"}[^1]. A trie, also known as *prefix tree*, is a binary tree (or generally, a $$k$$-ary tree where $$k$$ is the *radix* or *branching factor*) where the root represents the empty bit sequence and the two children of a node representing sequence $$x$$ represent the extended sequences $$x_{0}$$ and $$x_{1}$$ (or generally, $$x_{0}, x_{1}, \dots , x_{k-1}$$). In this way, a key is not stored at a particular node but is instead represented *bit-by-bit* (or *digit-by-digit*) along some path. Children of a trie node have a common "prefix" of the key associated with that parent node. A trie node may be defined as follows in C:
+This post digs into Linux's implementation of the **radix tree**{: style="color: red"} API. [This GitBook](https://0xax.gitbook.io/linux-insides/) is absolutely great but covers little about the radix tree. So I decided to set out on my own journey. The most complex and important user of Linux's radix tree API is the **page cache**{: style="color: red"}: every time we look up a page in a file, we consult the corresponding radix tree to see if the page is already in the cache. Besides, both the `proc` pseudo-filesystem and SCTP rely upon a minimalistic version of radix tree called generic radix tree (or `genradix` for short) that allocates one page of entries at a time. `genradix` is not discussed in this post.
+
+As the first step, our inquiry of radix tree should start with **trie**{: style="color: red"}[^1]. A trie, also known as *prefix tree*, is a binary tree (or generally, a $$k$$-ary tree where $$k$$ is the *radix* or *branching factor*) where the root represents the empty bit sequence and the two children of a node representing sequence $$x$$ represent the extended sequences $$x_{0}$$ and $$x_{1}$$ (or generally, $$x_{0}, x_{1}, \dots , x_{k-1}$$). In this way, a key is not stored at a particular node but is instead represented *bit-by-bit* (or *digit-by-digit*) along some path. Children of a trie node have a common "prefix" of the key associated with that parent node. A trie node may be simply defined as follows in C:
 
 ```c
 #define TRIE_BASE   (2)
@@ -82,7 +84,7 @@ static inline void xa_init_flags(struct xarray *xa, gfp_t flags)
 #define INIT_RADIX_TREE(root, mask) xa_init_flags(root, mask)
 ```
 
-In either case, a `gfp_mask` must be provided to tell the code how memory allocations are to be performed[^2]. Note that the above listings are copied from Linux source code version 6.1.12, which is the latest version at the time of writing. A pointer with the `rcu` prefix is RCU-protected, which means that any dereference of it must be covered by `rcu_read_lock()`, `rcu_read_lock_bh()`, `rcu_read_lock_sched()`, or by the appropriate update-side lock.
+In either case, a `gfp_mask` must be provided to tell the code how memory allocations are to be performed[^2]. Note that the above listings are copied from Linux source code version 6.1.12, which is the latest version at the time of writing. A pointer with the `__rcu` prefix is RCU-protected, which means that any dereference of it must be covered by `rcu_read_lock()`, `rcu_read_lock_bh()`, `rcu_read_lock_sched()`, or by the appropriate update-side lock.
 
 It surprised me that something called "[XArray](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt)" is actually behind the radix tree data structure right now. In [this email](https://lkml.iu.edu/hypermail/linux/kernel/1810.2/06430.html), kernel developer Matthew Wilcox introduced XArray ("eXtensible Array") for Linux version 4.20 and explained its advantages over radix tree:
 
@@ -90,7 +92,7 @@ It surprised me that something called "[XArray](https://www.kernel.org/doc/html/
 
 ### Outdated Radix Tree API
 
-Out of curiosity, I checked the `radix-tree.h` file in version 4.10.17 and found the following definitions:
+What does the original radix tree look like? Out of curiosity, I checked the `radix-tree.h` file in version 4.10.17 and found the following definitions:
 
 ```c
 struct radix_tree_node {
@@ -132,7 +134,7 @@ The longest path of the radix tree is defined as:
                                               RADIX_TREE_MAP_SHIFT))
 ```
 
-The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Each slot is indexed by a portion of an integer key of type `unsigned long` as seen in:
+The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Typically, each layer (a node and its siblings) of a radix tree contains `1UL << 6` pointers, that is, the length of the `slots` array is 64. Each slot is indexed by a portion of an integer "key" of type `unsigned long` as seen in:
 
 ```c
 struct radix_tree_iter {
@@ -146,7 +148,7 @@ struct radix_tree_iter {
 };
 ```
 
-Given the available bits in each slot of a node, the maximum index can be calculated by:
+Hereinafter, this "key" is referred to as "index." Given the available bits in each slot of a node, the maximum index can be calculated by:
 
 ```c
 static inline unsigned long shift_maxindex(unsigned int shift)
@@ -246,7 +248,7 @@ radix_tree_chunk_size(struct radix_tree_iter *iter)
 }
 ```
 
-Given a parent node, the following function returns the offset to its descendant and at the same time updates the node pointer that points to the address of that descendant:
+If we are aware of the address of a parent node, the following function returns the offset to its descendant and at the same time updates the node pointer that points to the address of that descendant:
 
 ```c
 static unsigned int
@@ -307,7 +309,7 @@ restart:
 }
 ```
 
-Both the node pointer that points to the address of the parent and the slot pointer that points to the address of the `slots` array are updated.
+Both the node pointer that points to the address of the parent and the slot pointer that points to the address of the `slots` array are updated before returning the node pointer that points to the node associated with the given index.
 
 The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org/2018-Wilcox-Replacing-the-Radix-Tree.pdf) during the 2018 linux.conf.au Kernel miniconf summarized main characteristics of the Linux kernel's radix tree implementation[^4]:
 - Implicit keys (like a trie), but not a bitwise trie
