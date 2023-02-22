@@ -132,7 +132,35 @@ The longest path of the radix tree is defined as:
                                               RADIX_TREE_MAP_SHIFT))
 ```
 
-The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Consequently, a tree of height $$N$$ can contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3]. For debugging, we can print out relevant informtion about a radix tree node:
+The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Given the available bits in each slot of a node, the maximum index can be calculated by:
+
+```c
+static inline unsigned long shift_maxindex(unsigned int shift)
+{
+    return (RADIX_TREE_MAP_SIZE << shift) - 1;
+}
+
+static inline unsigned long node_maxindex(struct radix_tree_node *node)
+{
+    return shift_maxindex(node->shift);
+}
+```
+
+A tree of height $$N$$ may contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3]. Each slot is indexed by a portion of an integer key of type `unsigned long` as seen in:
+
+```c
+struct radix_tree_iter {
+    unsigned long               index;
+    unsigned long               next_index;
+    unsigned long               tags;
+    struct radix_tree_node *    node;
+#ifdef CONFIG_RADIX_TREE_MULTIORDER
+    unsigned int                shift;
+#endif
+};
+```
+
+For debugging, we can print out relevant informtion about a radix tree node:
 
 ```c
 #ifndef __KERNEL__
@@ -180,21 +208,35 @@ static void radix_tree_dump(struct radix_tree_root *root)
 #endif
 ```
 
-Each slot is indexed by a portion of an integer key of type `unsigned long`.
+Counting the number of items held by a given node is straightforward:
 
 ```c
-struct radix_tree_iter {
-    unsigned long               index;
-    unsigned long               next_index;
-    unsigned long               tags;
-    struct radix_tree_node *    node;
+static inline unsigned long
+get_slot_offset(struct radix_tree_node *parent, void **slot)
+{
+    return slot - parent->slots;
+}
+
+static inline int
+slot_count(struct radix_tree_node *node, void **slot)
+{
+    int n = 1;
 #ifdef CONFIG_RADIX_TREE_MULTIORDER
-    unsigned int                shift;
+    void *ptr = node_to_entry(slot);
+    unsigned offset = get_slot_offset(node, slot);
+    int i;
+
+    for (i = 1; offset + i < RADIX_TREE_MAP_SIZE; i++) {
+        if (node->slots[offset + i] != ptr)
+            break;
+        n++;
+    }
 #endif
-};
+    return n;
+}
 ```
 
-The radix tree iterator shown above works in terms of "chunks" of slots. A chunk is a sub-interval of slots contained within one radix tree leaf node. It is described by a pointer to its first slot and a `struct radix_tree_iter` which holds the chunk's position in the tree and its size. The chunk size is calculated by:
+A radix tree iterator (the `radix_tree_iter` structure shown above) works in terms of "chunks" of slots. A chunk is a sub-interval of slots contained within one radix tree leaf node. It is described by a pointer to its first slot and a `struct radix_tree_iter` which holds the chunk's position in the tree and its size. The chunk size is calculated by:
 
 ```c
 static __always_inline long
@@ -203,6 +245,69 @@ radix_tree_chunk_size(struct radix_tree_iter *iter)
     return (iter->next_index - iter->index) >> iter_shift(iter);
 }
 ```
+
+Given a radix tree node, the following function returns the offset to its descendant and at the same time updates the node pointer that points to the address of that descendant:
+
+```c
+static unsigned int
+radix_tree_descend(struct radix_tree_node *parent,
+                   struct radix_tree_node **nodep,
+                   unsigned long index)
+{
+    unsigned int offset = (index >> parent->shift) & RADIX_TREE_MAP_MASK;
+    void **entry = rcu_dereference_raw(parent->slots[offset]);
+
+#ifdef CONFIG_RADIX_TREE_MULTIORDER
+    if (radix_tree_is_internal_node(entry)) {
+        if (is_sibling_entry(parent, entry)) {
+            void **sibentry = (void **) entry_to_node(entry);
+            offset = get_slot_offset(parent, sibentry);
+            entry = rcu_dereference_raw(*sibentry);
+        }
+    }
+#endif
+
+    *nodep = (void *)entry;
+    return offset;
+}
+```
+
+This is used to perform tree lookup:
+
+```c
+void *__radix_tree_lookup(struct radix_tree_root *root, unsigned long index,
+                          struct radix_tree_node **nodep, void ***slotp)
+{
+    struct radix_tree_node *node, *parent;
+    unsigned long maxindex;
+    void **slot;
+
+restart:
+    parent = NULL;
+    slot = (void **)&root->rnode;
+    radix_tree_load_root(root, &node, &maxindex);
+    if (index > maxindex)
+        return NULL;
+
+    while (radix_tree_is_internal_node(node)) {
+        unsigned offset;
+
+        if (node == RADIX_TREE_RETRY)
+            goto restart;
+        parent = entry_to_node(node);
+        offset = radix_tree_descend(parent, &node, index);
+        slot = parent->slots + offset;
+    }
+
+    if (nodep)
+        *nodep = parent;
+    if (slotp)
+        *slotp = slot;
+    return node;
+}
+```
+
+Both the node pointer that points to the address of the parent and the slot pointer that points to the address of the `slots` array are updated.
 
 The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org/2018-Wilcox-Replacing-the-Radix-Tree.pdf) during the 2018 linux.conf.au Kernel miniconf summarized main characteristics of the Linux kernel's radix tree implementation[^4]:
 - Implicit keys (like a trie), but not a bitwise trie
