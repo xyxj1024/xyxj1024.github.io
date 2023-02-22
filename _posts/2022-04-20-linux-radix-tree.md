@@ -338,8 +338,6 @@ static inline bool xa_is_internal(const void *entry)
 }
 ```
 
-## Genradix
-
 ## Integer ID Management
 
 idr, ida, Andrew Morton

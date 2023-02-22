@@ -87,7 +87,7 @@ In the thirty years between 1865 and 1895 some $$90$$ companies were at one time
 &hellip; Economic modernization in China prior to 1895 hardly extended beyond the treaty ports. Even in the treaty ports modern industry was restricted to those fields ancillary to the China trade &mdash; shipbuilding and processing of exports &mdash; while foreign participation in manufacturing industry was hindered by the difficulty of importing machinery over the protests of officials and the desire of the more progressive Chinese to keep modern-style companies in wholly Chinese hands.
 {: style="font-family:Gill Sans"}
 
-## 中国货币系统的主要特征
+## 第一章 中国货币系统的主要特征
 
 The confusions by which the Chinese monetary system appears to have been characterized are of two general kinds, those common to all metallic monetary systems and those peculiar to the Chinese.
 {: style="font-family:Gill Sans"}
@@ -175,7 +175,9 @@ Governments in premodern times generally found it difficult to enforce their cur
 In the traditional system the Chinese government undertook responsibility only for the coining of copper. Silver circulated in bullion form until the introduction through foreign trade of the Spanish dollar. Typical of the Chinese monetary system, therefore, was the existence of a silver coinage over which China itself had no control, the supplies of which depended upon the policies of foreign governments, especially of Mexico. The design and sometimes the content of dollar coins varied with a change of reigns, the need for currency reform in the issuing country, or a change of government in the South American republics. The French occupation of Mexico, for example, resulted in changes in the design of the Mexican dollar. The new "Eagle dollar" was assayed officially in Shanghai and found $$1.5\%$$ better than the old, and was then accepted by the Customs in 1872.
 {: style="font-family:Gill Sans"}
 
-## 现金部门
+## 第二章 现金部门
+
+
 
 ## 脚注
 
