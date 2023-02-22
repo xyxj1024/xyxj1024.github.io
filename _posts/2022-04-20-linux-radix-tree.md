@@ -124,18 +124,72 @@ where:
 #define RADIX_TREE_MAP_SIZE     (1UL << RADIX_TREE_MAP_SHIFT)
 ```
 
-Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Consequently, a tree of height $$N$$ can contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3].
+The longest path of the radix tree is defined as:
+
+```c
+#define RADIX_TREE_INDEX_BITS   (8 /* CHAR_BIT */ * sizeof(unsigned long))
+#define RADIX_TREE_MAX_PATH     (DIV_ROUND_UP(RADIX_TREE_INDEX_BITS, \
+                                              RADIX_TREE_MAP_SHIFT))
+```
+
+The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Consequently, a tree of height $$N$$ can contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3]. For debugging, we can print out relevant informtion about a radix tree node:
+
+```c
+#ifndef __KERNEL__
+static void dump_node(struct radix_tree_node *node, unsigned long index)
+{
+    unsigned long i;
+
+    pr_debug("radix node: %p offset %d indices %lu-%lu parent %p tags %lx %lx %lx shift %d count %d exceptional %d\n",
+        node, node->offset, index, index | node_maxindex(node),
+        node->parent,
+        node->tags[0][0], node->tags[1][0], node->tags[2][0],
+        node->shift, node->count, node->exceptional);
+
+    for (i = 0; i < RADIX_TREE_MAP_SIZE; i++) {
+        unsigned long first = index | (i << node->shift);
+        unsigned long last = first | ((1UL << node->shift) - 1);
+        void *entry = node->slots[i];
+        if (!entry)
+            continue;
+        if (entry == RADIX_TREE_RETRY) {
+            pr_debug("radix retry offset %ld indices %lu-%lu parent %p\n",
+                            i, first, last, node);
+		} else if (!radix_tree_is_internal_node(entry)) {
+            pr_debug("radix entry %p offset %ld indices %lu-%lu parent %p\n",
+                            entry, i, first, last, node);
+		} else if (is_sibling_entry(node, entry)) {
+            pr_debug("radix sblng %p offset %ld indices %lu-%lu parent %p val %p\n",
+                            entry, i, first, last, node,
+                            *(void **)entry_to_node(entry));
+		} else {
+            dump_node(entry_to_node(entry), first);
+		}
+	}
+}
+
+static void radix_tree_dump(struct radix_tree_root *root)
+{
+    pr_debug("radix root: %p rnode %p tags %x\n",
+                    root, root->rnode,
+                    root->gfp_mask >> __GFP_BITS_SHIFT);
+    if (!radix_tree_is_internal_node(root->rnode))
+        return;
+    dump_node(entry_to_node(root->rnode), 0);
+}
+#endif
+```
 
 Each slot is indexed by a portion of an integer key of type `unsigned long`.
 
 ```c
 struct radix_tree_iter {
-    unsigned long	            index;
-    unsigned long	            next_index;
-    unsigned long	            tags;
+    unsigned long               index;
+    unsigned long               next_index;
+    unsigned long               tags;
     struct radix_tree_node *    node;
 #ifdef CONFIG_RADIX_TREE_MULTIORDER
-    unsigned int	            shift;
+    unsigned int                shift;
 #endif
 };
 ```
