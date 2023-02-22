@@ -132,21 +132,7 @@ The longest path of the radix tree is defined as:
                                               RADIX_TREE_MAP_SHIFT))
 ```
 
-The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Given the available bits in each slot of a node, the maximum index can be calculated by:
-
-```c
-static inline unsigned long shift_maxindex(unsigned int shift)
-{
-    return (RADIX_TREE_MAP_SIZE << shift) - 1;
-}
-
-static inline unsigned long node_maxindex(struct radix_tree_node *node)
-{
-    return shift_maxindex(node->shift);
-}
-```
-
-A tree of height $$N$$ may contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3]. Each slot is indexed by a portion of an integer key of type `unsigned long` as seen in:
+The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Each slot is indexed by a portion of an integer key of type `unsigned long` as seen in:
 
 ```c
 struct radix_tree_iter {
@@ -160,7 +146,21 @@ struct radix_tree_iter {
 };
 ```
 
-For debugging, we can print out relevant informtion about a radix tree node:
+Given the available bits in each slot of a node, the maximum index can be calculated by:
+
+```c
+static inline unsigned long shift_maxindex(unsigned int shift)
+{
+    return (RADIX_TREE_MAP_SIZE << shift) - 1;
+}
+
+static inline unsigned long node_maxindex(struct radix_tree_node *node)
+{
+    return shift_maxindex(node->shift);
+}
+```
+
+A tree of height $$N$$ may contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3]. For debugging, we can print out relevant informtion about a radix tree node:
 
 ```c
 #ifndef __KERNEL__
@@ -246,7 +246,7 @@ radix_tree_chunk_size(struct radix_tree_iter *iter)
 }
 ```
 
-Given a radix tree node, the following function returns the offset to its descendant and at the same time updates the node pointer that points to the address of that descendant:
+Given a parent node, the following function returns the offset to its descendant and at the same time updates the node pointer that points to the address of that descendant:
 
 ```c
 static unsigned int
@@ -272,7 +272,7 @@ radix_tree_descend(struct radix_tree_node *parent,
 }
 ```
 
-This is used to perform tree lookup:
+This `radix_tree_descend` function is then used to perform tree lookup:
 
 ```c
 void *__radix_tree_lookup(struct radix_tree_root *root, unsigned long index,
