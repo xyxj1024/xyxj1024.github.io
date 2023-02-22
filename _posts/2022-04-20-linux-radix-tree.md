@@ -17,8 +17,8 @@ This post deals with Linux's **radix tree**{: style="color: red"} API. The most 
 #define TRIE_BASE   (2)
 
 struct trie_node {
-    char *key;
-    struct trie_node *children[TRIE_BASE];
+    char *              key;
+    struct trie_node *  children[TRIE_BASE];
 };
 ```
 
@@ -76,13 +76,13 @@ static inline void xa_init_flags(struct xarray *xa, gfp_t flags)
 }
 
 // In: include/linux/radix-tree.h
-#define radix_tree_root		xarray
-#define radix_tree_node		xa_node
+#define radix_tree_root             xarray
+#define radix_tree_node             xa_node
 
 #define INIT_RADIX_TREE(root, mask) xa_init_flags(root, mask)
 ```
 
-In either case, a `gfp_mask` must be provided to tell the code how memory allocations are to be performed[^2]. Note that the above listings are copied from Linux source code version 6.1.12, which is the latest version at the time of writing.
+In either case, a `gfp_mask` must be provided to tell the code how memory allocations are to be performed[^2]. Note that the above listings are copied from Linux source code version 6.1.12, which is the latest version at the time of writing. A pointer with the `rcu` prefix is RCU-protected, which means that any dereference of it must be covered by `rcu_read_lock()`, `rcu_read_lock_bh()`, `rcu_read_lock_sched()`, or by the appropriate update-side lock.
 
 It surprised me that something called "[XArray](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt)" is actually behind the radix tree data structure right now. In [this email](https://lkml.iu.edu/hypermail/linux/kernel/1810.2/06430.html), kernel developer Matthew Wilcox introduced XArray ("eXtensible Array") for Linux version 4.20 and explained its advantages over radix tree:
 
@@ -94,23 +94,23 @@ Out of curiosity, I checked the `radix-tree.h` file in version 4.10.17 and found
 
 ```c
 struct radix_tree_node {
-    unsigned char   shift;              /* Bits remaining in each slot */
-    unsigned char   offset;             /* Slot offset in parent */
-    unsigned char   count;              /* Total entry count */
-    unsigned char   exceptional;        /* Exceptional entry count */
-    struct radix_tree_node *parent;     /* Used when ascending tree */
-    void *private_data;                 /* For tree user */
+    unsigned char               shift;          /* Bits remaining in each slot */
+    unsigned char               offset;         /* Slot offset in parent */
+    unsigned char               count;          /* Total entry count */
+    unsigned char               exceptional;    /* Exceptional entry count */
+    struct radix_tree_node *    parent;         /* Used when ascending tree */
+    void *                      private_data;   /* For tree user */
     union {
-        struct list_head private_list;  /* For tree user */
-        struct rcu_head	rcu_head;       /* Used when freeing node */
+        struct list_head        private_list;   /* For tree user */
+        struct rcu_head         rcu_head;       /* Used when freeing node */
     };
-    void __rcu	*slots[RADIX_TREE_MAP_SIZE];
-    unsigned long	tags[RADIX_TREE_MAX_TAGS][RADIX_TREE_TAG_LONGS];
+    void __rcu *                slots[RADIX_TREE_MAP_SIZE];
+    unsigned long               tags[RADIX_TREE_MAX_TAGS][RADIX_TREE_TAG_LONGS];
 };
 
 struct radix_tree_root {
-    gfp_t                   gfp_mask;
-    struct radix_tree_node  __rcu *rnode;
+    gfp_t                           gfp_mask;
+    struct radix_tree_node __rcu *  rnode;
 };
 ```
 
@@ -121,7 +121,7 @@ where:
 #define RADIX_TREE_MAP_SHIFT	(CONFIG_BASE_SMALL ? 4 : 6)
 #endif
 
-#define RADIX_TREE_MAP_SIZE	(1UL << RADIX_TREE_MAP_SHIFT)
+#define RADIX_TREE_MAP_SIZE     (1UL << RADIX_TREE_MAP_SHIFT)
 ```
 
 Each layer of a radix tree contains 64 pointers (i.e., the `slots` array). Consequently, a tree of height $$N$$ can contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3].
@@ -130,12 +130,12 @@ Each slot is indexed by a portion of an integer key of type `unsigned long`.
 
 ```c
 struct radix_tree_iter {
-    unsigned long	index;
-    unsigned long	next_index;
-    unsigned long	tags;
-    struct radix_tree_node *node;
+    unsigned long	            index;
+    unsigned long	            next_index;
+    unsigned long	            tags;
+    struct radix_tree_node *    node;
 #ifdef CONFIG_RADIX_TREE_MULTIORDER
-    unsigned int	shift;
+    unsigned int	            shift;
 #endif
 };
 ```
