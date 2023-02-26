@@ -2,7 +2,7 @@
 layout:             post
 title:              "周其仁货币评论"
 category:           "Economics, Finance, Political Economy"
-tags:               macroeconomics monetary-policy China
+tags:               Chinese-economy macroeconomics monetary-policy
 permalink:          /posts/zhou-qiren-monetary-policy
 last_modified_at:   "2023-01-29"
 ---
