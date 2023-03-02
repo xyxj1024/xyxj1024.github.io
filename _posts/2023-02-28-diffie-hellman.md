@@ -17,19 +17,19 @@ permalink:          /posts/diffie-hellman
 
 ## Algebraic Structures Refresher
 
-**Definition 1.** A **group** is a 2-tuple $$(G, \cdot)$$, where $$G$$ is a set and $$\cdot$$ is a binary operation that defines an associative multiplication map $$G \times G \rightarrow G$$ (written $$g \cdot h$$)[^1] such that there is an identity element $$e \in G$$ (i.e., $$e \cdot g = g \cdot e = g$$ for all $$g \in G$$) and, for every element $$g \in G$$, in inverse element $$g^{-1}$$ satisfying $$g \cdot g^{-1} = e = g^{-1} \cdot g$$. A group is *Abelian* if the operation $$\cdot$$ is commutative, that is, if $$g \cdot h = h \cdot g$$ for all $$g, h \in G$$. A group $$G$$ is called *finite* if $$G$$ is a finite set.
+**Definition 1.** A **group** is a 2-tuple $$(G, \times)$$, where $$G$$ is a set and $$\times$$ is a binary operation that defines an associative multiplication map $$G \times G \rightarrow G$$[^1] such that there is an identity element $$e \in G$$ (i.e., $$e \times g = g \times e = g$$ for all $$g \in G$$) and, for every element $$g \in G$$, in inverse element $$g^{-1}$$ satisfying $$g \times g^{-1} = e = g^{-1} \times g$$. A group is *Abelian* if the operation $$\times$$ is commutative, that is, if $$g \times h = h \times g$$ for all $$g, h \in G$$. A group $$G$$ is called *finite* if $$G$$ is a finite set.
 
-For example, the group $$\mathbb{Z}_{n}$$ consists of the elements $$\{ 0, 1, 2, \dots , n - 1 \}$$ with addition $$\mod n$$ as the operation. If $$G$$ is a group, $$g^{n}$$ is defined for every $$g \in G$$ and every integer $$n$$.
+For example, the group $$\mathbb{Z}_{n}$$ consists of the elements $$\{ 0, 1, 2, \dots , n - 1 \}$$ with addition$$\mod n$$ as the operation. If $$G$$ is a group, $$g^{n}$$ is defined for every $$g \in G$$ and every integer $$n$$.
 
 **Definition 2.** Let $$n > 1$$ be a fixed positive integer. For each integer $$x$$, the congruence classes modulo $$n$$, denoted by $$[x]_{n}$$, is defined as:
 
-$$[x]_{n} = \{ k \in \mathbb{Z} : k \equiv x \pmod{n} \}.$$
+$$[x]_{n} = \left\{ k \in \mathbb{Z} : k \equiv x \pmod{n} \right\}.$$
 
 There are altogether $$n$$ such congruence classes. Together these $$n$$ congruence classes constitute $$\mathbb{Z} / n \mathbb{Z}$$:
 
 $$\mathbb{Z} / n \mathbb{Z} = \{ [x]_{n} : x \in \mathbb{Z} \}.$$
 
-This is the quotient set of $$\mathbb{Z}$$ by the congruence relation modulo $$n$$.
+This is the **quotient set of $$\mathbb{Z}$$ by the congruence relation modulo $$n$$**.
 
 **Definition 3.** Let $$G$$ be a group and let $$g \in G$$. The **order** of $$G$$ is its cardinality $$\lvert G \rvert$$. The order of $$g$$ in $$G$$ is the smallest positive integer $$n$$ such that $$g^{n} = e$$ provided that such an integer exists. If no such positive integer $$n$$ exists, then the order of $$g$$ is infinite.
 
@@ -48,18 +48,20 @@ with $$\lvert \langle g \rangle \rvert = n$$. In particular, for $$k \in \mathbb
 
 If $$g$$ is a group element of order $$r$$, then one needs at least $$\log_{2}(r)$$ bits to represent an arbitrary element of $$\langle g \rangle$$[^2].
 
-**Definition 5.** A **ring** is a 3-tuple $$(R, +, \cdot)$$, where $$R$$ is a set and $$+, \cdot$$ are binary operations satisfying the following properties:
+**Definition 5.** A **ring** is a 3-tuple $$(R, +, \times)$$, where $$R$$ is a set and $$+, \times$$ are binary operations satisfying the following properties:
 - $$(R, +)$$ is an Abelian group with identity element $$0$$;
-- (*associativity*) For all $$a, b, c \in R$$, $$(a \cdot b) \cdot c = a \cdot (b \cdot c)$$;
-- (*distributivity*) For all $$a, b, c \in R$$, $$a \cdot (b + c) = a \cdot b + a \cdot c$$ and $$(b + c) \cdot a = b \cdot a + c \cdot a$$.
+- (*associativity*) For all $$a, b, c \in R$$, $$(a \times b) \times c = a \times (b \times c)$$;
+- (*distributivity*) For all $$a, b, c \in R$$, $$a \times (b + c) = a \times b + a \times c$$ and $$(b + c) \times a = b \times a + c \times a$$.
 
-**Definition 6.** A **field** is a ring such that $$(R \ \{0\}, \cdot)$$ is an Abelian group with identity element $$1$$, and $$1 \not = 0$$.
+**Definition 6.** A **field** is a ring such that $$(R \ \{0\}, \times)$$ is an Abelian group with identity element $$1$$, and $$1 \not = 0$$.
 
-The multiplicaitve group or group of units of a ring $$R$$, denoted by $$R^{\times}$$, is the set of elements of $$R$$ with multiplicative inverses, together with multiplication. A field is therefore a ring for which the multiplicative group is as large as possible. $$\mathbb{Z} / n \mathbb{Z}$$ is a commutative ring with units, $$[1]_{n}$$ being the multiplicative identity. The multiplicative group of the ring $$\mathbb{Z} / n \mathbb{Z}$$ is often written succinctly as $$(\mathbb{Z} / n \mathbb{Z})^{\times}$$, which contains precisely the numbers between $$1$$ and $$n$$ that are coprime to $$n$$.
+**Definition 7.** The **multiplicaitve group** or group of units of a ring $$R$$, denoted by $$R^{\times}$$, is the set of elements of $$R$$ with multiplicative inverses, together with multiplication.
+
+A field is therefore a ring for which the multiplicative group is as large as possible. $$\mathbb{Z} / n \mathbb{Z}$$ is a commutative ring with units, $$[1]_{n}$$ being the multiplicative identity. The multiplicative group of the ring $$\mathbb{Z} / n \mathbb{Z}$$ is often written succinctly as $$(\mathbb{Z} / n \mathbb{Z})^{\times}$$, which contains precisely the numbers between $$1$$ and $$n$$ that are coprime to $$n$$.
 
 ## The Discrete Logarithm Problem (DLP)
 
-**Definition 7.** In its most standard form, the **discrete logarithm problem** in a finite group $$G$$ can be stated as follows: Given $$g \in G$$ and $$h \in \langle g \rangle$$, find the least positive integer $$x$$ such that $$g^{x} = h$$. In additive notation, this means $$xg = h$$[^3]. In either case, we call $$x$$ the discrete logarithm of $$h$$ with respect to the base $$g$$ and denote it $$\log_{g}h$$[^4].
+**Definition 8.** In its most standard form, the **discrete logarithm problem** in a finite group $$G$$ can be stated as follows: Given $$g \in G$$ and $$h \in \langle g \rangle$$, find the least positive integer $$x$$ such that $$g^{x} = h$$. In additive notation, this means $$xg = h$$[^3]. In either case, we call $$x$$ the discrete logarithm of $$h$$ with respect to the base $$g$$ and denote it $$\log_{g}h$$[^4].
 
 For efficient public key cryptography based on discrete logarithms, one would like to:
 - have groups for which computing $$g^{n}$$ is as fast as possible;
@@ -164,7 +166,7 @@ print(f"Flag: {long_to_bytes(m).decode()}")
 
 ## Footnotes
 
-[^1]: $$G$$ is said to be *closed* under the $$\cdot$$ operation. Associativity can be defined as the property of $$a \cdot (b \cdot c) = (a \cdot b) \cdot c$$ for all $$a, b, c \in G$$.
+[^1]: $$G$$ is said to be *closed* under the $$\times$$ operation. Associativity can be defined as the property of $$a \times (b \times c) = (a \times b) \times c$$ for all $$a, b, c \in G$$.
 
 [^2]: See [Dr. Steven Galbraith's cryptography book](https://www.math.auckland.ac.nz/~sgal018/crypto-book/crypto-book.html).
 
