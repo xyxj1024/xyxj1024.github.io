@@ -19,11 +19,11 @@ permalink:          /posts/diffie-hellman
 
 **Definition 1.** A **group** is a 2-tuple $$(G, \times)$$, where $$G$$ is a set and $$\times$$ is a binary operation that defines an associative multiplication map $$G \times G \rightarrow G$$[^1] such that there is an identity element $$e \in G$$ (i.e., $$e \times g = g \times e = g$$ for all $$g \in G$$) and, for every element $$g \in G$$, in inverse element $$g^{-1}$$ satisfying $$g \times g^{-1} = e = g^{-1} \times g$$. A group is *Abelian* if the operation $$\times$$ is commutative, that is, if $$g \times h = h \times g$$ for all $$g, h \in G$$. A group $$G$$ is called *finite* if $$G$$ is a finite set.
 
-For example, the group $$\mathbb{Z}_{n}$$ consists of the elements $$\{ 0, 1, 2, \dots , n - 1 \}$$ with addition$$\mod n$$ as the operation. If $$G$$ is a group, $$g^{n}$$ is defined for every $$g \in G$$ and every integer $$n$$.
+For example, the group $$\mathbb{Z}_{n}$$ consists of the elements $$\{ 0, 1, 2, \dots , n - 1 \}$$ with addition $$\bmod{n}$$ as the operation. If $$G$$ is a group, $$g^{n}$$ is defined for every $$g \in G$$ and every integer $$n$$.
 
 **Definition 2.** Let $$n > 1$$ be a fixed positive integer. For each integer $$x$$, the congruence classes modulo $$n$$, denoted by $$[x]_{n}$$, is defined as:
 
-$$[x]_{n} = \left\{ k \in \mathbb{Z} : k \equiv x \pmod{n} \right\}.$$
+$$[x]_{n} = \left\{ k \in \mathbb{Z} : k \equiv x \bmod{n} \right\}.$$
 
 There are altogether $$n$$ such congruence classes. Together these $$n$$ congruence classes constitute $$\mathbb{Z} / n \mathbb{Z}$$:
 
@@ -38,7 +38,7 @@ This is the **quotient set of $$\mathbb{Z}$$ by the congruence relation modulo $
 **Theorem 4.1** Let $$G$$ be a group and let $$g \in G$$. Then we have:
 1. $$\langle g \rangle = \{ g^{k} \mid k \in \mathbb{Z} \}$$;
 2. If $$\lvert g \rvert = \infty$$, then the elements $$g^{k}, k \in \mathbb{Z}$$ are all distinct, $$\lvert \langle g \rangle \rvert = \infty$$;
-3. If $$\lvert g \rvert = n$$, then for $$k, l \in \mathbb{Z}$$, $$g^{k} = g^{l}$$ is equivalent to $$k = l \pmod{n}$$, and
+3. If $$\lvert g \rvert = n$$, then for $$k, l \in \mathbb{Z}$$, $$g^{k} = g^{l}$$ is equivalent to $$k = l \bmod{n}$$, and
 
 $$\langle g \rangle = \{ g^{k} \mid k \in \mathbb{Z} \} = \{ e, g, g^{2}, \dots , g^{n - 1} \}$$
 
@@ -63,10 +63,16 @@ A field is therefore a ring for which the multiplicative group is as large as po
 
 **Definition 8.** In its most standard form, the **discrete logarithm problem** in a finite group $$G$$ can be stated as follows: Given $$g \in G$$ and $$h \in \langle g \rangle$$, find the least positive integer $$x$$ such that $$g^{x} = h$$. In additive notation, this means $$xg = h$$[^3]. In either case, we call $$x$$ the discrete logarithm of $$h$$ with respect to the base $$g$$ and denote it $$\log_{g}h$$[^4].
 
-For efficient public key cryptography based on discrete logarithms, one would like to:
+While the DLP is generally considered a "hard problem," its difficulty really depends not on the order of the group (or its structure)[^5], but on how the group is explicitly represented. Every group of prime order $$p$$ is isomorphic to $$\mathbb{Z} / p \mathbb{Z}$$; the computing the discrete logarithm amounts to computing this isomorphism.
+
+The DLP is known to be difficult in two types of groups:
+1. The multiplicative group of integers modulo prime $$p$$, $$\mathbb{Z}_{p}^{\times}$$, and
+2. The additive group of elliptic curves defined over finite fields.
+
+If the DLP is difficult in a given group, we can use it to implement several public key cryptographic algorithms, for example, Diffie-Hellman key exchange protocol, ElGamal public key encryption protocol, and the Digital Signature Algorithm. For efficient public key cryptography based on discrete logarithms, one would like to:
 - have groups for which computing $$g^{n}$$ is as fast as possible;
 - have groups for which the DLP is (at least conjecturally) as hard as possible;
-- the representation of group elements is as small as possible;
+- the representation of group elements is as small as possible.
 
 ### "discrete log" from PoseidonCTF 2020
 
@@ -162,7 +168,11 @@ m = (a * b_) % p
 print(f"Flag: {long_to_bytes(m).decode()}")
 ```
 
-## Diffie-Hellman
+## Diffie-Hellman (DH) Protocol
+
+For two users, say ALice and Bob, to derive a common key in a finite cyclic  group $$G$$, $$\lvert G \rvert = n$$, with generator $$g$$, $$G = \langle g \rangle$$, they, respectively, choose, at random, integers $$a, b \in_{\mathbb{R}}[1, n]$$ and exchange $$g^{a}, g^{b}$$. Each is able to compute $$g^{ab}$$ from which a common key may be derived. It is assumed here that an adversary, knowing $$G$$, $$g^{a}$$, and $$g^{b}$$, is unable to compute $$g^{ab}$$[^6].
+
+**Definition 9.** The computation of $$g^{ab}$$ from knowledge of $$g^{a}$$ and $$g^{b}$$ is referred to as the **Diffie-Hellman problem (DHP)**. If one is able to find discrete logarithm in $$G$$ then one can break the DH protocol and the DLP is at least as hard as the DHP.
 
 ## Footnotes
 
@@ -173,3 +183,7 @@ print(f"Flag: {long_to_bytes(m).decode()}")
 [^3]: We can also formulate a slightly stronger version of the problem: Given $$g, h \in G$$, compute $$\log_{g}h$$ if $$h \in \langle g \rangle$$ and otherwise report that $$h not \in \langle g \rangle$$. This can be a significantly harder problem. See lecture notes by [Dr. Andrew V. Sutherland](https://math.mit.edu/~drew/).
 
 [^4]: The multiplicative notation stems from the fact that most of the early work on computing discrete logarithms focused on the case where $$G$$ is the multiplicative group of a finite field.
+
+[^5]: When the group order is a product of small primes, it is easy to compute discrete logarithms.
+
+[^6]: See Whitfield Diffie and Martin E. Hellman, "New Directions in Cryptography," *IEEE Transactions on Information Theory*, Vol. 22, No. 6, 1976, pp. 644-654.
