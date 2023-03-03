@@ -21,6 +21,8 @@ If consciousness is based on language, then it follows that only humans are cons
 
 <!-- excerpt-end -->
 
+## Articles & Lectures
+
 Subjective conscious mind is an analog of what we call the *real* world. It is built up with a vocabulary or lexical field whose terms are all metaphors or analogs of behavior in the *physical* world. Its reality is of the same order as mathematics. It allows us to short-cut behavioral processes and arrive at more adequate decisions.
 {: style="font-family:Gill Sans"}
 

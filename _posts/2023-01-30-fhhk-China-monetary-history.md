@@ -191,9 +191,18 @@ In the *chung-ch'ien* model, which was typical of Chihli, Shantung, Kansu, and K
 The *hsiao-ch'ien* system was typical of Fengtian and Ying-kou and had *tiao* and *ch'ien* &mdash;&mdash; *kuan-tung-ch'ien* or *tung-ch'ien* &mdash;&mdash; units of account, but a debt of a *tiao* could be settled by the payment of $$160$$ cash coins. The $$160$$ coins were strung together, and there was thus no sub-string in the *hsian-ch'ien* system.
 {: style="font-family:Gill Sans"}
 
+<br />
 ![three-cash-systems](/assets/images/three-cash.png){:class="img-responsive"}
 *表三：理想状态下的三种现金系统*
 {:.table-caption}
+
+## 第三章 白银部门
+
+*Tael*, which is said to derive from the Hindu *tola*, is the standard translation for "liang," both when that term refers to a unit of account and to a unit of weight. In the former case, to avoid confusion such terms as "monetary tael" or "tael of account" may also be used, similar to the term *pound sterling*.
+{: style="font-family:Gill Sans"}
+
+Silver bullion in China was available in three main forms: ingots, fragments, and bars. The first two are types of syncee or monetary silver; the third, bar silver, was imported in this form and used almost exclusively for international trade or, possibly, for hoarding. To pass current in monetary transactions, bar silver had to be converted into syncee ingots. The most important form of silver bullion in China's monetary system was the syncee ingot of proximately $$50$$ liang, known as the "shoe of syncee" and in Chinese called variously *y&uuml;an-pao*, *tso-pao-yin*, or *tso-ma-t'i* &mdash;&mdash; the last name, it is said, because of its imagined resemblance to a horse's hoof, hence, in English, "shoe."
+{: style="font-family:Gill Sans"}
 
 ## 脚注
 
