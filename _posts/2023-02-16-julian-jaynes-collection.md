@@ -4,7 +4,7 @@ title:              "心智起源"
 category:           "Miscellaneous"
 tags:               psychology language
 permalink:          /posts/julian-jaynes-collection
-last_modified_at:   "2023-02-18"
+last_modified_at:   "2023-03-03"
 ---
 
 <p lang="en" class="message"><em>
@@ -20,13 +20,6 @@ If consciousness is based on language, then it follows that only humans are cons
 > Given the pervasiveness of an emotionally-based hostility toward the unfamiliar, coupled with the tendency to unconsciously form strong opinions based on limited information, we must learn to withhold judgment on new ideas until they can be properly evaluated.
 
 <!-- excerpt-end -->
-
-## Table of Contents
-{:.no_toc}
-* TOC 
-{:toc}
-
-## Articles & Lectures
 
 Subjective conscious mind is an analog of what we call the *real* world. It is built up with a vocabulary or lexical field whose terms are all metaphors or analogs of behavior in the *physical* world. Its reality is of the same order as mathematics. It allows us to short-cut behavioral processes and arrive at more adequate decisions.
 {: style="font-family:Gill Sans"}
@@ -97,6 +90,9 @@ If one plots the brain volume of fossil skulls over time, there is evidently a t
 1. It increased the death rate, since successively more and more premature infants would be less likely to survivie.
 2. This increase in infant mortality increased the birth rate since the cessation of suckling and therefore lactation would allow more frequent ovulation. (The first estrus after parturition occurs in primates only after nursing has stopped &mdash;&mdash; a kind of built-in birth control.) Both increased birth rate and death rate speed up the evolution of anything that the ecological pressures at the time select for. One of these may have been intentional vocalization.
 3. The premature human infant must communicate its needs by its cries and obtain the mother's help in everything. In such a situation, the tremendous advantages of increased communication between mother and infant are obvious. And during this long infancy with a high infant mortality, one can see how children who responded to the mother with vocalizations would be more carefully cared for on the one side and on the other side, that the mother who could vocally communicate and obtain vocal responses from their infants, being better mothers, would pass on their own genetic constitution through their children to the future more readily.
+{: style="font-family:Gill Sans"}
+
+Shame is one of the most powerful affects. It occurs in many mammals, such as canines, primates, and early man. Observations of present-day children's development or reminiscences about our own will demonstrate the tyrannous power of humiliation, of rejection from a social group, in shaping behavior to some norm or other. &hellip; Perhaps most interesting are the sexual emotions, which were usually omitted from Victorian lists of the emotions (including Darwin's) because their bodily expression is primarily genital rather than facial. We do know that mating in the anthropoid apes, in contrast to ourselves, is casual and almost minimal, with observations of mating in gibbons, chimpanzees, orangutans, and gorillas in the wild being extremely rare. Paralleling these facts, tomb and wall paintings, sculpture and the writings of bicameral civilizations rarely if ever have any sexual references.
 {: style="font-family:Gill Sans"}
 
 ## Footnotes

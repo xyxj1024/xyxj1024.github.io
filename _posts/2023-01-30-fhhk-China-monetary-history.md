@@ -177,7 +177,23 @@ In the traditional system the Chinese government undertook responsibility only f
 
 ## 第二章 现金部门
 
+The cash and silver systems were part of a parallel bimetallic system and their relative values were determined by market forces. The changes in the cash-silver exchange rate had to be taken into consideration in any commercial venture, but, as the factors involved in the changes appeared esoteric to the foreign merchant, internal trade was the more easily kept in the hands of the compradore and the local Chinese merchant. There was thus a corresponding loss of foreign control of the export trade, which not only was a source of annoyance and complaint to the foreigner but also, by keeping him economically separated from the point of production, made it impossible for him to enforce his specific demands relative to the quality of the product brought down to the coast for sale. These serious consequences cannot be attributed fairly to the cash system alone, however, as the Chinese had other, surer ways of maintaining control of their internal trade.
+{: style="font-family:Gill Sans"}
 
+### 三种现金系统
+
+The *ch'ang-ch'ien* system was one, then, in which the tender of one cash coin satisfied a debt of one *ch'ien*, or, to distinguish this unit of account from the *ch'ien* units of the other systems, one *ch'ang-ch'ien*. The *ch'ang-ch'ien* system had two units of account, the *ch'uan* and the *ch'ien* or *ch'ang-ch'ien*. One thousand *ch'ien* were equal in value to one *ch'uan*. A debt of one *ch'ien* could be satisfied by payment of a single standard cash coin; a *ch'uan* by $$1000$$ such coins or by a lesser number as customary in the particular market. In some localities the *ch'uan* was known as the *min*, or *tiao*, or, as in Shanghai and Fukien, simply as *i-ch'ien* (one thousand), but this was a matter of local custom.
+{: style="font-family:Gill Sans"}
+
+In the *chung-ch'ien* model, which was typical of Chihli, Shantung, Kansu, and Kirin, the number of cash coins required to satisfy a debt of one *tael* remains the same as in the *ch'ang-ch'ien* model, but since each coin satisfies twice as many *ch'ien* units of account, the model has had to be changed by doubling the units of account equal to one *tael*. The *chung-ch'ien* system also had two units of account, the *ch'uan* or *tiao* and the *ch'ien* or *chung-ch'ien*.
+{: style="font-family:Gill Sans"}
+
+The *hsiao-ch'ien* system was typical of Fengtian and Ying-kou and had *tiao* and *ch'ien* &mdash;&mdash; *kuan-tung-ch'ien* or *tung-ch'ien* &mdash;&mdash; units of account, but a debt of a *tiao* could be settled by the payment of $$160$$ cash coins. The $$160$$ coins were strung together, and there was thus no sub-string in the *hsian-ch'ien* system.
+{: style="font-family:Gill Sans"}
+
+![three-cash-systems](/assets/images/three-cash.png){:class="img-responsive"}
+*表三：理想状态下的三种现金系统*
+{:.table-caption}
 
 ## 脚注
 
