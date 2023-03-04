@@ -84,7 +84,7 @@ last_modified_at:   "2023-01-21"
 - **东侧**有太行东麓的大道及南下直入长江下游的大道。
 
 ![earlier-han](/assets/images/earlier-han.jpg){:class="img-responsive"}
-<p style="color:gray; font-size:80%;">
+<p style="text-align:center;color:gray;font-size:80%;">
 图片来源：Albert Herrmann, <i>An Historical Atlas of China (New Edition)</i>, Aldine Publishing Company, 1966.
 </p>
 
@@ -107,7 +107,7 @@ last_modified_at:   "2023-01-21"
 玄宗时十五道，分别为**京畿（长安）**、**都畿（洛阳）**、**河南**、**河北**、**河东**、**陇右**、**山南东**、**山南西**、**剑南**、**关内**、**淮南**、**江南东**、**江南西**、**黔中**、**岭南**诸道。长安、洛阳是两个中心，由此辐射成两个网，又互相叠合。益州（成都）与扬州分别为西南与东南扇状网的枢纽。唐代曾有五京五都之设，先后废置不一。除了长安、洛阳外，有五个大都会：凤翔、江陵、太原、河中（蒲州）、成都等。这些都会均是次级网络的中心。更降一级，则洪州、潭州、大名、苏州、广州又在另一层次的地区中心。此外，各处人口众多，位居冲要的都邑，则成为繁盛的州郡，又是更下一级的中心了。综合言之，唐代最盛的开元天宝年间，中国有四个层次的交通中心，成为全国庞大道路网络的联结点。
 
 ![tang](/assets/images/tang.jpg){:class="img-responsive"}
-<p style="color:gray; font-size:80%;">
+<p style="text-align:center;color:gray;font-size:80%;">
 图片来源：<i>Oxford Atlas of World History</i>, Oxford University Press, 2002. General Editor Patrick K. O'Brien.
 </p>
 

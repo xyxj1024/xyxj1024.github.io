@@ -139,7 +139,7 @@ last_modified_at:   "2023-02-23"
 
 <br />
 ![northeast-asia-1850s](/assets/images/northeast-asia.png){:class="img-responsive"}
-<p style="color:gray; font-size:80%;">
+<p style="text-align:center;color:gray;font-size:80%;">
 图片来源：Li Narangoa and Robert Cribb, <i>Historical Atlas of Northeast Asia, 1590-2010</i>, Columbia University Press, 2014, pp. 125.
 </p><br />
 
@@ -208,7 +208,7 @@ last_modified_at:   "2023-02-23"
 
 <br />
 ![kunlun](/assets/images/kunlun.jpg){:class="img-responsive"}
-<p style="color:gray; font-size:80%;">
+<p style="text-align:center;color:gray;font-size:80%;">
 国际空间站在262英里高空拍摄到的昆仑山画面（图片来源：<a href="https://www.nasa.gov/image-feature/a-portion-of-the-kunlun-mountains-in-southwestern-china">NASA</a>）
 </p><br />
 

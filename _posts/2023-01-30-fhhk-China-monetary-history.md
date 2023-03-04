@@ -193,8 +193,9 @@ The *hsiao-ch'ien* system was typical of Fengtian and Ying-kou and had *tiao* an
 
 <br />
 ![three-cash-systems](/assets/images/three-cash.png){:class="img-responsive"}
-*表三：理想状态下的三种现金系统*
-{:.table-caption}
+<p style="text-align:center;color:gray;font-size:80%;">
+图一：理想状态下的三种现金系统
+</p><br />
 
 ## 第三章 白银部门
 
