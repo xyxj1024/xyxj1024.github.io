@@ -206,8 +206,8 @@ subdir4:
 
 To support various native filesystem and, at the same time, to allow access to files of other operating systems, the Linux kernel includes a layer between user processes (or the standard library) and the filesystem implementation. This layer is known as the **Virtual Filesystem**, or **VFS** for short.
 
-![linux-vfs](/assets/images/linux-vfs.png)
-<p style="color:gray; font-size:80%;">
+![linux-vfs](/assets/images/linux-vfs.png){:class="img-responsive" width="100%"}
+<p style="text-align:center;color:gray;font-size:80%;">
 Source: Wolfgang Mauerer, "Professional Linux Kernel Architecture," Wiley Publishing, Inc., 2008.
 </p>
 

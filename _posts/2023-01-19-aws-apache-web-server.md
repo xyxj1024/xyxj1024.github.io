@@ -266,8 +266,8 @@ sudo yum install php-pear
 
 Using PEAR to install PHP extensions is just as easy as `yum`, `apt`, `gem`, and `pip`. Just run `sudo pear install xxx`.
 
-![cse-330-workflow](/assets/images/cse-330-workflow.png)
-<p style="color:gray; font-size:80%;"><em>
+![cse-330-workflow](/assets/images/cse-330-workflow.png){:class="img-responsive"}
+<p style="text-align:center;color:gray;font-size:80%;"><em>
 Figure 1: Three methods to copy files to your cloud instance
 </em></p>
 

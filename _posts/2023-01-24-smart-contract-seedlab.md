@@ -92,8 +92,8 @@ Required-by:
 
 ### Ethereum Nodes and Accounts
 
-![web3-providers](/assets/images/web3py-and-nodes.png)
-<p style="color:gray; font-size:80%;">
+![web3-providers](/assets/images/web3py-and-nodes.png){:class="img-responsive" width="100%"}
+<p style="text-align:center;color:gray;font-size:80%;">
 Source: ethereum.org
 </p>
 
