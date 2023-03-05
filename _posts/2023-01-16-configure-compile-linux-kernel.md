@@ -288,7 +288,7 @@ if (!capable(CAP_SYS_MODULE) || modules_disabled)
     return -EPERM;
 ```
 
-Back in 1999, with the release of the Linux kernel version 2.2, kernel developers started breaking up the privileges of the root user into distinct **capabilities**, allowing processes to inherit subsets of root's privilege, without giving away too much. Combining capabilities with user namespaces will allow administrators to apply those fine-grained privileges to containers. The `capable()` function (which actually wraps around `ns_capable_common}()` determines whether a task has a particular capability or not. If loading or unloading kernel modules is not permitted, `EPERM` error is returned:
+Back in 1999, with the release of the Linux kernel version 2.2, kernel developers started breaking up the privileges of the root user into distinct **capabilities**, allowing processes to inherit subsets of root's privilege, without giving away too much. Combining capabilities with user namespaces will allow administrators to apply those fine-grained privileges to containers. The `capable()` function (which actually wraps around `ns_capable_common()` determines whether a task has a particular capability or not. If loading or unloading kernel modules is not permitted, `EPERM` error is returned:
 
 ```c
 // In: /kernel/capability.c
@@ -316,4 +316,4 @@ static bool ns_capable_common(struct user_namespace *ns,
 #define CAP_SYS_MODULE       16
 ```
 
-Userspace programs must use system calls to access kernel's resources, and even then, most of the kernel remains opaque to user processes. With kernel modules, we can access all of the kernel's resources directly.
+Userspace programs must use system calls to access operating system resources (e.g., memory, I/O ports, I/O memory, interrupt lines, etc.), and even then, most of the kernel remains opaque to user processes. With kernel modules, we can access all of the kernel's resources directly.
