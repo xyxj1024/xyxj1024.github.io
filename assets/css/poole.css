@@ -356,7 +356,7 @@ tbody tr:nth-child(odd) th {
  */
 
 .lead {
-  padding: 2.5rem;
+  margin-left: 2.5rem;
   font-size: 1.25rem;
   font-weight: 300;
 }

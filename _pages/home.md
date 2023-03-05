@@ -9,8 +9,8 @@ pagination:
 
 <div class="posts">
   {% for post in site.posts %}
+  <br><hr>
   <div class="post">
-    <hr>
     <h3 class="post-title">
       <a href="{{ post.url }}">
         {{ post.title }}
