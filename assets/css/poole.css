@@ -210,7 +210,7 @@ hr::after {
   transform: translate(-50%, -50%) rotate(60deg);
   transform-origin: 50% 50%;
   padding: 1rem;
-  background-color: white;
+  background-color: transparent;
 }
 
 abbr {
