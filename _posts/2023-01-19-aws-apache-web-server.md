@@ -2,7 +2,7 @@
 layout:             post
 title:              "Apache Web Server Setup Guide"
 category:           "Computing Systems, Systems Security"
-tags:               networking
+tags:               networking php
 permalink:          /posts/apache-web-server-setup-guide
 ---
 
