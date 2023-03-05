@@ -197,20 +197,23 @@ dd {
 
 /* Misc */
 hr {
+  overflow: visible;
+  /* For IE */
+  padding: 0;
   border: none;
-  height: 2px;
-  background-image: linear-gradient(to right, #f0f0f0, #8f8f8f, #f0f0f0);
+  border-top: medium double #333;
+  color: #333;
+  text-align: center;
 }
 
 hr::after {
-  content: '§';
+  content: "§";
   display: inline-block;
-  position: absolute;
-  left: 50%;
-  /* transform: translate(-50%, -50%) rotate(60deg); */
-  /* transform-origin: 50% 50%; */
-  padding: 1rem;
-  background-color: transparent;
+  position: relative;
+  top: -0.7em;
+  font-size: 1.5em;
+  padding: 0 0.25em;
+  background: white;
 }
 
 abbr {
