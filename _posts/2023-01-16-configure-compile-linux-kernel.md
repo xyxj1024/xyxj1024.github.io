@@ -197,3 +197,123 @@ In-tree modules will match the "local version" on my Raspberry Pi:
 ```text
 linux_source/modules/lib/modules/5.10.17-v7-x.xingjian
 ```
+
+## Build & Install Kernel Modules
+
+Now, assume that we are using our Linux lab machine. Let's `cd` into the directory that holds our out-of-tree kernel modules (`/project/scratch01/compile/x.xingjian/modules`) and create a simple C program:
+
+```c
+/* simple_module.c - a simple template for a loadable kernel module in Linux,
+   based on the hello world kernel module example on pages 338-339 of Robert
+   Love's "Linux Kernel Development, Third Edition."
+ */
+
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+
+/* init function - logs that initialization happened, returns success */
+static int 
+simple_init(void)
+{
+    printk(KERN_ALERT "simple module initialized\n");
+    return 0;
+}
+
+/* exit function - logs that the module is being removed */
+static void 
+simple_exit(void)
+{
+    printk(KERN_ALERT "simple module is being unloaded\n");
+}
+
+module_init(simple_init);
+module_exit(simple_exit);
+
+MODULE_LICENSE ("GPL");
+MODULE_AUTHOR ("LKD Chapter 17");
+MODULE_DESCRIPTION ("Simple Module Template");
+```
+
+Create a `Makefile` in the same directory that contains the following line:
+
+```makefile
+obj-m := simple_module.o
+```
+
+We can then build the module by issuing the commands:
+
+```bash
+module add arm-rpi
+
+LINUX_SOURCE=/project/scratch01/compile/x.xingjian/linux_source/linux
+```
+
+and finally compile via:
+
+```bash
+make -C $LINUX_SOURCE ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=$PWD modules
+```
+
+which, if successful, should produce a kernel module file named `simple_module.ko`.
+
+Boot up our Raspberry Pi, open up a terminal window, create a directory to hold our kernel modules. Use `sftp` to get the `simple_module.ko` file. To load the kernel module into the kernel, issue the command:
+
+```bash
+sudo insmod simple_module.ko
+```
+
+If no error messages pop out, then our module has been successfully loaded. To confirm this, we can check the system log by issuing the command:
+
+```bash
+dmesg
+```
+
+To confirm our module was loaded, we can also issue the command:
+
+```bash
+lsmod
+```
+
+to see a listing of all currently loaded kernel modules. To remove the module, issue the command:
+
+```bash
+sudo rmmod simple_module.ko
+```
+
+The `rmmod` utility calls the underlying `delete_module()` system call. Looking at the source code for `delete_module()` system call, pay attention to these lines:
+
+```c
+if (!capable(CAP_SYS_MODULE) || modules_disabled)
+    return -EPERM;
+```
+
+Back in 1999, with the release of the Linux kernel version 2.2, kernel developers started breaking up the privileges of the root user into distinct **capabilities**, allowing processes to inherit subsets of root's privilege, without giving away too much. Combining capabilities with user namespaces will allow administrators to apply those fine-grained privileges to containers. The `capable()` function (which actually wraps around `ns_capable_common}()` determines whether a task has a particular capability or not. If loading or unloading kernel modules is not permitted, `EPERM` error is returned:
+
+```c
+// In: /kernel/capability.c
+static bool ns_capable_common(struct user_namespace *ns,
+                              int cap,
+                              unsigned int opts)
+{
+    int capable;
+
+    if (unlikely(!cap_valid(cap))) {
+        pr_crit("capable() called with invalid cap=%u\n", cap);
+        BUG();
+    }
+
+    capable = security_capable(current_cred(), ns, cap, opts);
+    if (capable == 0) {
+        current->flags |= PF_SUPERPRIV;
+        return true;
+    }
+    return false;
+}
+
+// In: /include/uapi/linux/capability.h
+/* Insert and remove kernel modules - modify kernel without limit */
+#define CAP_SYS_MODULE       16
+```
+
+Userspace programs must use system calls to access kernel's resources, and even then, most of the kernel remains opaque to user processes. With kernel modules, we can access all of the kernel's resources directly.
