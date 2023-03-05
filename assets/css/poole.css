@@ -197,8 +197,7 @@ dd {
 
 /* Misc */
 hr {
-  overflow: visible;
-  /* For IE */
+  overflow: visible; /* For IE */
   padding: 0;
   border: none;
   border-top: medium double #333;
@@ -252,9 +251,9 @@ pre {
   overflow-x: auto;
   white-space: pre;
   /*
-     * word-break: break-all;
-     * word-wrap: break-word;
-     */
+   * word-break: break-all;
+   * word-wrap: break-word;
+   */
   background-color: #f9f9f9;
 }
 
@@ -351,10 +350,10 @@ tbody tr:nth-child(odd) th {
 
 
 /*
-   * Custom type
-   *
-   * Extend paragraphs with `.lead` for larger introductory text.
-   */
+ * Custom type
+ *
+ * Extend paragraphs with `.lead` for larger introductory text.
+ */
 
 .lead {
   font-size: 1.25rem;
@@ -363,11 +362,11 @@ tbody tr:nth-child(odd) th {
 
 
 /*
-   * Messages
-   *
-   * Show alert messages to users. You may add it to single elements like a `<p>`,
-   * or to a parent if there are multiple elements to show.
-   */
+ * Messages
+ *
+ * Show alert messages to users. You may add it to single elements like a `<p>`,
+ * or to a parent if there are multiple elements to show.
+ */
 
 .message {
   margin-bottom: 1rem;
@@ -378,10 +377,10 @@ tbody tr:nth-child(odd) th {
 
 
 /*
-   * Container
-   *
-   * Center the page content.
-   */
+ * Container
+ *
+ * Center the page content.
+ */
 
 .container {
   max-width: 38rem;
@@ -394,10 +393,10 @@ tbody tr:nth-child(odd) th {
 
 
 /*
-   * Masthead
-   *
-   * Super small header above the content for site name and short description.
-   */
+ * Masthead
+ *
+ * Super small header above the content for site name and short description.
+ */
 
 .masthead {
   padding-top: 1rem;
@@ -424,11 +423,11 @@ tbody tr:nth-child(odd) th {
 
 
 /*
-   * Quotes, posts and pages
-   *
-   * Each post is wrapped in `.post` and is used on default and post layouts. Each
-   * page is wrapped in `.page` and is only used on the page layout.
-   */
+ * Quotes, posts and pages
+ *
+ * Each post is wrapped in `.post` and is used on default and post layouts. Each
+ * page is wrapped in `.page` and is only used on the page layout.
+ */
 
 .random-quote {
   font-size: 110%;
@@ -492,11 +491,11 @@ tbody tr:nth-child(odd) th {
 
 
 /*
-   * Pagination
-   *
-   * Super lightweight (HTML-wise) blog pagination. `span`s are provide for when
-   * there are no more previous or next posts to show.
-   */
+ * Pagination
+ *
+ * Super lightweight (HTML-wise) blog pagination. `span`s are provide for when
+ * there are no more previous or next posts to show.
+ */
 
 .pagination {
   overflow: hidden;
