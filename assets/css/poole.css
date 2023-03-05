@@ -198,7 +198,7 @@ dd {
 /* Misc */
 hr {
   border: none;
-  height: 1px;
+  height: 2px;
   background-image: linear-gradient(to right, #f0f0f0, #8f8f8f, #f0f0f0);
 }
 
@@ -207,8 +207,8 @@ hr::after {
   display: inline-block;
   position: absolute;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(60deg);
-  transform-origin: 50% 50%;
+  /* transform: translate(-50%, -50%) rotate(60deg); */
+  /* transform-origin: 50% 50%; */
   padding: 1rem;
   background-color: transparent;
 }
