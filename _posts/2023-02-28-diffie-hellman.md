@@ -92,7 +92,7 @@ The known algorithms for the DLP can be categorized as follows:
 
 The "discrete log" challenge from PoseidonCTF 2020 is constructed based on a public key cryptosystem called the Okamoto–Uchiyama cryptosystem. [Wikipedia](https://en.wikipedia.org/wiki/Okamoto%E2%80%93Uchiyama_cryptosystem) provides a clear explanation of this cryptosystem.
 
-**Description**: I heard some cryptosystem uses discrete logarithm. It is hard problem, isn't it? I encrypted the flag with $$4095$$-bit modulus &hellip;
+**Description**: I heard some cryptosystem uses discrete logarithm. It is hard problem, isn't it? I encrypted the flag with $$4095$$-bit modulus . . .
 
 The `problem.py` program:
 ```python
