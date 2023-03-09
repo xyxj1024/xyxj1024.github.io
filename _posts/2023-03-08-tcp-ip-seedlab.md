@@ -14,7 +14,12 @@ Any operating system that supports networking has some type of network stack.
 
 ![linux-network-stack](/assets/images/lns.png){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
-Source: <a href="https://www.usenix.org/conference/srecon22apac/presentation/jiang">Jizhong Jiang and Shane Xie, Alibaba Cloud</a>
+Source: <span><a href="https://www.usenix.org/conference/srecon22apac/presentation/jiang">Jizhong Jiang and Shane Xie, Alibaba Cloud</a></span>
+</p>
+
+![tcp-socket-listening](/assets/images/synq-acceptq.png){:class="img-responsive"}
+<p style="text-align:center;color:gray;font-size:80%;">
+Source: <span><a href="http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queues/">Arthur Chiao's Blog</a></span>
 </p>
 
 ## Table of Contents
