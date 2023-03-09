@@ -59,13 +59,13 @@ sysctls:
     - net.ipv4.tcp_syncookies=0
 ```
 
-turns off this countermeasure for the victim server container. Also pay attention to this line:
+turns off this countermeasure for the victim Docker container. Also pay attention to this line:
 
 ```yaml
 privileged: true
 ```
 
-The victim server container is thus given the privilege to use `sysctl` to change the values of system variables.
+The victim Docker container is thereby given the privilege to use `sysctl` to change the values of system variables.
 
 ### Task 1.1: Launch the Attack Using Python
 
@@ -118,7 +118,7 @@ After a while, our attack successfully broke into the victim's machine.
 
 ### Task 1.2: Launch the Attack Using C
 
-Other than the TCP cache issue, all the issues mentioned in the lab instructions for Task 1.1 can be resolved if we can send spoofed SYN packets fast enough.
+Actually, it is more likely that our attack using the Python program would fail. Multiple issues could contribute to the failure of the attack. Other than the TCP cache issue, all the issues mentioned in the [lab instructions](https://seedsecuritylabs.org/Labs_20.04/Files/TCP_Attacks/TCP_Attacks.pdf) for Task 1.1 can be resolved if we can send spoofed SYN packets fast enough. We can certainly achieve that using the following C program:
 
 ```c
 /* synflood.c */
@@ -187,7 +187,7 @@ struct pseudo_tcp
 };
 
 // #define DEST_IP    "10.9.0.5"
-// #define DEST_PORT  23  // Attack the web server
+// #define DEST_PORT  23            // Attack the web server
 #define PACKET_LEN 1500
 
 unsigned short calculate_tcp_checksum(struct ipheader *ip);
@@ -341,7 +341,7 @@ unsigned short calculate_tcp_checksum(struct ipheader *ip)
 }
 ```
 
-After a relatively short period of time, our attack succeeded.
+Compile this program on the SEED VM and then run it on our `seed-attacker` Docker container. After a relatively short period of time, our attack should succeed.
 
 ## Task 2: TCP RST Attacks on `telnet` Connections
 
@@ -354,3 +354,5 @@ After a relatively short period of time, our attack succeeded.
 [Linux kernel map](https://makelinux.github.io/kernel/map/)
 
 [Why we use the Linux kernel's TCP stack](https://blog.cloudflare.com/why-we-use-the-linux-kernels-tcp-stack/)
+
+[Anatomy of a user namespaces vulnerability](https://lwn.net/Articles/543273/)
