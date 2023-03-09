@@ -29,7 +29,14 @@ Source: <span><a href="http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queu
 
 ## Task 1: SYN Flooding Attack
 
-Based on the amount of memory available, the maximum number of remembered connection requests that did not receive an acknowledgment from connecting client is set by the operating system kernel:
+Synchronize (SYN) flooding attacks are a type of denial-of-service attack which exploits a vulnerability in the TCP/IP handshake in an attempt to make a server unavailable to legitimate traffic by consuming all available server resources. By repeatedly sending initial connection request (SYN) packets, the attacker is able to overwhelm all available ports on a targeted server machine, causing the targeted device to respond to legitimate traffic sluggishly or not at all[^1].
+
+![SYN-flooding-attack](/assets/images/synflood.png){:class="img-responsive" width="85%"}
+<p style="text-align:center;color:gray;font-size:80%;">
+SYN Flooding Attack
+</p>
+
+Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed[^2]. In the handshake, the state in which the server waits for the ACK packet of a client is called *half-open*. In this state, the server has prepared the communication with a client by assigning a buffer for the connection. At a server, the maximum number of remembered connection requests that did not receive an acknowledgment from connecting client is controlled by a backlog queue. Based on the amount of memory available, its value is set by the operating system kernel:
 
 ```console
 $ cat /proc/sys/net/ipv4/tcp_max_syn_backlog
@@ -42,6 +49,8 @@ This value can also be retrieved with the following command:
 $ sysctl net.ipv4.tcp_max_syn_backlog
 net.ipv4.tcp_max_syn_backlog = 128
 ```
+
+Packets that arrive at the server and exceed its capacity are simply rejected, and the server sends an RST packet to inform the relevant client that the SYN packet was thrown out. A connection that stays too long in a half-open state is timed-out, and an RST packet is sent to the client.
 
 By default, Ubuntu's SYN flooding countermeasure is turned on:
 
@@ -350,6 +359,10 @@ Compile this program on the SEED VM and then run it on our `seed-attacker` Docke
 ## Task 4: Creating Reverse Shell using TCP Session Hijacking
 
 ## Notes
+
+[^1]: [https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/](https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/).
+
+[^2]: A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
 
 [Linux kernel map](https://makelinux.github.io/kernel/map/)
 
