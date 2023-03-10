@@ -3,7 +3,7 @@ layout:       post
 title:        "SEED Labs 2.0: TCP/IP Attack Lab Writeup"
 category:     "Computing Systems, Systems Security"
 tags:         networking cybersecurity
-permalink:    /posts/seedlabs/tcp-ip
+permalink:    /posts/seedlabs/attacks-on-the-tcp-protocol
 ---
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org/Labs_20.04/Networking/TCP_Attacks/). The lab assignment was conducted using Docker Compose. Download the [`Labsetup.zip`](https://seedsecuritylabs.org/Labs_20.04/Files/TCP_Attacks/Labsetup.zip) file, unzip it, enter the `Labsetup` folder, and use the `docker-compose.yml` file to set up the lab environment.
@@ -13,7 +13,7 @@ For general overview and the setup package for this lab, please go to [SEED Labs
 Source: <span><a href="http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queues/">Arthur Chiao's Blog</a></span>
 </p>
 
-Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed. A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
+Before we start on the lab assignments, I would like to give an overview of the Transmission Control Protocol (TCP) here. Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed. A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
 
 <!-- excerpt-end -->
 
@@ -21,17 +21,19 @@ The fundamental unit of data transfer in TCP is a byte. However, TCP implementat
 
 The task of TCP is to divide the application-layer data into one or more segments, transmit them across the network, and deliver them reliably (and in order) to the receiving TCP. Each segment carries an explicit sequence number, for the purposes of ordering and reliability. During TCP handshake, the two endpoints establish the starting sequence numbers for data transfers in each direction, set connection parameters (e.g., MSS), and negotiate desired options (e.g., timestamps, SACK, or the window scale option for high bandwidth-delay product networks).
 
+## Table of Contents
+{:.no_toc}
+* TOC 
+{:toc}
+
+## Linux Network Architecture
+
 Any operating system that supports networking has some type of network stack.
 
 ![linux-network-stack](/assets/images/lns.png){:class="img-responsive" width="85%"}
 <p style="text-align:center;color:gray;font-size:80%;">
 Source: <span><a href="https://www.usenix.org/conference/srecon22apac/presentation/jiang">Jizhong Jiang and Shane Xie, Alibaba Cloud</a></span>
 </p>
-
-## Table of Contents
-{:.no_toc}
-* TOC 
-{:toc}
 
 ## Task 1: SYN Flooding Attack
 
@@ -58,7 +60,7 @@ net.ipv4.tcp_max_syn_backlog = 128
 
 Packets that arrive at the server and exceed its capacity are simply rejected, and the server sends an RST packet to inform the relevant client that the SYN packet was thrown out. A connection that stays too long in a half-open state is timed-out, and an RST packet is sent to the client.
 
-Large backlog queues and random early drops make SYN flooding more expensive but do not actually solve the problem. By default, Ubuntu's SYN flooding countermeasure is turned on:
+Large backlog queues and random early drops make SYN flooding more expensive but do not actually solve the problem. A countermeasure called "SYN cookies" is enabled by default on Ubuntu:
 
 ```console
 $ sysctl -a | grep syncookies
@@ -67,7 +69,7 @@ net.ipv4.tcp_syncookies = 1
 ...
 ```
 
-This mechanism is called "SYN cookie". It will kick in if the machine detects that it is under the SYN flooding attack. SYN cookies are particular choices of initial TCP sequence numbers by TCP servers. The differences between the server's initial sequence number and the client's initial sequence number are:
+It will kick in if the machine detects that it is under the SYN flooding attack. SYN cookies are particular choices of initial TCP sequence numbers by TCP servers. The differences between the server's initial sequence number and the client's initial sequence number are:
 - Top $$5$$ bits: $$t \bmod{32}$$, where $$t$$ is a $$32-bit$$ time counter that increases every $$64$$ seconds;
 - Next $$3$$ bits: an encoding of an MSS selected by the server in response to the client's MSS;
 - Bottom $$24$$ bits: a server-selected secret function of the client IP address and port number, the server IP address and port number, and $$t$$.
@@ -81,7 +83,7 @@ sysctls:
     - net.ipv4.tcp_syncookies=0
 ```
 
-turns off the SYN cookie countermeasure for the victim Docker container. Also pay attention to this line:
+disable the SYN cookies countermeasure for the victim Docker container. Also pay attention to this line:
 
 ```yaml
 privileged: true
@@ -386,7 +388,7 @@ Next, inside our `user1-10.9.0.6`'s shell, type:
 telnet 10.9.0.5
 ```
 
-Immediately, we should see the following messages generated by `tshark`:
+Immediately, we should see quite a lot of messages generated by `tshark`:
 
 ```console
     1 0.000000000     10.9.0.6 → 10.9.0.5     TCP 74 43106 → 23 [SYN] Seq=2451321324 Win=64240 Len=0 MSS=1460 SACK_PERM=1 TSval=3440862779 TSecr=0 WS=128
@@ -401,7 +403,7 @@ Immediately, we should see the following messages generated by `tshark`:
   107 16.612329722     10.9.0.6 → 10.9.0.5     TCP 66 43106 → 23 [ACK] Seq=2451321427 Ack=3957985002 Win=64128 Len=0 TSval=3440879392 TSecr=3679847895
 ```
 
-There we have all the information we need to write the following `reset.py` program:
+Therefore we have all the information we need to write the following `reset.py` program:
 
 ```python
 #!/usr/bin/env python3
