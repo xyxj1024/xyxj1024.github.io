@@ -8,18 +8,24 @@ permalink:    /posts/seedlabs/tcp-ip
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org/Labs_20.04/Networking/TCP_Attacks/). The lab assignment was conducted using Docker Compose. Download the [`Labsetup.zip`](https://seedsecuritylabs.org/Labs_20.04/Files/TCP_Attacks/Labsetup.zip) file, unzip it, enter the `Labsetup` folder, and use the `docker-compose.yml` file to set up the lab environment.
 
+![tcp-socket-listening](/assets/images/synq-acceptq.png){:class="img-responsive"}
+<p style="text-align:center;color:gray;font-size:80%;">
+Source: <span><a href="http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queues/">Arthur Chiao's Blog</a></span>
+</p>
+
+Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed. A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
+
 <!-- excerpt-end -->
+
+The fundamental unit of data transfer in TCP is a byte. However, TCP implementations generally work with a larger logical unit size called a *segment* when transmitting packets across an IP internetwork. The *Maximum Segment Size (MSS)* is a tunable parameter for a TCP transfer. The choice of the MSS typically depends on the *Maximum Transmission Unit (MTU)* size supported by the underlying network layer. In most instances, each TCP segment is carried in one IP packet.
+
+The task of TCP is to divide the application-layer data into one or more segments, transmit them across the network, and deliver them reliably (and in order) to the receiving TCP. Each segment carries an explicit sequence number, for the purposes of ordering and reliability. During TCP handshake, the two endpoints establish the starting sequence numbers for data transfers in each direction, set connection parameters (e.g., MSS), and negotiate desired options (e.g., timestamps, SACK, or the window scale option for high bandwidth-delay product networks).
 
 Any operating system that supports networking has some type of network stack.
 
 ![linux-network-stack](/assets/images/lns.png){:class="img-responsive" width="85%"}
 <p style="text-align:center;color:gray;font-size:80%;">
 Source: <span><a href="https://www.usenix.org/conference/srecon22apac/presentation/jiang">Jizhong Jiang and Shane Xie, Alibaba Cloud</a></span>
-</p>
-
-![tcp-socket-listening](/assets/images/synq-acceptq.png){:class="img-responsive"}
-<p style="text-align:center;color:gray;font-size:80%;">
-Source: <span><a href="http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queues/">Arthur Chiao's Blog</a></span>
 </p>
 
 ## Table of Contents
@@ -29,14 +35,14 @@ Source: <span><a href="http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queu
 
 ## Task 1: SYN Flooding Attack
 
-Synchronize (SYN) flooding attacks are a type of denial-of-service attack which exploits a vulnerability in the TCP/IP handshake in an attempt to make a server unavailable to legitimate traffic by consuming all available server resources. By repeatedly sending initial connection request (SYN) packets, the attacker is able to overwhelm all available ports on a targeted server machine, causing the targeted device to respond to legitimate traffic sluggishly or not at all[^1].
+Synchronize (SYN) flooding attacks are a type of denial-of-service attack which exploits a vulnerability in the TCP handshake in an attempt to make a server unavailable to legitimate traffic by consuming all available server resources. By repeatedly sending initial connection request (SYN) packets, the attacker is able to overwhelm all available ports on a targeted server machine, causing the targeted device to respond to legitimate traffic sluggishly or not at all[^1].
 
 ![SYN-flooding-attack](/assets/images/synflood.png){:class="img-responsive" width="85%"}
 <p style="text-align:center;color:gray;font-size:80%;">
 SYN Flooding Attack
 </p>
 
-Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed[^2]. In the handshake, the state in which the server waits for the ACK packet of a client is called *half-open*. In this state, the server has prepared the communication with a client by assigning a buffer for the connection. At a server, the maximum number of remembered connection requests that did not receive an acknowledgment from connecting client is controlled by a backlog queue. Based on the amount of memory available, its value is set by the operating system kernel:
+In the TCP handshake, the state in which the server waits for the ACK packet of a client is called *half-open*. In this state, the server has prepared the communication with a client by assigning a buffer for the connection. At a server, the maximum number of remembered connection requests that have not received an acknowledgment from connecting client is controlled by a backlog queue. Based on the amount of memory available, the maximal number of remembered connection requests is set by the operating system kernel:
 
 ```console
 $ cat /proc/sys/net/ipv4/tcp_max_syn_backlog
@@ -52,7 +58,7 @@ net.ipv4.tcp_max_syn_backlog = 128
 
 Packets that arrive at the server and exceed its capacity are simply rejected, and the server sends an RST packet to inform the relevant client that the SYN packet was thrown out. A connection that stays too long in a half-open state is timed-out, and an RST packet is sent to the client.
 
-Large backlog queues and random early drops make SYN flooding more expensive but don't actually solve the problem. By default, Ubuntu's SYN flooding countermeasure is turned on:
+Large backlog queues and random early drops make SYN flooding more expensive but do not actually solve the problem. By default, Ubuntu's SYN flooding countermeasure is turned on:
 
 ```console
 $ sysctl -a | grep syncookies
@@ -66,7 +72,7 @@ This mechanism is called "SYN cookie". It will kick in if the machine detects th
 - Next $$3$$ bits: an encoding of an MSS selected by the server in response to the client's MSS;
 - Bottom $$24$$ bits: a server-selected secret function of the client IP address and port number, the server IP address and port number, and $$t$$.
 
-This choice of sequence number complies with the basic TCP requirement that sequence numbers increase slowly; the server's initial sequence number increases slightly faster than the client's initial sequence number. A server that uses SYN cookies does not have to drop connections when its backlog queue fills up. Instead it sends back a SYN/ACK packet, exactly as if the backlog queue had been larger. (Exceptions: the server must reject TCP options such as large windows, and it must use one of the eight MSS values that it can encode.) When the server receives an ACK packet, it checks that the secret function works for a recent value of $$t$$, and then rebuilds the backlog queue entry from the encoded MSS[^3].
+This choice of sequence number complies with the basic TCP requirement that sequence numbers increase slowly; the server's initial sequence number increases slightly faster than the client's initial sequence number. A server that uses SYN cookies does not have to drop connections when its backlog queue fills up. Instead it sends back a SYN/ACK packet, exactly as if the backlog queue had been larger. (Exceptions: the server must reject TCP options such as large windows, and it must use one of the eight MSS values that it can encode.) When the server receives an ACK packet, it checks that the secret function works for a recent value of $$t$$, and then rebuilds the backlog queue entry from the encoded MSS[^2].
 
 The following lines inside this Lab's `docker-compose.yml` file:
 
@@ -444,9 +450,7 @@ pkt=sniff(iface='br-f00d665d871a', filter='tcp and port 23', prn=spoof_tcp)
 
 [^1]: [https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/](https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/).
 
-[^2]: A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement. The fundamental unit of data transfer in TCP is a byte. However, TCP implementations generally work with a larger logical unit size called a *segment* when transmitting packets across an IP internetwork. The Maximum Segment Size (MSS) is a tunable parameter for a TCP transfer. The choice of the MSS typically depends on the Maximum Transmission Unit (MTU) size supported by the underlying network layer. In most instances, each TCP segment is carried in one IP packet. The task of TCP is to divide the application-layer data into one or more segments, transmit them across the network, and deliver them reliably (and in order) to the receiving TCP. Each segment carries an explicit sequence number, for the purposes of ordering and reliability. During TCP handshake, the two endpoints establish the starting sequence numbers for data transfers in each direction, set connection parameters (e.g., MSS), and negotiate desired options (e.g., timestamps, SACK, or the window scale option for high bandwidth-delay product networks).
-
-[^3]: [https://cr.yp.to/syncookies.html](https://cr.yp.to/syncookies.html).
+[^2]: [https://cr.yp.to/syncookies.html](https://cr.yp.to/syncookies.html).
 
 [Linux kernel map](https://makelinux.github.io/kernel/map/)
 
