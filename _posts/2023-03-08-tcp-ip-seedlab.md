@@ -52,7 +52,7 @@ net.ipv4.tcp_max_syn_backlog = 128
 
 Packets that arrive at the server and exceed its capacity are simply rejected, and the server sends an RST packet to inform the relevant client that the SYN packet was thrown out. A connection that stays too long in a half-open state is timed-out, and an RST packet is sent to the client.
 
-By default, Ubuntu's SYN flooding countermeasure is turned on:
+Large backlog queues and random early drops make SYN flooding more expensive but don't actually solve the problem. By default, Ubuntu's SYN flooding countermeasure is turned on:
 
 ```console
 $ sysctl -a | grep syncookies
@@ -61,14 +61,21 @@ net.ipv4.tcp_syncookies = 1
 ...
 ```
 
-This mechanism is called "SYN cookie". It will kick in if the machine detects that it is under the SYN flooding attack. The following lines inside our `docker-compose.yml` file:
+This mechanism is called "SYN cookie". It will kick in if the machine detects that it is under the SYN flooding attack. SYN cookies are particular choices of initial TCP sequence numbers by TCP servers. The differences between the server's initial sequence number and the client's initial sequence number are:
+- Top $$5$$ bits: $$t \bmod{32}$$, where $$t$$ is a $$32-bit$$ time counter that increases every $$64$$ seconds;
+- Next $$3$$ bits: an encoding of an MSS selected by the server in response to the client's MSS;
+- Bottom $$24$$ bits: a server-selected secret function of the client IP address and port number, the server IP address and port number, and $$t$$.
+
+This choice of sequence number complies with the basic TCP requirement that sequence numbers increase slowly; the server's initial sequence number increases slightly faster than the client's initial sequence number. A server that uses SYN cookies does not have to drop connections when its backlog queue fills up. Instead it sends back a SYN/ACK packet, exactly as if the backlog queue had been larger. (Exceptions: the server must reject TCP options such as large windows, and it must use one of the eight MSS values that it can encode.) When the server receives an ACK packet, it checks that the secret function works for a recent value of $$t$$, and then rebuilds the backlog queue entry from the encoded MSS[^3].
+
+The following lines inside this Lab's `docker-compose.yml` file:
 
 ```yaml
 sysctls:
     - net.ipv4.tcp_syncookies=0
 ```
 
-turns off this countermeasure for the victim Docker container. Also pay attention to this line:
+turns off the SYN cookie countermeasure for the victim Docker container. Also pay attention to this line:
 
 ```yaml
 privileged: true
@@ -85,7 +92,7 @@ from scapy.all import IP, TCP, send
 from ipaddress import IPv4Address
 from random import getrandbits
 
-ip = IP(dst="10.9.0.5")                                 # victim's IPv4 address
+ip  = IP(dst="10.9.0.5")                                # victim's IPv4 address
 tcp = TCP(dport=23, flags='S')
 pkt = ip/tcp
 
@@ -354,6 +361,23 @@ Compile this program on the SEED VM and then run it on our `seed-attacker` Docke
 
 ## Task 2: TCP RST Attacks on `telnet` Connections
 
+In this task, we need to launch a TCP reset (RST) attack from the VM to break an existing `telnet` connection between A and B, which are containers. To simplify the lab, we assume that the attacker and the victim are on the same LAN, i.e., the attacker can observe the TCP traffic between A and B.
+
+The reset (RST) bit in the TCP packet header is used to signal error conditions detected by TCP. A TCP RST packet is used by a TCP sender to indicate that it will neither accept nor receive more data. Scenarios where a TCP RST packet must be sent include the arrival of a data packet for which no connection is open, the arrival of a TCP segment with an inappropriate sequence number, or the arrival of a SYN/ACK packet for which no SYN had been initiated.
+
+A TCP RST attack is executed using a single packet of data, no more than a few bytes in size. A spoofed TCP segment, crafted and sent by an attacker, tricks two victims into abandoning a TCP connection, interrupting possibly vital communications between them. The attack is believed to be a key component of China's Great Firewall, used by the Chinese government to censor the internet inside China.
+
+```python
+#!/usr/bin/env python3
+from scapy.all import *
+
+ip  = IP(src="", dst="")
+tcp = TCP(sport=, dport=, flags="R", seq=)
+pkt = ip/tcp
+ls(pkt)
+send(pkt, verbose = 0)
+```
+
 ## Task 3: TCP Session Hijacking
 
 ## Task 4: Creating Reverse Shell using TCP Session Hijacking
@@ -362,7 +386,9 @@ Compile this program on the SEED VM and then run it on our `seed-attacker` Docke
 
 [^1]: [https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/](https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/).
 
-[^2]: A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
+[^2]: A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement. The fundamental unit of data transfer in TCP is a byte. However, TCP implementations generally work with a larger logical unit size called a *segment* when transmitting packets across an IP internetwork. The Maximum Segment Size (MSS) is a tunable parameter for a TCP transfer. The choice of the MSS typically depends on the Maximum Transmission Unit (MTU) size supported by the underlying network layer. In most instances, each TCP segment is carried in one IP packet. The task of TCP is to divide the application-layer data into one or more segments, transmit them across the network, and deliver them reliably (and in order) to the receiving TCP. Each segment carries an explicit sequence number, for the purposes of ordering and reliability. During TCP handshake, the two endpoints establish the starting sequence numbers for data transfers in each direction, set connection parameters (e.g., MSS), and negotiate desired options (e.g., timestamps, SACK, or the window scale option for high bandwidth-delay product networks).
+
+[^3]: [https://cr.yp.to/syncookies.html](https://cr.yp.to/syncookies.html).
 
 [Linux kernel map](https://makelinux.github.io/kernel/map/)
 
