@@ -32,7 +32,21 @@ $$\mathbb{E}[S(n)] = \mathbb{E} \biggl[ \sum\limits_{i = 0}^{n - 1}|k_{i}| \bigg
 
 where $$k_{i}, i = 0, 1, \dots , n - 1$$ are the keys, $$L$$ is the average length of the strings held by the tree. Quite a lot of memory consumption, isn't it?
 
-Now we know that, in tries, most of the nodes do not store keys and are just hops on a path between a key and the ones that extend it. Although most of these hops are necessary, when we store long words using tries, they tend to produce long chains of internal nodes, each with just one child, which requires further space optimization. This is where radix trees (a.k.a. *radix tries*, a.k.a. *Patricia trees*) come into the picture. According to Wikipedia, in a radix tree, each node that is the only child is merged with its parent, resulting in the fact that the number of children of every internal node is at most the radix $$r$$ of the radix tree, where $$r$$ is a positive integer and a power $$x$$ of $$2$$, having $$x \geq 1$$.
+Now we know that, in tries, most of the nodes do not store keys and are just hops on a path between a key and the ones that extend it. Although most of these hops are necessary, when we store long words using tries, they tend to produce long chains of internal nodes, each with just one child, which requires further space optimization. This is where radix trees (a.k.a. *radix tries*, a.k.a. *PATRICIA tries*[^2]) come into the picture. According to Wikipedia, in a radix tree, each node that is the only child is merged with its parent, resulting in the fact that the number of children of every internal node is at most the radix $$r$$ of the radix tree, where $$r$$ is a positive integer and a power $$x$$ of $$2$$, having $$x \geq 1$$.
+
+The *depth* of a leaf in a trie, also known as *depth of insertion* or *successful search time*, is the number of internal nodes on the path from the root of the trie to the leaf. It is of particular interest since it provides useful information in many applications. For example, when keys are stored in the leaves of the trie, the depth of a key gives an estimate of the search time for that key in searching and sorting algorithms[^3]. The expected value of the insertion cost for a trie respectively a radix trie built from $$N$$ records with keys from random bit streams is:
+
+$$\log_{2}N + \frac{\gamma}{\log 2} + \frac{1}{2} + \delta^{[T]}(\log_{2} N) + O(N^{-1})$$
+
+respectively
+
+$$\log_{2}N + \frac{\gamma}{\log 2} + \frac{1}{2} + \delta^{[P]}(\log_{2} N) + O(N^{-1})$$
+
+where $$\gamma = .57721 \cdots$$ is Euler's constant; $$\delta^{[T]}(x) = \delta^{[P]}(x)$$ are periodic functions with period $$1$$ and very small amplitude:
+
+$$\delta^{[T]}(x) = \frac{1}{\log 2} \sum\limits_{k \in \mathbb{Z}, k \not = 0} \omega_{k} \cdot \Gamma(-\omega_{k}) e^{2k\pi ix},$$
+
+with $$\omega_{k} = 1 + 2k\pi i / \log 2$$. So the averages are of order $$\log N$$[^4].
 
 ## Table of Contents
 {:.no_toc}
@@ -84,7 +98,7 @@ static inline void xa_init_flags(struct xarray *xa, gfp_t flags)
 #define INIT_RADIX_TREE(root, mask) xa_init_flags(root, mask)
 ```
 
-In either case, a `gfp_mask` must be provided to tell the code how memory allocations are to be performed[^2]. Note that the above listings are copied from Linux source code version 6.1.12, which is the latest version at the time of writing. A pointer with the `__rcu` prefix is RCU-protected, which means that any dereference of it must be covered by `rcu_read_lock()`, `rcu_read_lock_bh()`, `rcu_read_lock_sched()`, or by the appropriate update-side lock.
+In either case, a `gfp_mask` must be provided to tell the code how memory allocations are to be performed[^5]. Note that the above listings are copied from Linux source code version 6.1.12, which is the latest version at the time of writing. A pointer with the `__rcu` prefix is RCU-protected, which means that any dereference of it must be covered by `rcu_read_lock()`, `rcu_read_lock_bh()`, `rcu_read_lock_sched()`, or by the appropriate update-side lock.
 
 It surprised me that something called "[XArray](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt)" is actually behind the radix tree data structure right now. In [this email](https://lkml.iu.edu/hypermail/linux/kernel/1810.2/06430.html), kernel developer Matthew Wilcox introduced XArray ("eXtensible Array") for Linux version 4.20 and explained its advantages over radix tree:
 
@@ -134,7 +148,7 @@ The longest path of the radix tree is defined as:
                                               RADIX_TREE_MAP_SHIFT))
 ```
 
-The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Typically, each layer (a node and its siblings) of a radix tree contains `1UL << 6` pointers, that is, the length of the `slots` array is 64. Each slot is indexed by a portion of an integer "key" of type `unsigned long` as seen in:
+The height of a fully populated tree is thus `RADIX_TREE_MAX_PATH + 1`. If the root node (`rnode` field of `radix_tree_root`) is a `NULL` pointer, then the radix tree is considered as empty. Typically, each layer (a node and its siblings) of a radix tree contains `1UL << 6` pointers, that is, the length of the `slots` array is $$64$$. Each slot is indexed by a portion of an integer "key" of type `unsigned long` as seen in:
 
 ```c
 struct radix_tree_iter {
@@ -162,7 +176,7 @@ static inline unsigned long node_maxindex(struct radix_tree_node *node)
 }
 ```
 
-A tree of height $$N$$ may contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^3]. For debugging, we can print out relevant informtion about a radix tree node:
+A tree of height $$N$$ may contain any index between $$0$$ and $$64^{N} - 1$$. The `count` field is the count of every non-`NULL` element in the `slots` array whether that is an exceptional entry, a retry entry, a user pointer, a sibling entry or a pointer to the next level of the tree[^6]. For debugging, we can print out relevant informtion about a radix tree node:
 
 ```c
 #ifndef __KERNEL__
@@ -311,7 +325,7 @@ restart:
 
 Both the node pointer that points to the address of the parent and the slot pointer that points to the address of the `slots` array are updated before returning the node pointer that points to the node associated with the given index.
 
-The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org/2018-Wilcox-Replacing-the-Radix-Tree.pdf) during the 2018 linux.conf.au Kernel miniconf summarized main characteristics of the Linux kernel's radix tree implementation[^4]:
+The third slide of Matthew Wilcox's [presentation](https://lca-kernel.ozlabs.org/2018-Wilcox-Replacing-the-Radix-Tree.pdf) during the 2018 linux.conf.au Kernel miniconf summarized main characteristics of the Linux kernel's radix tree implementation[^7]:
 - Implicit keys (like a trie), but not a bitwise trie
 - Grow/shrink, but never rebalanced
 - RCU-safe
@@ -344,7 +358,7 @@ idr, ida, Andrew Morton
 
 assoc_array
 
-[^5]
+[^8]
 
 IPv6 route lookup
 
@@ -352,10 +366,16 @@ IPv6 route lookup
 
 [^1]: The name *trie* comes from the phrase "information re*trie*val." Despite the etymology, trie is now almost always pronounced like *try* instead of *tree* to avoid confusion with other tree data structures. See [course notes](http://www.cs.yale.edu/homes/aspnes/classes/223/notes.html) written by Dr. James Aspnes from Yale University. Another good source for trie-based data structures is Peter Brass, *Advanced Data Structures*, Cambridge University Press, 2008.
 
-[^2]: See [Linux Weekly News](https://www.lwn.net): "Trees I: Radix Trees" by Jonathan Corbet, March 13, 2006.
+[^2]: The name *patricia* comes from the phrase "*p*ractical *a*lgorithm to re*tr*ieve *i*nformation *c*oded *i*n *a*lphanumeric."
 
-[^3]: Most users of the radix tree store pointers but `shmem`/`tmpfs` stores swap entries in the same tree. They are marked as exceptional entries to distinguish them from pointers to `struct page`. The internal entry may be a pointer to the next level in the tree, a sibling entry, or an indicator that the entry in this slot has been moved to another location in the tree and the lookup should be restarted. Sibling slots point directly to another `slot` in the same node. The bottom two bits of the slot determine how the remaining bits in the slot are interpreted: `00` (data pointer); `01` (internal entry); `10` (exceptional entry); `11` (unused/reserved).
+[^3]: See Donald E. Knuth, *The Art of Computer Programming. Sorting and Searching*, Vol. &#x8546;, Addison-Wesley, Reading, MA, 1973.
 
-[^4]: The video recording is [here](https://archive.org/details/lca2018-The_design_and_implementation_of_the_XArray). In an LWN article, Jonathan Corbet added that addition of an item to a tree has been called "insertion" for decades (since at least 1968), but an "insert" operation does not really describe what happens with a radix tree, especially if an item with the given key is already present there. See [Linux Weekly News](lwn.net): "The XArray Data Structure" by Jonathan Corbet, January 24, 2018.
+[^4]: Peter Kirschenhofer and Helmut Prodinger, "Further Results on Digital Search Trees," *Theoretical Computer Science*, Volume 58, Issues 1-3, June 1988, Pages 143-154.
 
-[^5]: *Examining Linux 2.6 Page-Cache Performance* by Sonny Rao, Dominique Heger, and Steven Pratt, [landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf](https://landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf)
+[^5]: See [Linux Weekly News](https://www.lwn.net): "Trees I: Radix Trees" by Jonathan Corbet, March 13, 2006.
+
+[^6]: Most users of the radix tree store pointers but `shmem`/`tmpfs` stores swap entries in the same tree. They are marked as exceptional entries to distinguish them from pointers to `struct page`. The internal entry may be a pointer to the next level in the tree, a sibling entry, or an indicator that the entry in this slot has been moved to another location in the tree and the lookup should be restarted. Sibling slots point directly to another `slot` in the same node. The bottom two bits of the slot determine how the remaining bits in the slot are interpreted: `00` (data pointer); `01` (internal entry); `10` (exceptional entry); `11` (unused/reserved).
+
+[^7]: The video recording is [here](https://archive.org/details/lca2018-The_design_and_implementation_of_the_XArray). In an LWN article, Jonathan Corbet added that addition of an item to a tree has been called "insertion" for decades (since at least 1968), but an "insert" operation does not really describe what happens with a radix tree, especially if an item with the given key is already present there. See [Linux Weekly News](lwn.net): "The XArray Data Structure" by Jonathan Corbet, January 24, 2018.
+
+[^8]: *Examining Linux 2.6 Page-Cache Performance* by Sonny Rao, Dominique Heger, and Steven Pratt, [landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf](https://landley.net/kdocs/ols/2005/ols2005v2-pages-87-98.pdf)
