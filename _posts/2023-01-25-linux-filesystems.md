@@ -49,7 +49,7 @@ struct vfsmount {
 } __randomize_layout;
 ```
 
-All mounts form a tree-like structure, with a child mount structure holding a reference to the parent mount structure. Whenever a mount operation is invoked, (1) a `vfsmount` structure is created which holds a reference to a new superblock structure created from the filesystem to be mounted on the disk, and (2) the `dentry` of the mount point as well as the `dentry` of the mounted tree is populated. The `dentry` has a reference to the `vfsmount`. This is where the Linux's virtual filesystem (VFS) distinguishes between a directory and a mount point. During a traversal, the `vfsmount` is found in a dentry, the the `inode` number 2 on the mounted device is used. Next section provides a more detailed discussion about VFS.
+All mounts form a tree-like structure, with a child mount structure holding a reference to the parent mount structure. Whenever a mount operation is invoked, (1) a `vfsmount` structure is created which holds a reference to a new superblock structure created from the filesystem to be mounted on the disk, and (2) the `dentry` of the mount point as well as the `dentry` of the mounted tree is populated. The `dentry` has a reference to the `vfsmount`. This is where the Linux's virtual filesystem (VFS) distinguishes between a directory and a mount point. During a pathname lookup, the `vfsmount` is found in a `dentry`, the `inode` number 2 on the mounted device is used (`inode` 2 is reserved for root directory and indicates starting of filesystem `inode`s). Next section provides a more detailed discussion about VFS.
 
 Now, on the Raspberry Pi, let's create a directory tree that looks something like this:
 
