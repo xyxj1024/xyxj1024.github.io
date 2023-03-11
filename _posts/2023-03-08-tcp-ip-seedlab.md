@@ -3,7 +3,7 @@ layout:       post
 title:        "SEED Labs 2.0: TCP/IP Attack Lab Writeup"
 category:     "Computing Systems, Systems Security"
 tags:         networking cybersecurity
-permalink:    /posts/seedlabs/attacks-on-the-tcp-protocol
+permalink:    /posts/seedlabs/attacks-on-tcp
 ---
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org/Labs_20.04/Networking/TCP_Attacks/). The lab assignment was conducted using Docker Compose. Download the [`Labsetup.zip`](https://seedsecuritylabs.org/Labs_20.04/Files/TCP_Attacks/Labsetup.zip) file, unzip it, enter the `Labsetup` folder, and use the `docker-compose.yml` file to set up the lab environment.
@@ -378,7 +378,7 @@ A TCP RST attack is executed using a single packet of data, no more than a few b
 First, let's enter into the shell of the `user1-10.9.0.6` container and issue the command `ifconfig`. Find the network interface with the IP address `10.9.0.1` (in my case: `br-f00d665d871a`). Then, open a new terminal window, and issue the following command (type `sudo apt install tshark` if `tshark` is not installed):
 
 ```console
-$ tshark -i br-f00d665d871a -f "port 23"
+$ tshark -i br-f00d665d871a -f "tcp port 23"
 Capturing on 'br-f00d665d871a'
 ```
 
@@ -421,7 +421,7 @@ send(pkt, iface="br-f00d665d871a", verbose=0)
 Run the program with `sudo`. We shall subsequently see the following message printed out by `tshark`:
 
 ```console
-$ tshark -i br-f00d665d871a -f "port 23"
+$ tshark -i br-f00d665d871a -f "tcp port 23"
 Capturing on 'br-f00d665d871a'
     1 0.000000000     10.9.0.6 → 10.9.0.5     TCP 54 43106 → 23 [RST] Seq=2451321325 Win=8192 Len=0
 ```
@@ -446,7 +446,30 @@ pkt=sniff(iface='br-f00d665d871a', filter='tcp and port 23', prn=spoof_tcp)
 
 ## Task 3: TCP Session Hijacking
 
+According to MDN Web Docs, the TCP session hijacking attack takes five steps:
+1. **Sniff**, that is perform a man-in-the-middle (MITM) attack, place the attacker between victim and server.
+2. **Monitor** packets flowing between server and user.
+3. **Break** the victim machine's connection.
+4. **Take control** of the session.
+5. **Inject** new packets to the server using the victim's session ID.
+
+In this task, we need to demonstrate how we can hijack a `telnet` session between two computers. Our goal is to get the `telnet` server to run a malicious command from us. For the simplicity of the task, we assume that the attacker and the victim are on the same LAN.
+
+```python
+#!/usr/bin/env python3
+from scapy.all import *
+
+ip   = IP(src="", dst="")
+tcp  = TCP(sport="", dport="", flags="A", seq=, ack=)
+data = ""
+pkt  = ip/tcp/data
+ls(pkt)
+send(pkt, verbose=0)
+```
+
 ## Task 4: Creating Reverse Shell using TCP Session Hijacking
+
+When attackers are able to inject a command to the victim's machine using TCP session hijacking, they are not interested in running one simple command on the victim machine; they are interested in running many commands. Obviously, running these commands all through TCP session hijacking is inconvenient. What attackers want to achieve is to use the attack to set up a back door, so they can use this back door to conveniently conduct further damages. A typical way to set up back doors is to run a reverse shell from the victim machine to give the attack the shell access to the victim machine. Reverse shell is a shell process running on a remote machine, connecting back to the attacker's machine. This gives an attacker a convenient way to access a remote machine once it has been compromised.
 
 ## Notes
 
