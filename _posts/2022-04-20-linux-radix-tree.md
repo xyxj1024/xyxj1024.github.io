@@ -368,7 +368,7 @@ IPv6 route lookup
 
 [^2]: The name *patricia* comes from the phrase "*p*ractical *a*lgorithm to re*tr*ieve *i*nformation *c*oded *i*n *a*lphanumeric."
 
-[^3]: See Donald E. Knuth, *The Art of Computer Programming. Sorting and Searching*, Vol. &#x8546;, Addison-Wesley, Reading, MA, 1973.
+[^3]: See Donald E. Knuth, *The Art of Computer Programming. Sorting and Searching*, Vol. III, Addison-Wesley, Reading, MA, 1973.
 
 [^4]: Peter Kirschenhofer and Helmut Prodinger, "Further Results on Digital Search Trees," *Theoretical Computer Science*, Volume 58, Issues 1-3, June 1988, Pages 143-154.
 
