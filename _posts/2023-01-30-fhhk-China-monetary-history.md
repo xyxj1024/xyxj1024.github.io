@@ -4,7 +4,7 @@ title:              "晚清货币与货币政策"
 category:           "Economics, Finance, Political Economy"
 tags:               Chinese-economy Chinese-history
 permalink:          /posts/Chinese-history/fhhk-China-monetary-policy
-last_modified_at:   "2023-02-03"
+last_modified_at:   "2023-03-03"
 ---
 
 <p lang="en" class="message"><em>

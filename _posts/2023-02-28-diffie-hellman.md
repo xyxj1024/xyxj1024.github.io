@@ -1,13 +1,15 @@
 ---
 layout:             post
-title:              "Diffie-Hellman Key Exchange"
+title:              "A Primer to Diffie-Hellman Key Exchange"
 category:           "Computing Systems, Systems Security"
 tags:               cryptography cybersecurity ctf
 permalink:          /posts/diffie-hellman
-last_modified_at:   "2023-03-02"
+last_modified_at:   "2023-03-11"
 ---
 
+According to [RFC2631](https://www.rfc-editor.org/rfc/rfc2631):
 
+> Diffie-Hellman key agreement requires that both the sender and recipient of a message have key pairs. By combining one's private key and the other party's public key, both parties can compute the same shared secret number. This number can then be converted into cryptographic keying material. That keying material is typically used as a key-encryption key (KEK) to encrypt (wrap) a content-encryption key (CEK) which is in turn used to encrypt the message data.
 
 <!-- excerpt-end -->
 
@@ -194,18 +196,18 @@ For two users, say Alice and Bob, to derive a common key in a finite cyclic grou
 
 **Definition 10.** The computation of $$g^{ab}$$ from knowledge of $$g^{a}$$ and $$g^{b}$$ is referred to as the **Diffie-Hellman problem (DHP)**. If one is able to find discrete logarithm in $$G$$ then one can break the DH protocol and the DLP is at least as hard as the DHP[^7].
 
-**Protocol 1 (Ephemeral Diffie-Hellman)** Assume that $$A$$ and $$B$$ are honest entities; $$p$$ is a $$1024$$-bit prime and $$q$$ is a $$160$$-bit prime divisor of $$p - 1$$; $$g$$ is an element of order $$q$$ in $$\mathbb{Z}_{p}^{\times}$$; the domain parameters $$(p, q, g)$$ are common to all entities. (Obviously, the choices for $$p$$ and $$g$$ must yield a large value for the order $$q$$, the size of the generated cyclic subgroup of $$\mathbb{Z}_{p}^{\times}$$.)
+**Protocol 1 (Ephemeral Diffie-Hellman)** Assume that $$A$$ and $$B$$ are honest entities; $$p$$ is a $$1024$$-bit prime[^8] and $$q$$ is a $$160$$-bit prime divisor of $$p - 1$$; $$g$$ is an element of order $$q$$ in $$\mathbb{Z}_{p}^{\times}$$; the domain parameters $$(p, q, g)$$ are common to all entities. (Obviously, the choices for $$p$$ and $$g$$ must yield a large value for the order $$q$$, the size of the generated cyclic subgroup of $$\mathbb{Z}_{p}^{\times}$$.)
 
 1. $$A$$ selects $$x \in_{\mathbb{R}} [1, q - 1]$$ and sends $$R_{A} = g^{x} \bmod{p}$$ to $$B$$.
 2. $$B$$ selects $$x \in_{\mathbb{R}} [1, q - 1]$$ and sends $$R_{B} = g^{y} \bmod{p}$$ to $$A$$.
 3. $$A$$ computes $$K = (R_{B})^{x} = g^{xy}$$.
 4. $$B$$ computes $$K = (R_{A})^{y} = g^{xy}$$.
 
-While the ephemeral Diffie–Hellman protocol provides implicit key authentication[^8] in the presence of passive adversaries, it does not on its own provide any useful services in the presence of active adversaries since neither entity is provided with any assurances regarding the identity of the entity it is communicating with.
+While the ephemeral Diffie–Hellman protocol provides implicit key authentication[^9] in the presence of passive adversaries, it does not on its own provide any useful services in the presence of active adversaries since neither entity is provided with any assurances regarding the identity of the entity it is communicating with.
 
 **Protocol 2 (Static Diffie-Hellman)** Let $$a$$ and $$b$$ denote static private keys of $$A$$ and $$B$$ such that $$a, b \in_{\mathbb{R}} [1, q - 1]$$. Let $$Y_{A}$$ and $$Y_{B}$$ denote static public keys of $$A$$ and $$B$$ such that $$Y_{A} = g^{a} \bmod{p}$$, $$Y_{B} = g^{b} \bmod{p}$$. Let $$Cert_{A}$$ denote $$A$$'s public-key certificate, containing a string of information that uniquely identifies $$A$$ (such as $$A$$'s name and address), her static public key $$Y_{A}$$, and a certifying authority CA's signature over this information. Any other entity $$B$$ can use his authentic copy of the CA's public key to verify $$A$$'s certificate, thereby obtaining an authentic copy of $$A$$'s static public key.
 
-Assume that the CA has verified that $$A$$ possess the private key $$a$$ corresponding to her static public key $$Y_{A}$$. This is done in order to prevent potential unknown key-share attacks[^9] whereby an adversary $$E$$ registers $$A$$'s public key $$Y_{A}$$ as its own and subsequently deceives $$B$$ into believing that $$A$$'s messages originated from $$E$$.
+Assume that the CA has verified that $$A$$ possess the private key $$a$$ corresponding to her static public key $$Y_{A}$$. This is done in order to prevent potential unknown key-share attacks[^10] whereby an adversary $$E$$ registers $$A$$'s public key $$Y_{A}$$ as its own and subsequently deceives $$B$$ into believing that $$A$$'s messages originated from $$E$$.
 
 Also assume that the CA has verified the validity of $$A$$'s static public key $$Y_{A}$$, i.e., the CA has verified that $$1 < Y_{A} < p$$ and that $$(Y_{A})^{q} \equiv 1 \bmod{p}$$.
 1. $$A$$ sends $$Cert_{A}$$ to $$B$$.
@@ -213,7 +215,7 @@ Also assume that the CA has verified the validity of $$A$$'s static public key $
 3. $$A$$ computes $$K = (Y_{B})^{a} = g^{ab}$$.
 4. $$B$$ computes $$K = (Y_{A})^{b} = g^{ab}$$.
 
-Since each entity is assured that it possesses an authentic copy of the other entity's public key, the static Diffie-Hellman protocol offers implicit key authentication. A major drawback, however, is that $$A$$ and $$B$$ compute the same shared secret $$K = g^{ab}$$ for each run of the protocol[^10].
+Since each entity is assured that it possesses an authentic copy of the other entity's public key, the static Diffie-Hellman protocol offers implicit key authentication. A major drawback, however, is that $$A$$ and $$B$$ compute the same shared secret $$K = g^{ab}$$ for each run of the protocol[^11].
 
 ### Oakley Key-Exchange Protocol
 
@@ -233,8 +235,10 @@ Since each entity is assured that it possesses an authentic copy of the other en
 
 [^7]: One commonly used variant of DHP relies on the elliptic curve discrete logarithm problem, which is based on the math around elliptic curves instead of modular arithmetic. Although the underlying number theory is more complicated, elliptic-curve Diffie-Hellman protocol is able to use smaller keys than modular arithmetic Diffie-Hellman protocol while still providing the same level of security, so it has many useful applications.
 
-[^8]: A key exchange (agreement) protocol is said to provide implicit key authentication (of $$B$$ to $$A$$) if entity $$A$$ is assured that no other entity aside from a specifically identified second entity $$B$$ can possibly learn the value of a particular secret key. Note that the property of implicit key authentication does not necessarily mean that $$A$$ is assured of $$B$$ actually possessing the key.
+[^8]: [This paper](https://weakdh.org/imperfect-forward-secrecy-ccs15.pdf) is highly recommended. [RFC8270](https://www.rfc-editor.org/rfc/rfc8270) summarizes that: "DH groups that are $$1024$$ bits can be broken by state-sponsored actors and any organization with enough computing resources." A minimum group size of $$2048$$ bits is suggested for the "`min`" value of the `SSH_MSG_KEY_DH_GEX_REQUEST` client message given in [RFC4419](https://www.rfc-editor.org/rfc/rfc4419).
 
-[^9]: Entity $$B$$ cannot be coerced into sharing a key with entity $$A$$ without $$B$$'s knowledge, i.e., when $$B$$ believes the key is shared with some entity $$C \not = A$$, and $$A$$ (correctly) believes the key is shared with $$B$$. A hypothetical scenario where an unknown key-share attack can have damaging consequences is the following; this scenario was first described by [Diffie, van Oorschot and Wiener (1992)](https://link.springer.com/article/10.1007/BF00124891).
+[^9]: A key exchange (agreement) protocol is said to provide implicit key authentication (of $$B$$ to $$A$$) if entity $$A$$ is assured that no other entity aside from a specifically identified second entity $$B$$ can possibly learn the value of a particular secret key. Note that the property of implicit key authentication does not necessarily mean that $$A$$ is assured of $$B$$ actually possessing the key.
 
-[^10]: See Simon Blake-Wilson and Alfred Menezes, "Authenticated Diffie-Hellman key Agreement Protocols," [https://link.springer.com/content/pdf/10.1007/3-540-48892-8_26.pdf](https://link.springer.com/content/pdf/10.1007/3-540-48892-8_26.pdf). From Avinash Kak's Computer and Network Security [lecture notes](https://engineering.purdue.edu/kak/compsec/NewLectures/): "Because of the vulnerability to the man-in-the-middle attack, use of the DH protocol should be preceded by sender authentication. When DH is used with sender authentication, the resulting overall protocol is sometimes referred to as *authenticated DH*."
+[^10]: Entity $$B$$ cannot be coerced into sharing a key with entity $$A$$ without $$B$$'s knowledge, i.e., when $$B$$ believes the key is shared with some entity $$C \not = A$$, and $$A$$ (correctly) believes the key is shared with $$B$$. A hypothetical scenario where an unknown key-share attack can have damaging consequences is the following; this scenario was first described by [Diffie, van Oorschot and Wiener (1992)](https://link.springer.com/article/10.1007/BF00124891).
+
+[^11]: See Simon Blake-Wilson and Alfred Menezes, "Authenticated Diffie-Hellman key Agreement Protocols," [https://link.springer.com/content/pdf/10.1007/3-540-48892-8_26.pdf](https://link.springer.com/content/pdf/10.1007/3-540-48892-8_26.pdf). From Avinash Kak's Computer and Network Security [lecture notes](https://engineering.purdue.edu/kak/compsec/NewLectures/): "Because of the vulnerability to the man-in-the-middle attack, use of the DH protocol should be preceded by sender authentication. When DH is used with sender authentication, the resulting overall protocol is sometimes referred to as *authenticated DH*."

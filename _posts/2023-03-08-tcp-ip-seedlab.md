@@ -1,9 +1,10 @@
 ---
-layout:       post
-title:        "SEED Labs 2.0: TCP/IP Attack Lab Writeup"
-category:     "Computing Systems, Systems Security"
-tags:         networking cybersecurity
-permalink:    /posts/seedlabs/attacks-on-tcp
+layout:             post
+title:              "SEED Labs 2.0: TCP/IP Attack Lab Writeup"
+category:           "Computing Systems, Systems Security"
+tags:               networking cybersecurity
+permalink:          /posts/seedlabs/attacks-on-tcp
+last_modified_at:   "2023-03-11"
 ---
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org/Labs_20.04/Networking/TCP_Attacks/). The lab assignment was conducted using Docker Compose. Download the [`Labsetup.zip`](https://seedsecuritylabs.org/Labs_20.04/Files/TCP_Attacks/Labsetup.zip) file, unzip it, enter the `Labsetup` folder, and use the `docker-compose.yml` file to set up the lab environment.
