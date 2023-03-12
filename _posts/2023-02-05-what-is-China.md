@@ -137,11 +137,11 @@ last_modified_at:   "2023-02-23"
 
 我们应当看到，首先，与“地中海”不同，在“东海”这个同样依赖海路彼此联系的空间里，尽管有着类似佛教和儒家这样共同尊奉的宗教与思想，但是，却始终缺乏一个类似基督教那样，超越国家（王朝）、皇权（君主）之上，作为彼此认同基础和联系纽带的共同宗教，因此，这个区域很难在国家之外，形成超越国家的文化共同体；其次，与“西域”也不同，“东海”也不是一个各种民族、宗教和语言的边界时常移动，因而成为彼此混融、互相冲突的空间，由于各个民族、宗教和语言大体各守边界，加上它们原本就有一些共享的典籍、文字和宗教，因此，历史学家应当关注的文化变迁，却是这些文化认同基础的崩溃。这倒是西域甚至地中海都没有的历史变化，也正是这一现象的延续，导致了近代东亚各国认同与文化的变迁。
 
-<br />
+<br>
 ![northeast-asia-1850s](/assets/images/northeast-asia.png){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
 图片来源：Li Narangoa and Robert Cribb, <i>Historical Atlas of Northeast Asia, 1590-2010</i>, Columbia University Press, 2014, pp. 125.
-</p><br />
+</p><br>
 
 ## 《何為中國：疆域、民族、文化與歷史》
 
@@ -206,11 +206,11 @@ last_modified_at:   "2023-02-23"
 
 以時髦的「現代性」來說，我總覺得，中國城市商業、娛樂與市民生活方式發展最快的，可能恰恰是在兩個所謂異族統治的時代，即蒙元與滿清兩個王朝。什麼原因呢？因為漢族的儒家文化是以鄉村秩序為基礎的，城市的生活樣式、日常秩序和價值取向，在漢族的儒家世界是被批判和抵制的。可是，恰恰在蒙元時代城市發展很快，也許就是因為儒家倫理暫時不那麼有控制力的緣故。
 
-<br />
+<br>
 ![kunlun](/assets/images/kunlun.jpg){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
 国际空间站在262英里高空拍摄到的昆仑山画面（图片来源：<a href="https://www.nasa.gov/image-feature/a-portion-of-the-kunlun-mountains-in-southwestern-china">NASA</a>）
-</p><br />
+</p><br>
 
 ## 脚注
 

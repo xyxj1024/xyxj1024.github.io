@@ -308,11 +308,11 @@ Burger et al. (1996)[^5] divided program execution time $$T$$ into three categor
 |---
 | **MT Approach** | **Resources Shared between Threads** | **Context Switch Mechanism**
 |:-|:-|:-
-| None | Everything | Explicit operating system <br /> context switch
-| Fine-grained | Everything but register file <br /> and control logic/state | Switch every cycle
-| Coarse-grained | Everything but I-fetch buffers, <br /> register file, and control logic/state | Switch on pipeline stall
-| SMT | Everything but I-fetch buffers, <br /> return address stack, <br /> architected register file, <br /> control logic/state, <br /> reorder buffer, store queue, etc. | All contexts concurrently <br /> active; no switching
-| CMP | Secondary cache, system interconnect | All contexts concurrently <br /> active; no switching
+| None | Everything | Explicit operating system <br> context switch
+| Fine-grained | Everything but register file <br> and control logic/state | Switch every cycle
+| Coarse-grained | Everything but I-fetch buffers, <br> register file, and control logic/state | Switch on pipeline stall
+| SMT | Everything but I-fetch buffers, <br> return address stack, <br> architected register file, <br> control logic/state, <br> reorder buffer, store queue, etc. | All contexts concurrently <br> active; no switching
+| CMP | Secondary cache, system interconnect | All contexts concurrently <br> active; no switching
 
 *Table 1: Various approaches to resource sharing and context switching, from Shen and Lipasti (2013)*[^6]
 {:.table-caption}

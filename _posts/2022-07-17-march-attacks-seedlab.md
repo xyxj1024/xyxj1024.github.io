@@ -486,7 +486,7 @@ On modern processors, the (per-core) **Branch Prediction Unit (BPU)**{: style="c
 
 Typically, the directional predictor takes advantage of the **Pattern History Table (PHT)**{: style="color: red"} for direction prediction (i.e. speculative decision about whether a conditional branch is taken or not). The BPU can operate in different modes: 
 - In the one-level prediction mode, the branch address is the only information source to index the PHT entry. 
-- In the history-based (two-level) prediction mode, a branch history buffer maintains the history of prior branch executions.<br />
+- In the history-based (two-level) prediction mode, a branch history buffer maintains the history of prior branch executions.<br>
 
 Modern processors generally choose a hybrid design that uses the one-level prediction to select PHT entry with a predetermined number of bits from the branch address and uses the history-based prediction to index into PHT with the branch address hashed by a **global history register (GHR)**{: style="color: red"}. The GHR is a shift register that keeps track of the most recent history among all branches executed on the core.
 

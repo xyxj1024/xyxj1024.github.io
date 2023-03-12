@@ -517,7 +517,7 @@ Define a macro that is used like "<code>while-less e1 do e2</code>" where <code>
 2. It evaluates <code>e2</code> at least once.
 3. It keeps evaluating <code>e2</code> until and only until the result is not a number less than the result of the evaluation of <code>e1</code>.
 4. Assuming evaluation terminates, the result is true.
-5. Assume <code>e1</code> and <code>e2</code> produce numbers.<br />
+5. Assume <code>e1</code> and <code>e2</code> produce numbers.<br>
 
 ```racket
 (define-syntax while-less

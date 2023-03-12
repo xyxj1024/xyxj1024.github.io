@@ -191,11 +191,11 @@ In the *chung-ch'ien* model, which was typical of Chihli, Shantung, Kansu, and K
 The *hsiao-ch'ien* system was typical of Fengtian and Ying-kou and had *tiao* and *ch'ien* &mdash;&mdash; *kuan-tung-ch'ien* or *tung-ch'ien* &mdash;&mdash; units of account, but a debt of a *tiao* could be settled by the payment of $$160$$ cash coins. The $$160$$ coins were strung together, and there was thus no sub-string in the *hsian-ch'ien* system.
 {: style="font-family:Gill Sans"}
 
-<br />
+<br>
 ![three-cash-systems](/assets/images/three-cash.png){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
 图一：理想状态下的三种现金系统
-</p><br />
+</p><br>
 
 ## 第三章 白银部门
 
