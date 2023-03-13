@@ -9,12 +9,12 @@ last_modified_at:   "2023-03-11"
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org/Labs_20.04/Networking/TCP_Attacks/). The lab assignment was conducted using Docker Compose. Download the [`Labsetup.zip`](https://seedsecuritylabs.org/Labs_20.04/Files/TCP_Attacks/Labsetup.zip) file, unzip it, enter the `Labsetup` folder, and use the `docker-compose.yml` file to set up the lab environment.
 
+In the first section of this post, I would like to give an overview of the Linux network architecture, including the TCP/IP stack. Here, let's first take a quick run-through of the Transmission Control Protocol (TCP). Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed. A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
+
 ![tcp-socket-listening](/assets/images/synq-acceptq.png){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
 Source: <span><a href="http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queues/">Arthur Chiao's Blog</a></span>
 </p>
-
-Before we start on the lab assignments, I would like to give an overview of the Transmission Control Protocol (TCP) here. Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed. A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
 
 <!-- excerpt-end -->
 
@@ -35,6 +35,20 @@ Any operating system that supports networking has some type of network stack.
 <p style="text-align:center;color:gray;font-size:80%;">
 Source: <span><a href="https://www.usenix.org/conference/srecon22apac/presentation/jiang">Jizhong Jiang and Shane Xie, Alibaba Cloud</a></span>
 </p>
+
+[Linux kernel map](https://makelinux.github.io/kernel/map/)
+
+[Data path](https://www.cs.cornell.edu/~ragarwal/pubs/network-stack.pdf)
+
+### Networking Scalability Problem
+
+[Scaling in the Linux Networking Stack](https://www.kernel.org/doc/Documentation/networking/scaling.txt)
+
+[Reduce cache performance](https://lwn.net/Articles/169961/)
+
+[Why we use the Linux kernel's TCP stack](https://blog.cloudflare.com/why-we-use-the-linux-kernels-tcp-stack/)
+
+[Anatomy of a user namespaces vulnerability](https://lwn.net/Articles/543273/)
 
 ## Task 1: SYN Flooding Attack
 
@@ -525,9 +539,3 @@ We can also launch the attack automatically as in the previous task.
 [^1]: [https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/](https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/).
 
 [^2]: [https://cr.yp.to/syncookies.html](https://cr.yp.to/syncookies.html).
-
-[Linux kernel map](https://makelinux.github.io/kernel/map/)
-
-[Why we use the Linux kernel's TCP stack](https://blog.cloudflare.com/why-we-use-the-linux-kernels-tcp-stack/)
-
-[Anatomy of a user namespaces vulnerability](https://lwn.net/Articles/543273/)

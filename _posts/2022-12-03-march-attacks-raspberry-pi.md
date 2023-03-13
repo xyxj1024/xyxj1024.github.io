@@ -1,9 +1,9 @@
 ---
 layout:             post
-title:              "Microarchitectural Attacks on a Raspberry Pi"
+title:              "Microarchitectural Attacks on ARM: Part 1"
 category:           "Computing Systems, Systems Security"
 tags:               hardware-security microarchitecture cache raspberry-pi
-permalink:          /posts/march-attacks-raspberry-pi
+permalink:          /posts/march-attacks-on-arm-part-1
 last_modified_at:   "2022-12-18"
 ---
 
