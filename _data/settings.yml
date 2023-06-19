@@ -1,0 +1,24 @@
+basic_settings:
+  site_title: Xingjian
+  favicon_image: /assets/images/favicon.png
+
+header_settings:
+  logo_image: 
+  logo_width: 200
+
+menu_settings:
+  menu_items:
+    - title: '2023'
+      url: '/'
+    - title: 'About'
+      url: '/about-en'
+
+advanced_settings:
+  ajax_loading: false
+  analytics_code: ""
+  custom_styles: ""
+  header_js: ""
+  footer_js: ""
+gh_api:
+  ci: 393e155961c613e38708
+  cs: 73e63733441c8b2991a154664b13a31c5e3e96c7

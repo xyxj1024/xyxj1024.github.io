@@ -1,0 +1,44 @@
+# Build settings
+markdown:             kramdown
+kramdown:
+  input:              GFM
+  hard_wrap:          false
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class:  'highlight' # use existing pygments syntax highlighting css
+  footnote_backlink:  "⤴"
+highlighter:          pygments
+excerpt_separator:    <!-- excerpt-end -->
+mathjax:              true
+
+# Permalinks
+permalink:            pretty
+
+# Setup
+title:                Xingjian
+description-1:        '譬大道之在天下猶川谷之於江海'
+description-2:        'Eventually, all things merge into one, and a river runs through it.'
+baseurl:              https://xyxj1024.github.io/
+twitter_username:     xyxj1024
+github_username:      xyxj1024
+
+include: ["_pages", "_posts"]
+
+# Gems
+plugins:
+  - jekyll-gist
+  - jekyll-paginate
+  - jekyll-seo-tag
+  - jekyll-target-blank
+
+author:
+  name:               'Xingjian Xuanyuan'
+  url:                https://twitter.com/xyxj1024
+
+paginate:             5
+
+# Custom vars
+version:              1.2
+
+github:
+  repo:               https://github.com/xyxj1024/xyxj1024.github.io
