@@ -28,17 +28,17 @@ Once thinking that I am destined for a career as a social scientist, right now I
 #### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis (Aug. 2021 &mdash; Present)
 
 CS-related coursework with links:
-  - **CSE 523S: Systems Security**, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/) (complemented with [SEED Labs](https://seedsecuritylabs.org/) developed by [Dr. Wenliang Du](https://web.ecs.syr.edu/~wedu/) from [Syracuse University](https://www.syracuse.edu/))
-  - **CSE 522S: Advanced Operating Systems**, taught by [Dr. James Orr](https://www.cse.wustl.edu/~james.orr/) and [Dr. Marion Sudvarg](https://www.sudvarg.com/) (originally developed by [Dr. David Ferry](https://cs.slu.edu/~ferry/), [Dr. Christopher D. Gill](https://www.cse.wustl.edu/~cdgill/), [Dr. Brian Kocoloski](https://www.isi.edu/people/bkocolos/about), Dr. James Orr, and Dr. Marion Sudvarg)
+  - **CSE 523S: Systems Security**, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/), complemented with [SEED Labs](https://seedsecuritylabs.org/) developed by [Dr. Wenliang Du](https://web.ecs.syr.edu/~wedu/) from [Syracuse University](https://www.syracuse.edu/)
+  - [**CSE 522S: Advanced Operating Systems**](https://classes.engineering.wustl.edu/cse522/), taught by [Dr. James Orr](https://www.cse.wustl.edu/~james.orr/) and [Dr. Marion Sudvarg](https://www.sudvarg.com/)
   - [**CSE 330/503S: Rapid Prototype Development and Creative Programming**](https://classes.engineering.wustl.edu/cse330), taught by [Dr. Todd Sproull](https://research.engineering.wustl.edu/~todd/)
-  - **CSE 467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich
-  - [**CSE 433S: Introduction to Computer Security**, taught by Dr. Ning Zhang](https://cybersecurity.seas.wustl.edu/ning/teaching/F22cse433s/index.html) (CTF exercises explained in [Kaplan et al. (2022)](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153) and [Cole (2022)](https://dl.acm.org/doi/pdf/10.1145/3502718.3524806))
-  - **CSE 433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (find resources page [here]({{ site.baseurl }}/posts/cse433r-resources))
-  - [**CSE 425S: Programming Languages and Systems**](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/), taught by [Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/) (complemented with CSE 341 course materials developed by [Dr. Dan Grossman](https://homes.cs.washington.edu/~djg/teachingMaterials/spl/) at [University of Washington](https://www.washington.edu/))
-  - **CSE 422S: Operating Systems Organization**, taught by Dr. James Orr (originally developed by Dr. David Ferry and subsequently revised and extended by Dr. Christopher D. Gill, Dr. Brian Kocoloski, Dr. James Orr, and Dr. Marion Sudvarg)
-  - **CSE 361S: Introduction to Systems Software**, taught by [Dr. I-Ting Angelina Lee](https://www.cse.wustl.edu/~angelee/home_page/)
-  - **ECON 558: Matching and Assignment**, taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
-  - [**MATH 4351: Number Theory and Cryptography**, taught by Dr. Ben Wormleighton](https://sites.google.com/view/benw/teaching/math-4351-spring-22) (following lecture notes from [Dr. Matt Kerr](https://www.math.wustl.edu/~matkerr/))
+  - **CSE 467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich, originally developed by [Dr. Chenyang Lu](https://www.cse.wustl.edu/~lu/)
+  - [**CSE 433S: Introduction to Computer Security**](https://cybersecurity.seas.wustl.edu/ning/teaching/F21cse433s/index.html), taught by [Dr. Ning Zhang](https://engineering.wustl.edu/faculty/Ning-Zhang.html), complemented with CTF exercises explained in [Kaplan et al. (2022)](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153) and [Cole (2022)](https://dl.acm.org/doi/pdf/10.1145/3502718.3524806)
+  - **CSE 433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (please find resources page [here]({{ site.baseurl }}/posts/cse433r-resources))
+  - [**CSE 425S: Programming Languages and Systems**](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/), taught by [Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/), complemented with CSE 341 course materials developed by [Dr. Dan Grossman](https://homes.cs.washington.edu/~djg/teachingMaterials/spl/) at [University of Washington](https://www.washington.edu/)
+  - [**CSE 422S: Operating Systems Organization**](https://classes.engineering.wustl.edu/cse422/), taught by Dr. James Orr
+  - [**CSE 361S: Introduction to Systems Software**](https://www.cse.wustl.edu/~angelee/cse361/), taught by [Dr. I-Ting Angelina Lee](https://www.cse.wustl.edu/~angelee/home_page/) (a course based on [CS:APP](https://csapp.cs.cmu.edu/))
+  - [**ECON 558: Matching and Assignment**](https://economics.wustl.edu/matching-and-assignment), taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
+  - [**MATH 4351: Number Theory and Cryptography**](https://sites.google.com/view/benw/teaching/math-4351-spring-22), taught by [Dr. Ben Wormleighton](https://sites.google.com/view/benw/), following lecture notes from [Dr. Matt Kerr](https://www.math.wustl.edu/~matkerr/)
 
 #### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 &mdash; Jul. 2021)
 
