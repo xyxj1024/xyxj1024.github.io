@@ -4,6 +4,7 @@ title:              "Benchmarking Protocol Buffer and JSON Performance"
 category:           "Web Applications and Cybersecurity"
 tags:               protobuf json go
 permalink:          /posts/benchmarking-protobuf-and-json-performance
+last_modified_at:   "2023-06-20"
 ---
 
 In this post, I would like to present some basic observations on performance differences between two data serialization protocols: Protocol Buffer (Protobuf) and JSON. Specifically, I would like to compare them based on serialization/de-serialization speeds and the memory footprint of data encoding for different data sizes.
@@ -128,7 +129,7 @@ var (
 )
 
 func TestDataAllocationsSmall(_ *testing.T) {
-	fmt.Printf("Small ---------\n")
+	fmt.Printf("---------- Small ----------\n")
 	bs := PBSmall
 	j, _ := json.Marshal(bs)
 	p, _ := proto.Marshal(bs)
@@ -138,8 +139,8 @@ func TestDataAllocationsSmall(_ *testing.T) {
 	fmt.Printf("\n")
 }
 
-func TestDataAllocations(_ *testing.T) {
-	fmt.Printf("Medium ---------\n")
+func TestDataAllocationsMedium(_ *testing.T) {
+	fmt.Printf("---------- Medium ----------\n")
 	bs := PBMedium
 	j, _ := json.Marshal(bs)
 	p, _ := proto.Marshal(bs)
@@ -150,7 +151,7 @@ func TestDataAllocations(_ *testing.T) {
 }
 
 func TestDataAllocationsLarge(_ *testing.T) {
-	fmt.Printf("Large ---------\n")
+	fmt.Printf("---------- Large ----------\n")
 	bs := PBLarge
 	j, _ := json.Marshal(bs)
 	p, _ := proto.Marshal(bs)
@@ -293,10 +294,10 @@ func BenchmarkProtobufUnmarshal(b *testing.B) {
 	})
 }
 
-func printInfo(d []byte, ser string) {
+func printInfo(d []byte, typ string) {
 	used := len(d)
 	allocated := cap(d)
-	fmt.Printf("Type: %s \t\tData size: %d \t\tTotal Allocated: %d \t\t Used/Allocated: %.2f%%\n", ser, used, allocated, percentUsed(used, allocated)*100)
+	fmt.Printf("Type: %s \t\tData size: %d \t\tTotal Allocated: %d \t\t Used/Allocated: %.2f%%\n", typ, used, allocated, percentUsed(used, allocated)*100)
 }
 
 func percentUsed(used, allocated int) float32 {
@@ -367,15 +368,15 @@ docker run pb-test
 Running natively:
 
 ```console
-Small ---------
+---------- Small ----------
 Type: json 		Data size: 51 		Total Allocated: 64 		 Used/Allocated: 79.69%
 Type: protobuf 		Data size: 28 		Total Allocated: 28 		 Used/Allocated: 100.00%
 
-Medium ---------
+---------- Medium ----------
 Type: json 		Data size: 398 		Total Allocated: 416 		 Used/Allocated: 95.67%
 Type: protobuf 		Data size: 282 		Total Allocated: 282 		 Used/Allocated: 100.00%
 
-Large ---------
+---------- Large ----------
 Type: json 		Data size: 4060 		Total Allocated: 4096 		 Used/Allocated: 99.12%
 Type: protobuf 		Data size: 3029 		Total Allocated: 3029 		 Used/Allocated: 100.00%
 
@@ -405,15 +406,15 @@ ok  	pb-test	20.718s
 Running inside a Docker container:
 
 ```console
-Small ---------
+---------- Small ----------
 Type: json 		Data size: 51 		Total Allocated: 64 		 Used/Allocated: 79.69%
 Type: protobuf 		Data size: 28 		Total Allocated: 28 		 Used/Allocated: 100.00%
 
-Medium ---------
+---------- Medium ----------
 Type: json 		Data size: 398 		Total Allocated: 416 		 Used/Allocated: 95.67%
 Type: protobuf 		Data size: 282 		Total Allocated: 282 		 Used/Allocated: 100.00%
 
-Large ---------
+---------- Large ----------
 Type: json 		Data size: 4060 		Total Allocated: 4096 		 Used/Allocated: 99.12%
 Type: protobuf 		Data size: 3029 		Total Allocated: 3029 		 Used/Allocated: 100.00%
 
@@ -440,4 +441,4 @@ PASS
 ok  	pb-test	21.233s
 ```
 
-The four columns of the benchmark section are: the number of iterations, time per function call, memory allocation, and the rate of memory allocation, respectively. Note that Protobuf has smaller memory footprints and fewer allocations than JSON. The `marshal` and `unmarshal` speeds of Protobuf are significantly faster than those of JSON, especially for large data size.
+The four columns of the benchmark section are: the number of iterations, time per function call, memory allocation, and the rate of memory allocation, respectively. Note that Protobuf has smaller memory footprints and, in most cases, lower rate of memory allocation than JSON. The `marshal` and `unmarshal` speeds of Protobuf are significantly faster than those of JSON, especially for large data size.

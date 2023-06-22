@@ -6,6 +6,7 @@ Any incident with GitHub Actions, Codespaces, and Pages is reported on [https://
 
 ## To-Dos
 
+- Software Security. [LLSoftSecBook](https://llsoftsec.github.io/llsoftsecbook/).
 - Hardware Security. Foreshadow attack.
 - Hardware Security. [Hasan Hassan](https://safari.ethz.ch/congratulations-to-hasan-hassan-on-his-edaa-outstanding-dissertation-award-2023/) and [Onur Mutlu](https://people.inf.ethz.ch/omutlu/)'s collaborative works on DRAM.
 - Cybersecurity. Small subgroup confinement attack on Diffie-Hellman.
