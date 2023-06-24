@@ -2,7 +2,7 @@
 layout:     post
 title:      "Linux Netfilter Connection Tracking: Two Simple Tests"
 category:   "Linux System Programming"
-tags:       networking namespace packet-filtering syn-flood
+tags:       linux-kernel networking namespace packet-filtering syn-flood
 permalink:  /posts/linux-plumbing/netfilter-conntrack-tests
 ---
 

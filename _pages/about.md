@@ -7,8 +7,14 @@ nav_order:  2
 
 ![me-at-cbi](/assets/images/about/cbi.jpg){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
-An awe-inspiring glimpse into the Atlantic<br>
-Cape Breton Island, Nova Scotia, Canada, August 2022
+An awe-inspiring glimpse into the Atlantic,<br>
+@Cape Breton Island, Nova Scotia, Canada, August 2022.
+</p>
+
+![arctic-region](https://images.nationalgeographic.org/image/upload/v1638890479/EducationHub/photos/arctic-circle.jpg){:class="img-responsive"}
+<p style="text-align:center;color:gray;font-size:80%;">
+Most of my travel destinations can be found in this map.<br>
+Source: <a href="https://education.nationalgeographic.org/resource/arctic/">National Geographic Society</a>.
 </p>
 
 ## XUANYUAN Xingjian (轩辕 行健)

@@ -95,7 +95,7 @@ Required-by:
 <!--
 ![web3-providers](/assets/images/schematic/web3py-and-nodes.png){:class="img-responsive" width="100%"}
 <p style="text-align:center;color:gray;font-size:80%;">
-Source: ethereum.org
+Source: ethereum.org.
 </p>
 -->
 

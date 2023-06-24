@@ -6,9 +6,42 @@ tags:               namespace container networking
 permalink:          /posts/linux-plumbing/linux-network-namespaces
 ---
 
-Network namespaces entered the Linux kernel in version 2.6.24. They partition the use of the system resources associated with networking&mdash;network devices, addresses, ports, routes, firewall rules, etc.&mdash;into separate boxes, essentially virtualizing the network within a single running kernel instance. Container implementations use network namespaces to give each container its own view of the network, untrammeled by processes outside of the container[^1].
+Network namespaces entered the Linux kernel in version 2.6.24. They partition the use of the system resources associated with networking&mdash;network devices, addresses, ports, routes, firewall rules, etc.&mdash;into separate boxes, essentially virtualizing the network within a single running kernel instance[^1].
 
 <!-- excerpt-end -->
+
+Once upon a time, there was a patch set called "[process containers](https://lwn.net/Articles/236038/)". The "container subsystem" allows an administrator to group processes into hierarchies of "containers"; each hierarchy is managed by one or more "subsystems." As of 2.6.23, virtualization is quite well supported on Linux, at least for the x86 architecture. Containers lag a little behind, instead. In 2.6.24, "containers" were renamed "control groups." It makes sense to pair "control groups" with the management of the various namespaces and resource management in general to create a framework for a container implementation[^2].
+
+Current container implementations use network namespaces to give each container its own view of the network, untrammeled by processes outside of the container. The network namespace patches merged for 2.6.24 added a line to `<linux/sched.h>`:
+
+```c
+#define CLONE_NEWNET      0x40000000     /* New network namespace */
+```
+
+A central structure defined in `<include/net/net_namespace.h>` was used to keep track of all available network namespaces:
+
+```c
+struct net {
+    atomic_t              count;         /* To decided when the network
+                                          * namespace should be freed
+                                          */
+    atomic_t              use_count;     /* To track references we
+                                          * destroy on demand
+                                          */
+    struct list_head      list;          /* list of network namespaces */
+    struct work_struct    work;          /* work struct for freeing */
+
+    struct proc_dir_entry *proc_net;
+    struct proc_dir_entry *proc_net_stat;
+    struct proc_dir_entry *proc_net_root;
+
+    struct net_device     *loopback_dev; /* The loopback */
+
+    struct list_head      dev_base_head;
+    struct hlist_head     *dev_name_head;
+    struct hlist_head     *dev_index_head;
+};
+```
 
 ## Table of Contents
 {:.no_toc}
@@ -137,14 +170,16 @@ $ sudo ip netns exec ns-1 route
 $ sudo ip netns exec ns-1 iptables -L
 ```
 
-Network devices called *bridges* (or synonymously, *switches*[^2]) connect two or more physical Ethernet segments together to form one bigger (logical) Ethernet segment[^3]. The job of bridges is to examine the destination of the data packets one at a time and decide whether or not to pass the packets to the other side of the Ethernet. The Linux bridging module decides whether to bridge data or to drop it not by looking at the protocol type, but by looking at the MAC address unique to each NIC[^4]. Unlike routers that understand Layer-3 network protocols, bridges understand Layer-2 protocols and therefore copy data frame by frame, instead of bit by bit.
+Network devices called *bridges* (or synonymously, *switches*[^3]) connect two or more physical Ethernet segments together to form one bigger (logical) Ethernet segment[^4]. The job of bridges is to examine the destination of the data packets one at a time and decide whether or not to pass the packets to the other side of the Ethernet. The Linux bridging module decides whether to bridge data or to drop it not by looking at the protocol type, but by looking at the MAC address unique to each NIC[^5]. Unlike routers that understand Layer-3 network protocols, bridges understand Layer-2 protocols and therefore copy data frame by frame, instead of bit by bit.
 
 ## Footnotes
 
 [^1]: See Jake Edge, "[Namespaces in operation, part 7: Network namespaces](https://lwn.net/Articles/580893/)," January 22, 2014. [This Linux manual page](https://man7.org/linux/man-pages/man7/network_namespaces.7.html) can also serve as a good starting point.
 
-[^2]: People might refer to a bridge device using the term *bridge* when the device is equipped with only two ports, although the term *switch* is more commonly used. See Christian Benvenuti, "Chapter 14: Bridging" in *Understanding Linux Network Internals*, p.320, O'Reilly Media, 2005. Or, to put it alternatively, [a linux bridge implements a Layer-2 switch in software](https://paulgorman.org/technical/linux-bridges-and-virtual-networking.txt.html).
+[^2]: See Jonathan Corbet, "[Notes from a container](https://lwn.net/Articles/256389/)," October 29, 2007.
 
-[^3]: See the [official documentation](https://wiki.linuxfoundation.org/networking/bridge) for Linux bridging.
+[^3]: People might refer to a bridge device using the term *bridge* when the device is equipped with only two ports, although the term *switch* is more commonly used. See Christian Benvenuti, "Chapter 14: Bridging" in *Understanding Linux Network Internals*, p.320, O'Reilly Media, 2005. Or, to put it alternatively, [a linux bridge implements a Layer-2 switch in software](https://paulgorman.org/technical/linux-bridges-and-virtual-networking.txt.html).
 
-[^4]: See [Linux BRIDGE-STP-HOWTO](https://tldp.org/HOWTO/BRIDGE-STP-HOWTO/what-is-a-bridge.html).
+[^4]: See the [official documentation](https://wiki.linuxfoundation.org/networking/bridge) for Linux bridging.
+
+[^5]: See [Linux BRIDGE-STP-HOWTO](https://tldp.org/HOWTO/BRIDGE-STP-HOWTO/what-is-a-bridge.html).

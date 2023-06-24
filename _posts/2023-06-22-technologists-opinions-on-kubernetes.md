@@ -2,7 +2,7 @@
 layout:     post
 title:      "Technologists' Opinions on Kubernetes"
 category:   "Cloud Native Computing"
-tags:       kubernetes devops
+tags:       open-source kubernetes devops
 permalink:  /posts/technologists-opinions-on-kubernetes
 ---
 
@@ -13,6 +13,11 @@ It is quite fun watching people exchanging thoughts and ideas on Twitter, even t
 I decide to document here a recent debate on [Twitter](https://twitter.com/) about [Kubernetes](https://kubernetes.io/), which prompts me to ask myself:
 
 *What might be called a good attitude towards an emerging OSS technology?*
+
+## Table of Contents
+{:.no_toc}
+* TOC 
+{:toc}
 
 ## Pete Cheslock
 
@@ -52,7 +57,7 @@ And then, there is [Gabe Monroy](https://twitter.com/gabe_monroy?lang=en)'s repl
 
 ## Joe Beda
 
-[Joe Beda](https://hachyderm.io/@jbeda)'s [long thread](https://twitter.com/jbeda/status/993978918196531200) back in 2018 (this is gold):
+[Joe Beda](https://hachyderm.io/@jbeda)'s [long thread](https://twitter.com/jbeda/status/993978918196531200) back in 2018 (this is gold!):
 
 > First off: Kubernetes *is* a complex system. It does a lot and brings new abstractions. Those abstractions aren't always justified for all problems. I'm sure that there are plenty of people using Kubernetes that could get by with something simpler.
 >

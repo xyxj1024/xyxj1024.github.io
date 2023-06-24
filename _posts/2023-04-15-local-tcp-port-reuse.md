@@ -781,7 +781,7 @@ FAILED (failures=1)
 
 ## Footnotes
 
-[^1]: A network namespace, represented by `struct net` defined in `include/net/net_namespace.h`, is logically another copy of the network stack, with its routes, firewall rules, and network devices. The initial network namespace, `struct net init_net`, includes the loopback device and all physical devices, the networking tables, etc. Each newly created network namespace includes only the loopback device (run `unshare --net bash` then run `ifconfig -a`).
+[^1]: A network namespace, represented by `struct net` defined in `include/net/net_namespace.h`, is logically another copy of the network stack, with its routes, firewall rules, and network devices. The initial network namespace, `struct net init_net`, includes the loopback device and all physical devices, the networking tables, etc. Each newly created network namespace includes only the loopback device (to verify this, run `unshare --net bash` then run `ifconfig -a`). Check out [this post]({{ site.baseurl }}/posts/linux-plumbing/linux-network-namespaces) for a general overview of Linux network namespaces.
 
 [^2]: [Jonathan Corbet](https://lwn.net/Articles/612021/): "Hash tables are heavily used within the kernel to speed access to objects of interest. Using a hash table will be faster than, say, a linear search through a single list, but there is always value in making accesses faster yet. Quite a bit of work has been done toward this goal over the years; for example, the use of read-copy-update (RCU) can allow the addition and removal of items from a hash bucket list without locking out readers. Some operations have proved harder to make concurrent in that manner, though, with table resizing being near the top of the list."
 
