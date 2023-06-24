@@ -11,10 +11,10 @@ An awe-inspiring glimpse into the Atlantic,<br>
 @Cape Breton Island, Nova Scotia, Canada, August 2022.
 </p>
 
-![arctic-region](https://images.nationalgeographic.org/image/upload/v1638890479/EducationHub/photos/arctic-circle.jpg){:class="img-responsive"}
+![arctic-region](https://drive.google.com/file/d/1idXsgdzOLvlcoqM0kWhZfX14iOIlxUv8/view?usp=drive_link){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
 Most of my travel destinations can be found in this map.<br>
-Source: <a href="https://education.nationalgeographic.org/resource/arctic/">National Geographic Society</a>.
+Source: <a href="https://2009-2017.state.gov/documents/organization/258414.pdf">U.S. Chairmanship of the Arctic Council</a>.
 </p>
 
 ## XUANYUAN Xingjian (轩辕 行健)
@@ -52,7 +52,7 @@ Thesis Title: "The U.S. Tri­-Party Repo Market: Historical Dynamics and the Glo
 
 Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
-![overnight-reference-rates](/assets/images/about/overnight-reference-rates.jpeg){:class="img-responsive"}
+![overnight-reference-rates](https://drive.google.com/file/d/1ntyFwwLGOcqWAU84jmRSWGYQWRNboK7s/view?usp=drive_link){:class="img-responsive"}
 
 > A Twitter thread by [@concodanomics](https://twitter.com/concodanomics): The repo market is the wheel greaser of the U.S. empire's financial engine. Without it, U.S. dollar liquidity would be lackluster. . . . On top, triparty repo allows cash lenders, mainly asset managers like MMFs, to lend mostly to the Fed's primary dealers, whose job is to distribute cash to other segments in repo. Primary dealers then attempt to make a profit by lending these funds into "interdealer" (dealer-to-dealer) markets and charging a higher spread. Smaller securities dealers will lend this cash to customers in the "bilateral" (dealer-to-customer) market, for an even larger fee.
 
