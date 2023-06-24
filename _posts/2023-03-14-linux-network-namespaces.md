@@ -6,7 +6,7 @@ tags:               namespace container networking
 permalink:          /posts/linux-plumbing/linux-network-namespaces
 ---
 
-
+Network namespaces entered the Linux kernel in version 2.6.24. They partition the use of the system resources associated with networking&mdash;network devices, addresses, ports, routes, firewall rules, etc.&mdash;into separate boxes, essentially virtualizing the network within a single running kernel instance. Container implementations use network namespaces to give each container its own view of the network, untrammeled by processes outside of the container[^1].
 
 <!-- excerpt-end -->
 
@@ -57,7 +57,7 @@ $ ip link show
     link/ether 92:0a:ed:2d:30:a7 brd ff:ff:ff:ff:ff:ff
 ```
 
-Next, we need to place one end of the `veth` pair in `ns-1` and the other end in `ns-2`:
+The `veth` pair, at this moment, exists within the global network namespace. We need to place one end of the `veth` pair in `ns-1` and the other end in `ns-2`:
 
 ```bash
 sudo ip link set veth-1 netns ns-1
@@ -65,7 +65,7 @@ sudo ip link set veth-1 netns ns-1
 sudo ip link set veth-2 netns ns-2
 ```
 
-This time, the `ip link show` command should only display the initial two network devices. To view the `veth` pair we have just created, we need to execute the `ip link show` command inside the corresponding network namespace, for example:
+Subsequently, the `ip link show` command should only display the initial two network devices. To view the `veth` pair we have just created, execute the `ip link show` command inside the corresponding network namespace, for example:
 
 ```console
 $ sudo ip netns exec ns-1 ip link show
@@ -75,7 +75,7 @@ $ sudo ip netns exec ns-1 ip link show
     link/ether 92:0a:ed:2d:30:a7 brd ff:ff:ff:ff:ff:ff link-netns ns-2
 ```
 
-Each `veth` interface needs a unique IP address:
+Let's assign each `veth` interface a unique IP address and bring it up:
 
 ```bash
 sudo ip netns exec ns-1 ip addr add 10.0.0.10/16 dev veth-1 && sudo ip netns exec ns-1 ip link set dev veth-1 up
@@ -83,7 +83,7 @@ sudo ip netns exec ns-1 ip addr add 10.0.0.10/16 dev veth-1 && sudo ip netns exe
 sudo ip netns exec ns-2 ip addr add 10.0.0.20/16 dev veth-2 && sudo ip netns exec ns-2 ip link set dev veth-2 up
 ```
 
-Now, let's open two separate terminals, one for each network namespace:
+Now, we can open two separate terminals, one for each network namespace:
 
 ```bash
 # Terminal 1
@@ -130,3 +130,21 @@ sudo netns delete ns-1
 
 sudo netns delete ns-2
 ```
+
+```console
+$ sudo ip netns exec ns-1 route
+
+$ sudo ip netns exec ns-1 iptables -L
+```
+
+Network devices called *bridges* (or synonymously, *switches*[^2]) connect two or more physical Ethernet segments together to form one bigger (logical) Ethernet segment[^3]. The job of bridges is to examine the destination of the data packets one at a time and decide whether or not to pass the packets to the other side of the Ethernet. The Linux bridging module decides whether to bridge data or to drop it not by looking at the protocol type, but by looking at the MAC address unique to each NIC[^4]. Unlike routers that understand Layer-3 network protocols, bridges understand Layer-2 protocols and therefore copy data frame by frame, instead of bit by bit.
+
+## Footnotes
+
+[^1]: See Jake Edge, "[Namespaces in operation, part 7: Network namespaces](https://lwn.net/Articles/580893/)," January 22, 2014. [This Linux manual page](https://man7.org/linux/man-pages/man7/network_namespaces.7.html) can also serve as a good starting point.
+
+[^2]: People might refer to a bridge device using the term *bridge* when the device is equipped with only two ports, although the term *switch* is more commonly used. See Christian Benvenuti, "Chapter 14: Bridging" in *Understanding Linux Network Internals*, p.320, O'Reilly Media, 2005. Or, to put it alternatively, [a linux bridge implements a Layer-2 switch in software](https://paulgorman.org/technical/linux-bridges-and-virtual-networking.txt.html).
+
+[^3]: See the [official documentation](https://wiki.linuxfoundation.org/networking/bridge) for Linux bridging.
+
+[^4]: See [Linux BRIDGE-STP-HOWTO](https://tldp.org/HOWTO/BRIDGE-STP-HOWTO/what-is-a-bridge.html).
