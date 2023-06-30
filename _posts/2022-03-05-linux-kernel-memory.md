@@ -154,7 +154,7 @@ This would be in the outermost scope of our module's source file. In other words
 
 ## Studio Writeup
 
-<p>Here is the <a href="https://xyxj1024.github.io/assets/download/cse422s-studio11-writeup.pdf">PDF document</a> for studio writeup.</p>
+<p>Here is the <a href="https://drive.google.com/uc?id=1j6oN_g0FguHvQX5GpZZim6cstMjz4VUJ">PDF document</a> for studio writeup.</p>
 
 ## Footnotes
 

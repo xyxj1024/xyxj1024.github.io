@@ -1,9 +1,9 @@
 ---
-layout:     post
-title:      "Concurrent Stacks in Java"
-category:   "Data Structures and Algorithms"
-tags:       object-oriented-programming concurrency tree
-permalink:  /posts/concurrent-stacks
+layout:             post
+title:              "Concurrent Stacks in Java"
+category:           "Data Structures and Algorithms"
+tags:               object-oriented-programming concurrency tree
+permalink:          /posts/concurrent-stacks
 ---
 
 A **concurrent stack**{: style="color: red"} is a data structure linearizable to a sequential stack that provides `push` and `pop` operations with the usual LIFO semantics. Linearizability is the *de facto* standard correctness condition for concurrent algorithms. Intuitively, an algorithm is linearizable with respect to a sequential specification if each execution of the algorithm is equivalent to some sequential execution of the specification, where the order between the non-overlapping methods is preserved. In this post, I would like to review a Java implementation of a concurrent stack data structure called the elimination back-off stack. Those who are interested in C++ implementations of concurrent data structures may find [this repo](https://github.com/cksystemsgroup/scal) useful. I also found [this article](http://people.csail.mit.edu/shanir/publications/concurrent-data-structures.pdf) by Mark Moir and Nir Shavit a good source for concurrent programming.
@@ -159,6 +159,20 @@ works as follows:
 
 Many concurrent data structure algorithms that have been developed use locks in order to enforce the correct semantics of the operations to be performed. However, locking risks blocking. Concurrent algorithms based on CAS are called *lock-free*, because threads do not ever have to wait for a lock. Either the CAS operation succeeds or it doesn't, but in either case, it completes in a predictable amount of time. If the CAS fails, the caller can retry the CAS operation or take another action as it sees fit[^5].
 
+Often, programmers perform CAS in a loop to repeatedly attempt an action. For example, incrementing an atomic integer in a CAS loop:
+
+```java
+AtomicInteger atomicVar = new AtomicInteger(0);
+public void funcLockFree() {
+    int localVar = atomicVar.get();
+    while (!atomicVar.compareAndSet(localVar, localVar + 1)) {
+        localVar = atomicVar.get();
+    }
+}
+```
+
+The `AtomicInteger` class has a [`compareAndSet()`](https://docs.oracle.com/en/java/javase/20/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html#compareAndSet(int,int)) method which will compare the value of the `AtomicInteger` instance to an expected value: if `atomicVar` has the expected value of `localVar`, the method sets the value of `atomicVar` to `localVar + 1`. The method returns `true` if the value was set, and `false` if not.
+
 ### Shared-Memory Computation
 
 *Instructions* are the lowest level of operations. An instruction accesses a single unit of memory called a *primitive element*. A primitive element is either a basic data type such as an integer, float, pointer, or lock. A data structure is composed of *cells*. Cells are the unit of locking. An *execution* is a sequence of instructions and the return values of those instructions. A *proper execution* of a concurrent program, $$P$$, is an execution, $$E$$, where:
@@ -175,6 +189,10 @@ Many concurrent data structure algorithms that have been developed use locks in 
 **Definition 5.** (Wait-freedom) A method of an object implementation is *wait-free* if every call finishes its execution in a finite number of steps; that is, if a thread with a pending invocation to a wait-free method keeps taking steps, it completes in a finite number of steps. Wait-freedom is a nonblocking progress condition because a wait-free implementation cannot be blocking: An arbitrary delay by one thread cannot prevent other threads from making progress. The wait-free condition rules out any kind of mutual exclusion, and guarantees independent progress, that is, without making assumptions about the operating system scheduler.
 
 **Definition 6.** (Lock-freedom) A method of an object implementation is *lock-free* if executing the method guarantees that *some* method call finishes in a finite number of steps; that is, if a thread with a pending invocation to a lock-free method keeps taking steps, then within a finite number of its steps, some pending call to a method of that object (not necessarily the lock-free method) completes.
+
+Note that a *wait-free* data structure is a *lock-free* data structure with the additional property that every thread accessing the data structure can complete its operation within a bounded number of steps, regardless of the behavior of other threads.
+
+[This post](https://preshing.com/20120612/an-introduction-to-lock-free-programming/) by [Jeff Preshing](https://github.com/preshing) could serve as a good starting point on lock-free or lockless programming. There is also a short list of links in [this answer on Stack Overflow](https://stackoverflow.com/questions/14167767/what-is-the-difference-between-using-explicit-fences-and-stdatomic/14185300#14185300).
 
 Concurrent threads reading and writing shared memory locations, which are called *registers* for historical reasons, is the simplest form of shared-memory computation. A *read-write register* is an object that encapsulates a value that can be observed by a `read()` method ("load") and modified by a `write()` method ("store"):
 

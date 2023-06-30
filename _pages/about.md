@@ -7,14 +7,14 @@ nav_order:  2
 
 ![me-at-cbi](/assets/images/about/cbi.jpg){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
-An awe-inspiring glimpse into the Atlantic,<br>
-@Cape Breton Island, Nova Scotia, Canada, August 2022.
+An awe-inspiring glimpse into the Atlantic<br>
+&#128205; Cape Breton Island, Nova Scotia, Canada, August 2022.
 </p>
 
 ![arctic-region](https://drive.google.com/uc?id=1idXsgdzOLvlcoqM0kWhZfX14iOIlxUv8){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
-Most of my travel destinations can be found in this map.<br>
-Source: <a href="https://2009-2017.state.gov/documents/organization/258414.pdf">U.S. Chairmanship of the Arctic Council</a>.
+Most of my travel destinations can be found on this map<br>
+&copy; <a href="https://2009-2017.state.gov/documents/organization/258414.pdf">U.S. Chairmanship of the Arctic Council</a>.
 </p>
 
 ## XUANYUAN Xingjian (轩辕 行健)
@@ -72,7 +72,7 @@ Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 - Hand-collected, cross-checked, cleaned, and visualized provincial data sets for the period 2013-2017. Data sources include official websites of PBoC, MoF, NAO, MoHURD along with commercial databases such as WIND, CEIC, and Choice. Data items include fiscal position, wealth management product issuance, municipal and chengtou bond issuance, local and foreign currency deposits of financial institutions, supply of state­owned land for construction purposes, etc., totaling 8215 entries.
 - Validated the spatial correlation between the number of wealth management products issued by major commercial banks and outstanding local government debt.
 
-### &#128205; Experience
+### &#128372; Experience
 
 #### Graduate Teaching Assistant (Spring 2023)
 

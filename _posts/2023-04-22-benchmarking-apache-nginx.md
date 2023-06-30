@@ -103,7 +103,7 @@ Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cm
 
 ## Install NGINX on the AWS EC2 Instance
 
-I followed [this StackOverflow discussion](https://stackoverflow.com/questions/57784287/how-to-install-nginx-on-aws-ec2-linux-2) to install the NGINX web server. However, after I ran the command `sudo systemctl status nginx`, I found the error message: `nginx.service failed because the control process exited`. To fix this situation, I ran the following two commands:
+I followed [this Stack Overflow discussion](https://stackoverflow.com/questions/57784287/how-to-install-nginx-on-aws-ec2-linux-2) to install the NGINX web server. However, after I ran the command `sudo systemctl status nginx`, I found the error message: `nginx.service failed because the control process exited`. To fix this situation, I ran the following two commands:
 
 ```console
 $ sudo fuser -k 80/tcp

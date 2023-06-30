@@ -70,6 +70,16 @@ ns-2
 ns-1
 ```
 
+Compare the ARP table of the global namespace and our manually created namespaces:
+
+```console
+$ arp
+Address                  HWtype  HWaddress           Flags Mask            Iface
+ip-172-31-80-1.ec2.inte  ether   12:19:04:c5:6c:6d   C                     eth0
+$ sudo ip netns exec ns-1 arp # nothing
+$ sudo ip netns exec ns-2 arp # nothing
+```
+
 To enable communication between these two network namespaces, we can make use of a virtual Ethernet (`veth`) device, which is a local Ethernet tunnel created in interconnected pairs. Let's create a `veth` pair using the following command:
 
 ```bash
@@ -156,19 +166,48 @@ listening on veth-2, link-type EN10MB (Ethernet), capture size 262144 bytes
 20:30:31.004582 IP ip-172-31-95-167.ec2.internal > 10.0.0.10: ICMP echo reply, id 3892, seq 5, length 64
 ```
 
-Delete the network namespaces:
+Inside either of the network namespaces, let's take a look at the current state of the ARP table:
 
-```bash
-sudo netns delete ns-1
+```console
+# ip --all netns exec arp
+netns: ns-2
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.0.0.10                ether   a6:ae:c7:74:56:b8   C                     veth-2
 
-sudo netns delete ns-2
+netns: ns-1
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.0.0.20                ether   06:22:d8:20:50:0b   C                     veth-1
 ```
+
+Also, inspect the routing table and packet filtering rules within either of the network namespaces:
 
 ```console
 $ sudo ip netns exec ns-1 route
-
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+10.0.0.0        0.0.0.0         255.255.0.0     U     0      0        0 veth-1
 $ sudo ip netns exec ns-1 iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination         
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination         
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
 ```
+
+The `iptables -L` command by default displays the `filter` table, which is, at this moment, empty. An `ACCEPT` target is specified by each chain.
+
+Delete our manually created network namespaces:
+
+```bash
+sudo ip netns delete ns-1
+
+sudo ip netns delete ns-2
+```
+
+## Linux Bridging
 
 Network devices called *bridges* (or synonymously, *switches*[^3]) connect two or more physical Ethernet segments together to form one bigger (logical) Ethernet segment[^4]. The job of bridges is to examine the destination of the data packets one at a time and decide whether or not to pass the packets to the other side of the Ethernet. The Linux bridging module decides whether to bridge data or to drop it not by looking at the protocol type, but by looking at the MAC address unique to each NIC[^5]. Unlike routers that understand Layer-3 network protocols, bridges understand Layer-2 protocols and therefore copy data frame by frame, instead of bit by bit.
 
