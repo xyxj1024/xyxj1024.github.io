@@ -2,7 +2,7 @@
 layout:     post
 title:      "Observing Containerized Envoy with bpftrace Programs: Part 1"
 category:   "Cloud Native Computing"
-tags:       envoy-proxy bpf container
+tags:       envoy-proxy bpf container docker
 permalink:  /posts/observing-containerized-envoy-part-1
 ---
 

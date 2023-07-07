@@ -468,6 +468,18 @@ public class Node<T> {
 }
 ```
 
+<!--
+
+Lock-free data structures:
+- [A single-producer, single-consumer lock-free queue for C++](https://github.com/cameron314/readerwriterqueue), [the article](https://moodycamel.com/blog/2013/a-fast-lock-free-queue-for-c++)
+- [`boost/lockfree/spsc_queue.hpp`](https://www.boost.org/doc/libs/1_82_0/boost/lockfree/spsc_queue.hpp), [Class template `spsc_queue`](https://www.boost.org/doc/libs/1_82_0/doc/html/boost/lockfree/spsc_queue.html)
+- [A lock-free,concurrent, generic queue in 32 bits](https://nullprogram.com/blog/2022/05/14/), on [Hacker News](https://news.ycombinator.com/item?id=31384602)
+- [C11 lock-free stack](https://nullprogram.com/blog/2014/09/02/)
+- [Optimizing a ring buffer for throughput](https://rigtorp.se/ringbuffer/)
+- [Dmitry Vyukov on Producer-Consumer Queues](https://www.1024cores.net/home/lock-free-algorithms/queues)
+
+-->
+
 ## Notes
 
 [^1]: Please refer to [this post](https://blog.csdn.net/qqqqq1993qqqqq/article/details/75211993) for more details.
