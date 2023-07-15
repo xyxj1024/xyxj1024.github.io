@@ -6,7 +6,7 @@ tags:       envoy-proxy control-plane service-mesh container docker swarm
 permalink:  /posts/a-control-plane-for-containerized-envoy-proxies
 ---
 
-In this post, I would like to document how I implemented my own [Envoy control plane](https://www.envoyproxy.io/docs/envoy/latest/start/quick-start/configuration-dynamic-control-plane) utilizing [Envoy's data plane API](https://github.com/envoyproxy/go-control-plane). The demo presented here is built for Docker swarm where dynamic resources for Envoy are updated by parsing labels of swarm services. The demo code can be found in [this GitHub repository](https://github.com/xyxj1024/envoy-playground/tree/main/demo6). Another demo for Envoy running natively can be found [here](https://github.com/xyxj1024/envoy-playground/tree/main/demo3). The blog post, "[Guidance for Building a Control Plane to Manage Envoy Proxy at the edge, as a gateway, or in a mesh](https://blog.christianposta.com/envoy/guidance-for-building-a-control-plane-to-manage-envoy-proxy-based-infrastructure/)," by [Christian Posta](https://github.com/christian-posta) is highly recommended before jumping into the topic of Envoy dynamic configuration.
+In this post, I would like to document briefly how I implemented my own [Envoy control plane](https://www.envoyproxy.io/docs/envoy/latest/start/quick-start/configuration-dynamic-control-plane) utilizing [Envoy's data plane API](https://github.com/envoyproxy/go-control-plane). The demo presented here is built for Docker swarm where dynamic resources for Envoy are updated by parsing labels of swarm services. Thus, the control plane should be run on a manager node. The demo code can be found in [this GitHub repository](https://github.com/xyxj1024/envoy-playground/tree/main/demo6). Another demo for Envoy running natively can be found [here](https://github.com/xyxj1024/envoy-playground/tree/main/demo3). The blog post, "[Guidance for Building a Control Plane to Manage Envoy Proxy at the edge, as a gateway, or in a mesh](https://blog.christianposta.com/envoy/guidance-for-building-a-control-plane-to-manage-envoy-proxy-based-infrastructure/)," by [Christian Posta](https://github.com/christian-posta) is highly recommended before jumping into the topic of Envoy dynamic configuration.
 
 <!-- excerpt-end -->
 
@@ -29,7 +29,7 @@ Docker Swarm mode uses [overlay network](https://book.systemsapproach.org/applic
 docker network create --driver=overlay --attachable mesh-traffic
 ```
 
-In my demo setup, Envoy is always created as a swarm service with three port publishing rules: one for the admin port, one for the listener port, and one for the gRPC port.
+In my demo setup, Envoy is always created as a swarm service specified with three port publishing rules: one for the admin port, one for the listener port, and one for the gRPC port[^1].
 
 ## A Watcher for Docker Label Updates
 
@@ -39,7 +39,7 @@ A swarm service may carry a label, which is actually a key-value pair storing so
 docker service update --label-add $KEY=$VALUE $SERVICE_NAME
 ```
 
-I would like to implement a watcher for my Envoy control plane operating in the way that it generates a new [snapshot](https://pkg.go.dev/github.com/envoyproxy/go-control-plane/pkg/cache/v3#Snapshot) whenever it detects a swarm service update.
+I implemented a simple watcher for my Envoy control plane operating in the way that it generates a new [snapshot](https://pkg.go.dev/github.com/envoyproxy/go-control-plane/pkg/cache/v3#Snapshot) whenever it detects a swarm service update.
 
 Below are some data fields that I would like to configure dynamically:
 
@@ -72,7 +72,7 @@ type ServiceLabels struct {
 }
 ```
 
-The `ServiceLabels` structure will be passed to the following function via a [channel](https://dave.cheney.net/2014/03/19/channel-axioms):
+The `ServiceLabels` structure will be passed to the following `Discover` function via a [Go channel](https://dave.cheney.net/2014/03/19/channel-axioms):
 
 ```go
 type Manager struct {
@@ -94,9 +94,9 @@ func (m *Manager) Discover(updateChannel chan ServiceLabels, ctx context.Context
 }
 ```
 
-The `main.go` program, which serves as the entrypoint of this demo, starts two goroutines, one running the above `Discover` function and the other running the xDS [management server](https://www.envoyproxy.io/docs/envoy/latest/configuration/overview/mgmt_server).
+The `main.go` program, which serves as the entrypoint of this demo, starts two [goroutines](https://notes.shichao.io/gopl/ch8/), one running the above function and the other running the xDS [management server](https://www.envoyproxy.io/docs/envoy/latest/configuration/overview/mgmt_server).
 
-The [Go client for the Docker Engine API](https://pkg.go.dev/github.com/docker/docker/client) provides a [`ServiceList`](https://pkg.go.dev/github.com/docker/docker/client#Client.ServiceList) method that can be used to retrieve the information we want:
+The [Go client for the Docker Engine API](https://pkg.go.dev/github.com/docker/docker/client) provides a [`ServiceList`](https://pkg.go.dev/github.com/docker/docker/client#Client.ServiceList) method that can be used to retrieve the labels information we want:
 
 ```go
 func StartWatcher(ctx context.Context, cli docker.APIClient, ingressNetwork string, updateChannel chan snapshot.ServiceLabels) {
@@ -184,7 +184,7 @@ func generateWatcher(ctx context.Context) chan snapshot.ServiceLabels {
 
 ## Upstream Service
 
-In [this demo](https://github.com/xyxj1024/envoy-playground/tree/main/demo3), Envoy is configured to send requests to upstream IP addresses such as `www.google.com/robots.txt` and `www.wustl.edu/robots.txt`. We might also want Envoy to connect to our own application services. To illustrate this, I use the following program:
+In [my previous control plane demo](https://github.com/xyxj1024/envoy-playground/tree/main/demo3), one single, standalone Envoy proxy is configured to send requests to upstream IP addresses such as `www.google.com/robots.txt` and `www.wustl.edu/robots.txt`. We might also want Envoy to connect to our own application services. To illustrate this, I use the following program:
 
 ```go
 package main
@@ -212,7 +212,7 @@ func main() {
 }
 ```
 
-If running inside a Docker container, it needs a Dockerfile:
+If running inside a Docker container, it needs a Dockerfile like this:
 
 ```dockerfile
 FROM golang:1.20.5-alpine3.18
@@ -225,7 +225,7 @@ COPY app.go ./
 CMD ["go", "run", "app.go"]
 ```
 
-Finally, deploy it as a swarm service:
+Deploy it as a swarm service:
 
 ```bash
 docker image build --tag app-1:v1 $APPDIR
@@ -235,7 +235,7 @@ docker service create \
     --name app-1 app-1:v1
 ```
 
-We can update our Envoy service as follows:
+Finally, we can update our Envoy service as follows:
 
 ```bash
 docker service update \
@@ -248,3 +248,5 @@ docker service update \
 ```
 
 where the application service name is used as the upstream host.
+
+[^1]: The control plane communicates with Envoy instances via the [xDS protocol](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol). In my case, this communication takes the form of bi-directional gRPC streaming. Therefore, the gRPC port is exclusively used for dynamic configuration. If multiple Envoy instances want to communicate with one single control plane instance, they need to configure the same port value. When Envoy instances are Dockerized while the control plane instance is running natively, in Envoy's bootstrap config YAML file, we need to explicitly set the control plane's endpoint address to host machine's IP address. Since I'm using Docker Desktop for macOS, which actually launches a Linux VM for containers, `host.docker.internal` can be used. On a Linux machine, one might want to use [this program](https://github.com/xyxj1024/envoy-playground/blob/main/utils/linux_host_ip.sh) to determine this address.
