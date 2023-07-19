@@ -3,7 +3,7 @@ layout:             post
 title:              "景复朗晚清货币研究"
 category:           "Book Excerpts"
 tags:               Chinese-economy Chinese-history
-permalink:          /posts/Chinese-history/qing-monetary-policy
+permalink:          /blog/Chinese-history/qing-monetary-policy
 last_modified_at:   "2023-05-01"
 ---
 

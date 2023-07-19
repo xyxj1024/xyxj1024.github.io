@@ -3,7 +3,7 @@ layout:             post
 title:              "Benchmarking Protocol Buffer and JSON Performance"
 category:           "Web Applications and Cybersecurity"
 tags:               protobuf json go
-permalink:          /posts/benchmarking-protobuf-and-json-performance
+permalink:          /blog/benchmarking-protobuf-and-json-performance
 last_modified_at:   "2023-06-20"
 ---
 

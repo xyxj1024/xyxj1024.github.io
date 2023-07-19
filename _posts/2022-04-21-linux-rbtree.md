@@ -3,11 +3,11 @@ layout:           post
 title:            "Linux Red-Black Tree Data Structure"
 category:         "Linux System Programming"
 tags:		      linux-kernel tree
-permalink:        /posts/linux-plumbing/rbtree
+permalink:        /blog/linux-plumbing/rbtree
 last_modified_at: "2022-12-30"
 ---
 
-The [previous post]({{ site.baseurl }}/posts/linux-plumbing/radix-tree) gives a broad-brush survey of radix tree data structure in Linux. Another useful tree-based API is red-black tree, which has been particularly crucial for Linux kernel memory management.
+The [previous post]({{ site.baseurl }}/blog/linux-plumbing/radix-tree) gives a broad-brush survey of radix tree data structure in Linux. Another useful tree-based API is red-black tree, which has been particularly crucial for Linux kernel memory management.
 
 A **red-black tree**{: style="color: red"} is a binary search tree which has the following *red-black properties*:
 1. Every node is either red or black.

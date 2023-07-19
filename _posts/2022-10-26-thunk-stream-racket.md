@@ -3,7 +3,7 @@ layout: 		      post
 title: 			      "Thunks and Streams in Racket"
 category:		      "Programming Languages"
 tags:			        functional-programming lazy-evaluation cse425-assignment
-permalink:		    /posts/thunk-stream-racket
+permalink:		    /blog/thunk-stream-racket
 last_modified_at: "2022-11-06"
 ---
 

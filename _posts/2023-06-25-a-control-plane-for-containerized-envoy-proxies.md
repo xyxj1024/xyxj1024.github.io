@@ -1,9 +1,10 @@
 ---
-layout:     post
-title:      "A Control Plane for Containerized Envoy Proxies"
-category:   "Cloud Native Computing"
-tags:       envoy-proxy control-plane service-mesh container docker swarm
-permalink:  /posts/a-control-plane-for-containerized-envoy-proxies
+layout:           post
+title:            "A Control Plane for Containerized Envoy Proxies"
+category:         "Cloud Native Computing"
+tags:             envoy-proxy control-plane service-mesh container docker swarm
+permalink:        /blog/a-control-plane-for-containerized-envoy-proxies
+last_modified_at: "2023-07-14"
 ---
 
 In this post, I would like to document briefly how I implemented my own [Envoy control plane](https://www.envoyproxy.io/docs/envoy/latest/start/quick-start/configuration-dynamic-control-plane) utilizing [Envoy's data plane API](https://github.com/envoyproxy/go-control-plane). The demo presented here is built for Docker swarm where dynamic resources for Envoy are updated by parsing labels of swarm services. Thus, the control plane should be run on a manager node. The demo code can be found in [this GitHub repository](https://github.com/xyxj1024/envoy-playground/tree/main/demo6). Another demo for Envoy running natively can be found [here](https://github.com/xyxj1024/envoy-playground/tree/main/demo3). The blog post, "[Guidance for Building a Control Plane to Manage Envoy Proxy at the edge, as a gateway, or in a mesh](https://blog.christianposta.com/envoy/guidance-for-building-a-control-plane-to-manage-envoy-proxy-based-infrastructure/)," by [Christian Posta](https://github.com/christian-posta) is highly recommended before jumping into the topic of Envoy dynamic configuration.

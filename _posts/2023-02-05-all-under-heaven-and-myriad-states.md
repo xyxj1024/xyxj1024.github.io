@@ -3,7 +3,7 @@ layout:             post
 title:              "何为中国"
 category:           "Book Excerpts"
 tags:               Chinese-history Chinese-classics intellectual-history
-permalink:          /posts/Chinese-history/all-under-heaven-and-myriad-states
+permalink:          /blog/Chinese-history/all-under-heaven-and-myriad-states
 last_modified_at:   "2023-05-01"
 ---
 

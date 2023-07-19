@@ -3,12 +3,12 @@ layout:             post
 title:              "Linux Control Groups: Fork Bomb Revisited"
 category:           "Linux System Programming"
 tags:               linux-kernel process-thread cgroup
-permalink:          /posts/linux-plumbing/cgroups/forkbomb
+permalink:          /blog/linux-plumbing/cgroups/forkbomb
 ---
 
 Some writeup for Washington University CSE 522S: Studio 8 "Observing Memory Events", Exercise 4 through 6.
 
-[Here]({{ site.baseurl }}/posts/linux-plumbing/fork-execve#fork-bomb) I rediscovered some history episode about fork bomb attack. In this post, I would like to test a fork bomb program which additionally makes `malloc()` function calls that generate significant memory usage for Linux **control groups**{: style="color: red"}:
+[Here]({{ site.baseurl }}/blog/linux-plumbing/fork-execve#fork-bomb) I rediscovered some history episode about fork bomb attack. In this post, I would like to test a fork bomb program which additionally makes `malloc()` function calls that generate significant memory usage for Linux **control groups**{: style="color: red"}:
 
 ```c
 #include <unistd.h>

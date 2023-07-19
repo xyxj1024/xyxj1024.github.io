@@ -3,7 +3,7 @@ layout:             post
 title:              "Serving External Static Files with Pure Node.js"
 category:           "Web Applications and Cybersecurity"
 tags:               web-development javascript nodejs cse503-assignment
-permalink:          /posts/nodejs-static-file-server
+permalink:          /blog/nodejs-static-file-server
 ---
 
 When implementing [the multi-room chat server project](https://classes.engineering.wustl.edu/cse330/index.php?title=Module_6) for Washington University CSE 503S (Spring 2023), I encountered the issue of loading external static files (e.g., CSS stylesheets, JavaScript programs, and images, etc.) into the web page. This post documents a simple solution inspired by [this MDN article](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Node_server_without_framework).

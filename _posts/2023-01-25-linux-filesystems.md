@@ -3,7 +3,7 @@ layout:             post
 title:              "Linux Filesystem Forensics"
 category:           "Linux System Programming"
 tags:               linux-kernel namespace cse422-assignment cse522-assignment
-permalink:          /posts/linux-plumbing/filesystem
+permalink:          /blog/linux-plumbing/filesystem
 last_modified_at:   "2023-02-11"
 ---
 
@@ -81,7 +81,7 @@ cd /path/to/studio4/subdir1
 ln ../subdir0/myfile
 ```
 
-(I gave a brief recap on hard links in Linux [here]({{ site.baseurl }}/posts/seedlabs/race-condition#linux-filesystem-hard-links-vs-soft-links).)
+(I gave a brief recap on hard links in Linux [here]({{ site.baseurl }}/blog/seedlabs/race-condition#linux-filesystem-hard-links-vs-soft-links).)
 
 We can write a userspace C program that emulates some of the behavior of the `ln` utility making use of the `link()` system call:
 

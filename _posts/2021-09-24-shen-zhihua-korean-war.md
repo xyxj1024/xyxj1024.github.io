@@ -3,7 +3,7 @@ layout:             post
 title:              "朝鲜战争"
 category:           "Book Excerpts"
 tags:               korean-war cold-war foreign-relations
-permalink:          /posts/world-history/shen-zhihua-korean-war
+permalink:          /blog/world-history/shen-zhihua-korean-war
 last_modified_at:   "2023-05-04"
 ---
 

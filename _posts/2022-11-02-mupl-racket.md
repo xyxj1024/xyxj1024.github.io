@@ -3,7 +3,7 @@ layout: 		      post
 title: 			      "A Made Up Programming Language in Racket"
 category:		      "Programming Languages"
 tags:			        interpreter functional-programming cse425-assignment
-permalink:		    /posts/mupl-racket
+permalink:		    /blog/mupl-racket
 last_modified_at: "2022-11-04"
 ---
 

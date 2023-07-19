@@ -3,7 +3,7 @@ layout:             post
 title:              "Linux Kernel Memory Management"
 category:           "Linux System Programming"
 tags:               linux-kernel raspberry-pi cse422-assignment
-permalink:          /posts/linux-plumbing/kernel-memory-management
+permalink:          /blog/linux-plumbing/kernel-memory-management
 last_modified_at:   "2023-03-22"
 ---
 

@@ -3,7 +3,7 @@ layout:       post
 title:        "SEED Labs 2.0: Race Condition Vulnerability Lab Writeup"
 category:     "Software Security"
 tags:         software-security
-permalink:    /posts/seedlabs/race-condition
+permalink:    /blog/seedlabs/race-condition
 ---
 
 For general overview and the setup package for this lab, please go to [SEED Labs official website](https://seedsecuritylabs.org). The lab assignment was conducted using SEED virtual machine configured on a AWS EC2 instance.

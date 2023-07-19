@@ -3,7 +3,7 @@ layout:           post
 title:            "Linux Radix Tree Data Structure"
 category:         "Linux System Programming"
 tags:		      linux-kernel tree
-permalink:        /posts/linux-plumbing/radix-tree
+permalink:        /blog/linux-plumbing/radix-tree
 last_modified_at: "2023-02-18"
 ---
 

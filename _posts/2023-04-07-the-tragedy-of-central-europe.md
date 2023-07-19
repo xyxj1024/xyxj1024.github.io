@@ -3,7 +3,7 @@ layout:             post
 title:              "中欧的悲剧"
 category:           "Book Excerpts"
 tags:               european-history cultural-history cold-war
-permalink:          /posts/world-history/the-tragedy-of-central-europe
+permalink:          /blog/world-history/the-tragedy-of-central-europe
 last_modified_at:   "2023-05-21"
 ---
 

@@ -3,7 +3,7 @@ layout:     post
 title:      "Technologists' Opinions on Kubernetes"
 category:   "Cloud Native Computing"
 tags:       open-source kubernetes devops
-permalink:  /posts/technologists-opinions-on-kubernetes
+permalink:  /blog/technologists-opinions-on-kubernetes
 ---
 
 It is quite fun watching people exchanging thoughts and ideas on Twitter, even though from time to time people no longer care about their intellectual humility and turn the discussion into a fight. Everyone, more or less, wants to be heard. The Internet has taught me that information sharing, as a human instinct, eventually makes social progress possible. This is especially true for OSS ("open source software") in that to facilitate open discussions and to have faith in collective intelligence are what we have luckily done right so far.

@@ -3,7 +3,7 @@ layout:             post
 title:              "Linux Network Namespaces"
 category:           "Linux System Programming"
 tags:               namespace container networking
-permalink:          /posts/linux-plumbing/linux-network-namespaces
+permalink:          /blog/linux-plumbing/linux-network-namespaces
 ---
 
 Network namespaces entered the Linux kernel in version 2.6.24. They partition the use of the system resources associated with networking&mdash;network devices, addresses, ports, routes, firewall rules, etc.&mdash;into separate boxes, essentially virtualizing the network within a single running kernel instance[^1].

@@ -3,11 +3,11 @@ layout:             post
 title:              "Microarchitectural Attacks on ARM: Part 1"
 category:           "Hardware Security"
 tags:               hardware-security microarchitecture raspberry-pi last-level-cache
-permalink:          /posts/march-attacks-on-arm-part-1
+permalink:          /blog/march-attacks-on-arm-part-1
 last_modified_at:   "2022-12-18"
 ---
 
-I have attempted to shed light on whys and hows regarding the [Spectre]({{ site.baseurl }}/posts/seedlabs/march-attacks) and [Meltdown]({{ site.baseurl }}/posts/seedlabs/meltdown) attacks with materials drawn from [SEED Labs 2.0](https://seedsecuritylabs.org). A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
+I have attempted to shed light on whys and hows regarding the [Spectre]({{ site.baseurl }}/blog/seedlabs/march-attacks) and [Meltdown]({{ site.baseurl }}/blog/seedlabs/meltdown) attacks with materials drawn from [SEED Labs 2.0](https://seedsecuritylabs.org). A MacBook Air equipped with Intel Core i5-5250U was used to run the C programs. Here in this post, I would like to address the problem of launching microarchitectural attacks on a Raspberry Pi 3 Model B+[^1], which is an ARM machine.
 
 <!-- excerpt-end -->
 

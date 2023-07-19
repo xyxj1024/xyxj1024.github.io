@@ -3,7 +3,7 @@ layout:             post
 title:              "Install Rust and CMake on an Intel MacBook"
 category:           "Programming Languages"
 tags:               rust
-permalink:          /posts/mac-rust-cmake-installation
+permalink:          /blog/mac-rust-cmake-installation
 last_modified_at:   "2023-02-02"
 ---
 

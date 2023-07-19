@@ -3,7 +3,7 @@ layout:             post
 title:              "SEED Labs 2.0: Smart Contract Reentrancy Attack Lab Writeup"
 category:           "Software Security"
 tags:               ethereum web3
-permalink:          /posts/seedlabs/smart-contract-reentrancy
+permalink:          /blog/seedlabs/smart-contract-reentrancy
 ---
 
 **The DAO** was a *decentralized autonomous organization (DAO)* that was launched in 2016 on the Ethereum blockchain. After raising $$\$150$$ million USD worth of ether (ETH) through a token sale, The DAO was hacked due to vulnerabilities in its code base. The Ethereum blockchain was eventually hard forked to restore the stolen funds, but not all parties agreed with this decision, which resulted in the network splitting into two distinct blockchains: Ethereum and Ethereum Classic.

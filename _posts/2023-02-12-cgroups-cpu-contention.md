@@ -3,7 +3,7 @@ layout:             post
 title:              "Linux Control Groups: Observing CPU Contention"
 category:           "Linux System Programming"
 tags:               linux-kernel process-thread cgroup
-permalink:          /posts/linux-plumbing/cgroups/cpu-contention
+permalink:          /blog/linux-plumbing/cgroups/cpu-contention
 ---
 
 Some writeup for Washington University CSE 522S: Studio 9 "CPU Control and Timing Events".

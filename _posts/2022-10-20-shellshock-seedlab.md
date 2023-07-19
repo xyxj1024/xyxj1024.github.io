@@ -3,7 +3,7 @@ layout:             post
 title:              "SEED Labs 2.0: Shellshock Attack Lab Writeup"
 category:           "Web Applications and Cybersecurity"
 tags:               networking cybersecurity container reverse-shell
-permalink:          /posts/seedlabs/shellshock
+permalink:          /blog/seedlabs/shellshock
 last_modified_at:   "2023-04-12"
 ---
 

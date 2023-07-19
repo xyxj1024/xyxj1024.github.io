@@ -31,7 +31,7 @@ Once thinking that I am destined for a career as a social scientist, right now I
 
 ### &#127979; Education
 
-#### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis (Aug. 2021 &mdash; Present)
+#### Master of Engineering in Computer Science and Engineering, Washington University in St. Louis
 
 CS-related coursework with links:
   - **CSE 523S: Systems Security**, taught by [Dr. Patrick Crowley](https://www.arl.wustl.edu/~pcrowley/), complemented with [SEED Labs](https://seedsecuritylabs.org/) developed by [Dr. Wenliang Du](https://web.ecs.syr.edu/~wedu/) from [Syracuse University](https://www.syracuse.edu/)
@@ -39,14 +39,14 @@ CS-related coursework with links:
   - [**CSE 330/503S: Rapid Prototype Development and Creative Programming**](https://classes.engineering.wustl.edu/cse330), taught by [Dr. Todd Sproull](https://research.engineering.wustl.edu/~todd/)
   - **CSE 467S: Embedded Computing Systems**, taught by Dr. Darko Ivanovich, originally developed by [Dr. Chenyang Lu](https://www.cse.wustl.edu/~lu/)
   - [**CSE 433S: Introduction to Computer Security**](https://cybersecurity.seas.wustl.edu/ning/teaching/F21cse433s/index.html), taught by [Dr. Ning Zhang](https://engineering.wustl.edu/faculty/Ning-Zhang.html), complemented with CTF exercises explained in [Kaplan et al. (2022)](https://dl.acm.org/doi/pdf/10.1145/3502717.3532153) and [Cole (2022)](https://dl.acm.org/doi/pdf/10.1145/3502718.3524806)
-  - **CSE 433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (please find resources page [here]({{ site.baseurl }}/posts/cse433r-resources))
+  - **CSE 433R: Capture The Flag (CTF) Studio**, taught by [Dr. Stephen V. Cole](https://github.com/cole-wustl) (please find resources page [here]({{ site.baseurl }}/blog/cse433r-resources))
   - [**CSE 425S: Programming Languages and Systems**](https://www.cse.wustl.edu/~dennis.cosgrove/courses/cse425s/fall22/), taught by [Prof. Dennis Cosgrove](https://www.cse.wustl.edu/~dennis.cosgrove/), complemented with CSE 341 course materials developed by [Dr. Dan Grossman](https://homes.cs.washington.edu/~djg/teachingMaterials/spl/) at [University of Washington](https://www.washington.edu/)
   - [**CSE 422S: Operating Systems Organization**](https://classes.engineering.wustl.edu/cse422/), taught by Dr. James Orr
   - [**CSE 361S: Introduction to Systems Software**](https://www.cse.wustl.edu/~angelee/cse361/), taught by [Dr. I-Ting Angelina Lee](https://www.cse.wustl.edu/~angelee/home_page/) (a course based on [CS:APP](https://csapp.cs.cmu.edu/))
   - [**ECON 558: Matching and Assignment**](https://economics.wustl.edu/matching-and-assignment), taught by [Dr. SangMok Lee](https://sangmok81.github.io/website/)
   - [**MATH 4351: Number Theory and Cryptography**](https://sites.google.com/view/benw/teaching/math-4351-spring-22), taught by [Dr. Ben Wormleighton](https://sites.google.com/view/benw/), following lecture notes from [Dr. Matt Kerr](https://www.math.wustl.edu/~matkerr/)
 
-#### Bachelor of Arts in Economics, Tsinghua University (Sep. 2017 &mdash; Jul. 2021)
+#### Bachelor of Arts in Economics, Tsinghua University
 
 Thesis Title: "The U.S. Tri­-Party Repo Market: Historical Dynamics and the Global Financial Crisis"
 
@@ -62,11 +62,12 @@ Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
 ### &#128194; Course Projects
 
-#### Microarchitectural Attacks (Fall 2022)
+#### Microarchitectural Attacks
 
-#### CSAPP Cache Lab (Fall 2021)
+- Implemented Flush+Reload Attack, Spectre Attack Variant 1, Spectre-RSB Attack, Meltdown Attack on an Intel MacBook.
+- Implemented Shared Cache DoS Attack on a Raspberry Pi 3 B+.
 
-#### China's Shadow Banking System and Local Government Debt Problem (Spring 2019)
+#### China's Shadow Banking System and Local Government Debt Problem
 
 - Created a conceptual diagram for China's shadow banking credit intermediation.
 - Hand-collected, cross-checked, cleaned, and visualized provincial data sets for the period 2013-2017. Data sources include official websites of PBoC, MoF, NAO, MoHURD along with commercial databases such as WIND, CEIC, and Choice. Data items include fiscal position, wealth management product issuance, municipal and chengtou bond issuance, local and foreign currency deposits of financial institutions, supply of state­owned land for construction purposes, etc., totaling 8215 entries.
@@ -74,11 +75,11 @@ Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
 ### &#128372; Experience
 
-#### Graduate Teaching Assistant (Spring 2023)
+#### Graduate Teaching Assistant
 
 Washington University CSE 523S: "Systems Security"
 
-#### Tsinghua University Student Orchestra (Aug. 2016 &mdash; Aug. 2020)
+#### Tsinghua University Student Orchestra
 
 Principal Second Violin
 
@@ -91,5 +92,5 @@ Orchestral and chamber music events held at:
 
 ### &#128187; Skills
 
- - General programming: C/C++, Go, Python, Java
+ - General programming: C/C++, Go, Python
  - Web development: HTML, CSS, JavaScript

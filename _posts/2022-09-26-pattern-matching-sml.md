@@ -3,7 +3,7 @@ layout: 		      post
 title: 			      "Pattern Matching in Standard ML"
 category:		      "Programming Languages"
 tags:			        functional-programming cse425-assignment
-permalink:		    /posts/pattern-matching-sml
+permalink:		    /blog/pattern-matching-sml
 last_modified_at: "2022-10-09"
 ---
 

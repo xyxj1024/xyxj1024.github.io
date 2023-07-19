@@ -3,7 +3,7 @@ layout:             post
 title:              "Apache Web Server Setup Guide"
 category:           "Web Applications and Cybersecurity"
 tags:               web-development apache cse503-assignment
-permalink:          /posts/apache-web-server-setup-guide
+permalink:          /blog/apache-web-server-setup-guide
 ---
 
 Individual portion of [Module 2](https://classes.engineering.wustl.edu/cse330/index.php/Module_2) from CSE 330/503S: "Rapid Prototype Development and Creative Programming" at Washington University in St. Louis. The Apache web server will be installed and configured on an AWS EC2 instance. A Mac laptop is used as the local machine.

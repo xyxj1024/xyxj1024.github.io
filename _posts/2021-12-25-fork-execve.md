@@ -3,7 +3,7 @@ layout: 		    post
 title: 			    "Linux Fork and Execve Under the Hood"
 category:		    "Linux System Programming"
 tags:			    linux-kernel process-thread
-permalink:		    /posts/linux-plumbing/fork-execve
+permalink:		    /blog/linux-plumbing/fork-execve
 last_modified_at:   "2023-03-30"
 ---
 

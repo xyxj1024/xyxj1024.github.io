@@ -3,7 +3,7 @@ layout: 		      post
 title: 			      "Tetris Game in Ruby"
 category:		      "Programming Languages"
 tags:			        object-oriented-programming game cse425-assignment
-permalink:		    /posts/tetris-ruby
+permalink:		    /blog/tetris-ruby
 last_modified_at: "2022-12-08"
 ---
 

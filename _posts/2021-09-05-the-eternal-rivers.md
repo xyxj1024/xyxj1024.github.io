@@ -3,7 +3,7 @@ layout:             post
 title:              "万古江河"
 category:           "Book Excerpts"
 tags:               Chinese-history Chinese-classics cultural-history
-permalink:          /posts/Chinese-history/the-eternal-rivers
+permalink:          /blog/Chinese-history/the-eternal-rivers
 last_modified_at:   "2023-05-01"     
 ---
 

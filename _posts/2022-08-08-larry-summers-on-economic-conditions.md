@@ -3,7 +3,7 @@ layout:           post
 title:            "Larry Summers on 2022 U.S. Economic Conditions"
 category:         "Macroeconomics and Finance"
 tags:             central-bank macroeconomics inflation unemployment
-permalink:        /posts/larry-summers-on-economic-conditions
+permalink:        /blog/larry-summers-on-economic-conditions
 last_modified_at: "2022-12-03"
 ---
 

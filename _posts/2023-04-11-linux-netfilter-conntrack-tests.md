@@ -3,7 +3,7 @@ layout:     post
 title:      "Linux Netfilter Connection Tracking: Two Simple Tests"
 category:   "Linux System Programming"
 tags:       linux-kernel networking namespace packet-filtering syn-flood
-permalink:  /posts/linux-plumbing/netfilter-conntrack-tests
+permalink:  /blog/linux-plumbing/netfilter-conntrack-tests
 ---
 
 The Linux connection tracking subsystem (in many scenarios called "the `conntrack` table"), built on top of [the Netfilter framework](https://www.netfilter.org/), stores information about the state of a network connection in a memory structure that contains the source and destination IP addresses, port number pairs, protocol types, state, and timeout.
@@ -497,7 +497,7 @@ We can see 7 SYN+ACK's flying out of the port 80 listening socket. The final thr
 
 The results here have security implications. Just as Marek Majkowski wrote:
 
-> If you use `conntrack` on publicly accessible ports, during [SYN flood]({{ site.baseurl }}/posts/seedlabs/attacks-on-tcp) mitigation technologies like SYN Cookies won't help. You are still at risk of running out of `conntrack` space and therefore affecting legitimate connections.
+> If you use `conntrack` on publicly accessible ports, during [SYN flood]({{ site.baseurl }}/blog/seedlabs/attacks-on-tcp) mitigation technologies like SYN Cookies won't help. You are still at risk of running out of `conntrack` space and therefore affecting legitimate connections.
 
 ## Further Reading
 

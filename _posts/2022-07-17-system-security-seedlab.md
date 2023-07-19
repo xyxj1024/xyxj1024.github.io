@@ -3,7 +3,7 @@ layout:             post
 title:              "SEED Labs 2.0: System Security Labs Preview"
 category:           "Hardware Security"
 tags:               hardware-security microarchitecture cache
-permalink:          /posts/seedlabs/system-security
+permalink:          /blog/seedlabs/system-security
 last_modified_at:   "2022-12-14"
 ---
 

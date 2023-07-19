@@ -3,11 +3,11 @@ layout:             post
 title:              "Microarchitectural Attacks on ARM: Part 2"
 category:           "Hardware Security"
 tags:               hardware-security microarchitecture raspberry-pi last-level-cache
-permalink:          /posts/march-attacks-on-arm-part-2
+permalink:          /blog/march-attacks-on-arm-part-2
 last_modified_at:   "2023-04-26"
 ---
 
-In this post, I would like to revise and update results for the shared-cache DoS attack that I presented [here]({{ site.baseurl }}/posts/march-attacks-on-arm-part-1).
+In this post, I would like to revise and update results for the shared-cache DoS attack that I presented [here]({{ site.baseurl }}/blog/march-attacks-on-arm-part-1).
 
 <!-- excerpt-end -->
 
@@ -35,7 +35,7 @@ and
 int clock_gettime(clockid_t clockid, struct timespec *tp);
 ```
 
-to obtain wall-clock timing measurements[^1]. This time, based on the knowledge about the [ARM PMU]({{ site.baseurl }}/posts/arm-pmu), I will replace these wall-clock timers with the ARMv7 cycle counter, which is able to count every cycle or every 64th cycle. Specifically, there are three steps to perform. The first step is to execute the following two inline assembly statements inside the kernel (the second may be optional):
+to obtain wall-clock timing measurements[^1]. This time, based on the knowledge about the [ARM PMU]({{ site.baseurl }}/blog/arm-pmu), I will replace these wall-clock timers with the ARMv7 cycle counter, which is able to count every cycle or every 64th cycle. Specifically, there are three steps to perform. The first step is to execute the following two inline assembly statements inside the kernel (the second may be optional):
 
 ```c
 /* Enable user-mode access to the counter */

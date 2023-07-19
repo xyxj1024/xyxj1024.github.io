@@ -3,7 +3,7 @@ layout:             post
 title:              "A Primer to Diffie-Hellman Key Exchange"
 category:           "Web Applications and Cybersecurity"
 tags:               cryptography cybersecurity ctf
-permalink:          /posts/diffie-hellman
+permalink:          /blog/diffie-hellman
 last_modified_at:   "2023-03-29"
 ---
 

@@ -3,10 +3,10 @@ layout:             post
 title:              "Benchmarking Apache and NGINX Performance"
 category:           "Web Applications and Cybersecurity"
 tags:               apache nginx cse503-assignment
-permalink:          /posts/benchmarking-apache-and-nginx-performance
+permalink:          /blog/benchmarking-apache-and-nginx-performance
 ---
 
-In this post, I would like to present performance measurements for Apache and NGINX web servers on the same free-tier AWS EC2 instance created [here]({{ site.baseurl }}/posts/apache-web-server-setup-guide). Experiments were conducted **inside the AWS EC2 instance** (rather than connected from my local machine through SSH) using the [Apache Bench (`ab`) command-line tool](https://httpd.apache.org/docs/2.4/programs/ab.html). For each run, I explicitly specified the number of HTTP GET requests made to the website I wrote for [CSE 503S Module 5](https://classes.engineering.wustl.edu/cse330/index.php?title=Module_5) and the level of concurrency (i.e., the number of multiple requests to perform at a time).
+In this post, I would like to present performance measurements for Apache and NGINX web servers on the same free-tier AWS EC2 instance created [here]({{ site.baseurl }}/blog/apache-web-server-setup-guide). Experiments were conducted **inside the AWS EC2 instance** (rather than connected from my local machine through SSH) using the [Apache Bench (`ab`) command-line tool](https://httpd.apache.org/docs/2.4/programs/ab.html). For each run, I explicitly specified the number of HTTP GET requests made to the website I wrote for [CSE 503S Module 5](https://classes.engineering.wustl.edu/cse330/index.php?title=Module_5) and the level of concurrency (i.e., the number of multiple requests to perform at a time).
 
 <br>
 ![ab-top](/assets/images/benchmarking-apache-nginx/ab-top.png){:class="img-responsive"}

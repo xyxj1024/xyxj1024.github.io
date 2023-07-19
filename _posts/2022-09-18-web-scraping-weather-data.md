@@ -3,7 +3,7 @@ layout:             post
 title:              "Python Weather Data Scraping"
 category:           "Programming Languages"
 tags:               web-scraping python
-permalink:          /posts/web-scraping/weather-data
+permalink:          /blog/web-scraping/weather-data
 last_modified_at:   "2023-01-30"
 ---
 

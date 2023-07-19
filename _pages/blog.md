@@ -1,7 +1,7 @@
 ---
 layout:     page
 title:      Blog Posts
-permalink:  /posts
+permalink:  /blog
 nav_order:  3
 ---
 

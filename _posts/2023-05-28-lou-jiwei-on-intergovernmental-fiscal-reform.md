@@ -3,7 +3,7 @@ layout:             post
 title:              "楼继伟谈中国财税体制改革"
 category:           "Book Excerpts"
 tags:               Chinese-economy economic-reform fiscal-policy macroeconomics
-permalink:          /posts/lou-jiwei-on-intergovernmental-fiscal-reform
+permalink:          /blog/lou-jiwei-on-intergovernmental-fiscal-reform
 last_modified_at:   "2023-06-30"
 comment_id:         1
 ---

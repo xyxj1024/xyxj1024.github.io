@@ -3,7 +3,7 @@ layout:             post
 title:              "SEED Labs 2.0: TCP/IP and Mitnick Attack Labs Writeup"
 category:           "Web Applications and Cybersecurity"
 tags:               networking cybersecurity syn-flood tcp container
-permalink:          /posts/seedlabs/attacks-on-tcp
+permalink:          /blog/seedlabs/attacks-on-tcp
 last_modified_at:   "2023-03-11"
 ---
 

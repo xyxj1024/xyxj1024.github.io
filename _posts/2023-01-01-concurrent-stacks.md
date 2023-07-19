@@ -3,7 +3,7 @@ layout:             post
 title:              "Concurrent Stacks in Java"
 category:           "Data Structures and Algorithms"
 tags:               object-oriented-programming concurrency tree
-permalink:          /posts/concurrent-stacks
+permalink:          /blog/concurrent-stacks
 ---
 
 A **concurrent stack**{: style="color: red"} is a data structure linearizable to a sequential stack that provides `push` and `pop` operations with the usual LIFO semantics. Linearizability is the *de facto* standard correctness condition for concurrent algorithms. Intuitively, an algorithm is linearizable with respect to a sequential specification if each execution of the algorithm is equivalent to some sequential execution of the specification, where the order between the non-overlapping methods is preserved. In this post, I would like to review a Java implementation of a concurrent stack data structure called the elimination back-off stack. Those who are interested in C++ implementations of concurrent data structures may find [this repo](https://github.com/cksystemsgroup/scal) useful. I also found [this article](http://people.csail.mit.edu/shanir/publications/concurrent-data-structures.pdf) by Mark Moir and Nir Shavit a good source for concurrent programming.

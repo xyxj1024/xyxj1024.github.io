@@ -3,7 +3,7 @@ layout:     post
 title:      "Merkle Trees"
 category:   "Data Structures and Algorithms"
 tags:       tree cryptography
-permalink:  /posts/crypto/merkle-trees
+permalink:  /blog/crypto/merkle-trees
 ---
 
 The [Merkle tree](http://www.ralphmerkle.com/papers/Certified1979.pdf)[^1] data structure was proposed by Ralph C. Merkle in 1979 to mitigate the huge storage requirements of traditional one-time signature methods. The research problem was originally stated as shown below:
