@@ -77,7 +77,11 @@ Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
 #### Graduate Teaching Assistant
 
-Washington University CSE 523S: "Systems Security"
+Course CSE 523S: "Systems Security", Washington University in St. Louis
+
+#### Research Assistant
+
+Translation of Hyman P. Minsky's *Can It Happen Again*, Institute of Economics, Tsinghua University
 
 #### Tsinghua University Student Orchestra
 
