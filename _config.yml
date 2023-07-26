@@ -22,7 +22,7 @@ baseurl:              https://xyxj1024.github.io/
 twitter_username:     xyxj1024
 github_username:      xyxj1024
 
-include: ["_pages", "_posts"]
+include: ["_pages", "_posts", "_journals"]
 
 # Gems
 plugins:
