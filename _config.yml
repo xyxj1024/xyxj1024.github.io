@@ -11,6 +11,11 @@ highlighter:          pygments
 excerpt_separator:    <!-- excerpt-end -->
 mathjax:              true
 
+# Add journals (similar with posts)
+collections:
+  journals:
+    output: true
+
 # Permalinks
 permalink:            pretty
 

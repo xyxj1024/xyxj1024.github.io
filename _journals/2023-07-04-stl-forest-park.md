@@ -1,8 +1,9 @@
 ---
-layout:             post
-title:              "American urbanism as I see it"
-tags:               north-america city-life
-permalink:          /journal/2023/07/04
+layout:      journal
+title:       "July 4, 2023"
+description: "American urbanism as I see it"
+tags:        north-america city-life
+permalink:   /journal/2023/07/04
 ---
 
 The American urbanism as I see it:
