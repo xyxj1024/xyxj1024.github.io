@@ -6,11 +6,9 @@ Any incident with GitHub Actions, Codespaces, and Pages is reported on [https://
 
 ## To-Dos
 
-- Software Security. [LLSoftSecBook](https://llsoftsec.github.io/llsoftsecbook/).
-- Hardware Security. Foreshadow attack.
-- Hardware Security. [Hasan Hassan](https://safari.ethz.ch/congratulations-to-hasan-hassan-on-his-edaa-outstanding-dissertation-award-2023/) and [Onur Mutlu](https://people.inf.ethz.ch/omutlu/)'s collaborative works on DRAM.
-- Cybersecurity. Small subgroup confinement attack on Diffie-Hellman.
-- Programming Languages. Golang's [GC](https://github.com/golang/go/blob/master/src/runtime/mgc.go) mechanism.
+- AI. LLM, RLHF, and prompt engineering.
+- Web. Small subgroup confinement attack on Diffie-Hellman.
+- Macro-Finance. *The Fiscal Fed* by Will Bateman.
 - Page Design. `Blog Posts` page categories reordering: Is there a simple way to sort `site.categories` by post count using Liquid syntax?
 - Page Design. Discussion of the integration of Chinese fonts to GitHub Pages by Long Qian in [this post](http://longqian.me/2017/02/12/jekyll-support-chinese/). However, since the proposed approach requires too much code rewrite, I decide to use system fonts for now.
 
