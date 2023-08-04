@@ -1,12 +1,12 @@
 ---
 layout:      journal
 title:       "July 26, 2023"
-description: ""
+description: "Elon on human electricity demand"
 tags:        electrification renewable-energy entrepreneurship
 permalink:   /journal/2023/07/26
 ---
 
-Some transcripts are gathered below from Patti Poppe's [interview](https://www.youtube.com/watch?v=ab8dJ1MIrrc) with Elon Musk at Pacific Gas & Electric Innovation Summit 2023:
+Some transcripts are gathered below from Patti Poppe's [interview](https://www.youtube.com/watch?v=ab8dJ1MIrrc) with Elon Musk at Pacific Gas & Electric (PG&E) Innovation Summit 2023:
 
 > Patti Poppe: *I'd love to know where you think the grid is going and where, you know, obviously you've made some really big predictions about the three times increase in energy demand as a result of electrification, what do you think the role of the grid is in that future?*
 >

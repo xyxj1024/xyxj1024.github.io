@@ -109,8 +109,7 @@ The first RSS ("resident set size", the portion of memory occupied by a process 
 1. Isolate an application or a group of applications; Memory hungry applications can be isolated and limited to a smaller amount of memory,
 2. Create a `cgroup` with limited amount of memory, this can be used as a good alternative to booting with `mem=XXXX`,
 3. Virtualization solutions can control the amount of memory they want to assign to a virtual machine instance,
-4. A CD/DVD burner could control the amount of memory used by the rest of the system to ensure that burning does not fail due to lack of available memory,
-5. . . .
+4. A CD/DVD burner could control the amount of memory used by the rest of the system to ensure that burning does not fail due to lack of available memory . . .
 
 Currently, the following types of memory usages are tracked:
 
