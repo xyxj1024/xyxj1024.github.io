@@ -4,7 +4,7 @@ title:              "SEED Labs 2.0: System Security Labs Preview"
 category:           "Hardware Security"
 tags:               hardware-security microarchitecture cache
 permalink:          /blog/seedlabs/system-security
-last_modified_at:   "2022-12-14"
+last_modified_at:   "2023-08-09"
 ---
 
 **This post guides through some background knowledge required in the [SEED Meltdown and Spectre Attack Labs](https://seedsecuritylabs.org/Labs_20.04/System/)**.
@@ -15,6 +15,13 @@ In 2017, it was discovered that many modern processors are vulnerable to attacks
 
 <!-- excerpt-end -->
 
+An important concept involved in Meltdown and Spectre attacks is *transient execution*. Since modern CPUs rely on intricate microarchitectural optimizations to predict and sometimes even re-order the instruction stream, [pipeline flushes](https://en.wikipedia.org/wiki/Pipeline_stall) may be necessary, discarding any architectural effects of pending instructions and ensuring functional correctness. Hence, the instructions are executed *transiently*. From a bird's eye view, transient execution attacks consist of five stages:
+1. microarchitectural preparation,
+2. triggering a fault,
+3. encoding secret data to a covert channel,
+4. flushing transient instructions, and
+5. decoding secret data[^intro1].
+
 ## Table of Contents
 {:.no_toc}
 * TOC 
@@ -22,13 +29,15 @@ In 2017, it was discovered that many modern processors are vulnerable to attacks
 
 ## An Introduction to Cache Attacks
 
-**Cache attacks are side channel attacks exploiting timing differences introduced by CPU caches.**
+Side-channel attacks exploit the side effects of a program to leak information about the program's execution. For example, the cache memory system can be used to leak information about the memory access pattern of a program. The root cause of most side-channel attacks is resource sharing, which is one key to the CPU performance optimization.
+
+**Cache attacks are side-channel attacks exploiting timing differences introduced by CPU caches.**
 
 Assume that a **set-associative memory cache**{: style="color: red"} on modern processors is organized into $S$ *cache sets*, each of which contains $W$ *cache lines*. In common terminology, $W$ is called the *associativity* and the corresponding cache is called $W$-*way associative*. A cache line is a storage cell consisting of, let's say, $B$ bytes. Thus, a cache has $S \cdot W \cdot B$ bytes in size.
 
 "Higher-level" caches, which are closer to the processor core, are smaller but faster than "lower-level" caches, which are closer to main memory. The last-level cache (LLC) is a *unified* cache (storing both data and instruction), typically shared among all cores of a multicore chip. An important feature of the LLC in modern Intel processors is its *inclusivity*, i.e. the LLC contains copies of all of the data stored in the higher cache levels. The $\log_{2}B$ lowest-order bits of the memory address (the *line offset*) are used to locate a datum in the cache line. The $\log_{2}S$ consecutive bits starting from bit $\log_{2}B$ of the memory address (the *set index*) is used to locate a cache set when the cache is accessed. The remaining high-order bits are used as a *tag* for each cache line. After locating the cache set, the tag field of the address is matched against the tag of the $W$ lines in the set to identify if one of the cache lines is a cache hit.
 
-[The 2005 paper by Colin Percival](https://www.daemonology.net/papers/htt.pdf) investigated the cryptographic side-channel created by cache memory sharing (on the 2.8 GHz Intel Pentium 4 processor)[^1]. The instruction <code>prefetcht2</code> tells the processor to prefetch data from memory into L2 cache and higher.
+[The 2005 paper by Colin Percival](https://www.daemonology.net/papers/htt.pdf) investigated the cryptographic side channel created by cache memory sharing (on the 2.8 GHz Intel Pentium 4 processor)[^1]. The instruction <code>prefetcht2</code> tells the processor to prefetch data from memory into L2 cache and higher.
 
 ```assembly
     mov         ecx, start_of_buffer
@@ -173,7 +182,7 @@ We can see that the accesses of <code>array[3 * 4096]</code> and <code>array[7 *
 
 ### Attacks on AES: Exploiting Memory Access Patterns
 
-Side channel attacks consist of three phases: the **priming phase** which is used to place a system into a desired initial state (e.g. flushing cache lines), the **triggering phase** which is used to perform the action that conveys information through the side channel, and the **observing phase**, which is used to detect the presence of the information conveyed through the side channel. These phases can occur architecturally (by actually executing instructions), or speculatively (through speculative execution)[^2].
+Generally speaking, side-channel attacks consist of three phases: the **priming phase** which is used to place a system into a desired initial state (e.g. flushing cache lines), the **triggering phase** which is used to perform the action that conveys information through the side channel, and the **observing phase**, which is used to detect the presence of the information conveyed through the side channel. These phases can occur architecturally (by actually executing instructions), or speculatively (through speculative execution)[^2].
 
 [RSA](https://cs.ru.nl/~joan/papers/JDA_VRI_Rijndael_2002.pdf) is a public-key cryptosystem which supports both encryption and digital signatures. To generate an RSA key pair $(N, e)$, the user randomly generates two prime numbers $p$, $q$, and computes $N = pq$. Next, given a public exponnet $e$ (e.g. $65537$ used by GnuPG and OpenSSL), the user computes the secret exponent
 
@@ -263,7 +272,7 @@ Another timing method called **Prime+Probe** tries to discover the set of memory
 - Trigger an encryption of $\mathbf{p}$;
 - For every table $\ell = 0, \dots , 3$, and index $y = 0, \delta, 2\delta, \dots , 256 - \delta$, read memory addresses $A[1024\ell + 4y + tSB]$ for $t = 0, \dots , W - 1$ and time these $W$ memory accesses.
 
-Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^5]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy. Nevertheless, the Prime+Probe side channel attack has some limitations:
+Each encryption effectively yields $4 \cdot 256 / \delta$ samples of measure score[^5]. With page sharing between the Spy process and the Trojan process, the Spy can make sure that a specific memory line is evicted from the whole cache hierarchy. Nevertheless, the Prime+Probe side-channel attack has some limitations:
 - First, it can only be applied in small caches (typically the L1 cache), since only a few bits of the virtual memory address are known. (More recently, [Liu et al. (2015)](https://ieeexplore.ieee.org/document/7163050)[^6] implements a Prime+Probe attack targeting the LLC.)
 - Second, the employment of such a Spy process in small caches restricts its application to processes co-located on the same core.
 - Finally, modern processors have very similar access times for L1 and L2 caches, only differing in a few cycles, which makes the detection method noisy and challenging[^7].
@@ -842,6 +851,8 @@ Reading at secret = 0x10ce24f02... Unclear: 0x2E='.' score=907  ( second best: 0
 ```
 
 ## References
+
+[^intro1]: Claudio Canella, Jo Van Bulck, Michael Schwarz, Moritz Lipp, Benjamin von Berg, Philipp Ortner, Frank Piessens, Dmitry Evtyushkin, and Daniel Gruss, "A Systematic Evaluation of Transient Execution Attacks and Defenses," In *Proceedings of the 28th USENIX Security Symposium*, August 14-16, 2019, Santa Clara, CA, USA.
 
 [^1]: Colin Percival, "Cache Missing for Fun and Profit," In *BSDCan 2005*, Ottawa, CA, 2005.
 
