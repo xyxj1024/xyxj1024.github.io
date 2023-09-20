@@ -207,18 +207,8 @@ sudo ip netns delete ns-1
 sudo ip netns delete ns-2
 ```
 
-## Linux Bridging
-
-Network devices called *bridges* (or synonymously, *switches*[^3]) connect two or more physical Ethernet segments together to form one bigger (logical) Ethernet segment[^4]. The job of bridges is to examine the destination of the data packets one at a time and decide whether or not to pass the packets to the other side of the Ethernet. The Linux bridging module decides whether to bridge data or to drop it not by looking at the protocol type, but by looking at the MAC address unique to each NIC[^5]. Unlike routers that understand Layer-3 network protocols, bridges understand Layer-2 protocols and therefore copy data frame by frame, instead of bit by bit.
-
 ## Footnotes
 
 [^1]: See Jake Edge, "[Namespaces in operation, part 7: Network namespaces](https://lwn.net/Articles/580893/)," January 22, 2014. [This Linux manual page](https://man7.org/linux/man-pages/man7/network_namespaces.7.html) can also serve as a good starting point.
 
 [^2]: See Jonathan Corbet, "[Notes from a container](https://lwn.net/Articles/256389/)," October 29, 2007.
-
-[^3]: People might refer to a bridge device using the term *bridge* when the device is equipped with only two ports, although the term *switch* is more commonly used. See Christian Benvenuti, "Chapter 14: Bridging" in *Understanding Linux Network Internals*, p.320, O'Reilly Media, 2005. Or, to put it alternatively, [a linux bridge implements a Layer-2 switch in software](https://paulgorman.org/technical/linux-bridges-and-virtual-networking.txt.html).
-
-[^4]: See the [official documentation](https://wiki.linuxfoundation.org/networking/bridge) for Linux bridging.
-
-[^5]: See [Linux BRIDGE-STP-HOWTO](https://tldp.org/HOWTO/BRIDGE-STP-HOWTO/what-is-a-bridge.html).
