@@ -1,9 +1,9 @@
 ---
 layout:     post
-title:      "Observing Containerized Envoy with bpftrace Programs: Part 1"
+title:      "Observing Containerized Envoy with bpftrace Programs"
 category:   "Cloud Native Computing"
 tags:       envoy-proxy bpf container docker
-permalink:  /blog/observing-containerized-envoy-part-1
+permalink:  /blog/observing-containerized-envoy
 ---
 
 Recently, I have been learning the basics of [Envoy](https://github.com/envoyproxy/envoy), which is a high-performance, open source, application-level service proxy written in C++. Envoy was developed at Lyft, where large distributed systems problem needed to be overcome. Envoy was not originally intended as an edge proxy, but was designed to be deployed as a [sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar). [The union of performance, extensibility, and dynamic configurability](https://blog.envoyproxy.io/the-universal-data-plane-api-d15cec7a) has made Envoy the universal data plane in cloud native architectures for application/L7 networking solutions[^1].

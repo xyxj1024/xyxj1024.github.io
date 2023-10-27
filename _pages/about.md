@@ -77,24 +77,26 @@ Supervisor: [Dr. Zhun Zhao](https://www.tioe.tsinghua.edu.cn/info/1180/1309.htm)
 
 #### Graduate Teaching Assistant
 
-Course CSE 523S: "Systems Security", Washington University in St. Louis
+Working under Professor Patrick Crowley for the CSE course CSE 523S: "Systems Security" at Washington University in St. Louis.
 
 #### Research Assistant
 
-Translation of Hyman P. Minsky's *Can It Happen Again*, Institute of Economics, Tsinghua University
+Envoy control plane design at Washington University's Open Network Laboratory.
+
+Translation of Hyman P. Minsky's *Can It Happen Again* at Institute of Economics, Tsinghua University.
 
 #### Tsinghua University Student Orchestra
 
-Principal Second Violin
+Principal Second Violin.
 
 Orchestral and chamber music events held at:
-- [National Center for the Performing Arts, Beijing, China](http://en.chncpa.org/)
-- [The New Tsinghua Xuetang, Beijing, China](https://www.tsinghua.edu.cn/en/Campus/Student_Life/Arts_Culture.htm)
-- [Mong Man Wai Concert Hall, Beijing, China](https://www.tsinghua.edu.cn/en/Campus/Student_Life/Arts_Culture.htm)
-- [Lee Hysan Concert Hall, Hong Kong, China](https://www.arts.cuhk.edu.hk/~music/facility/1)
+- [National Center for the Performing Arts, Beijing, China](http://en.chncpa.org/),
+- [The New Tsinghua Xuetang, Beijing, China](https://www.tsinghua.edu.cn/en/Campus/Student_Life/Arts_Culture.htm),
+- [Mong Man Wai Concert Hall, Beijing, China](https://www.tsinghua.edu.cn/en/Campus/Student_Life/Arts_Culture.htm),
+- [Lee Hysan Concert Hall, Hong Kong, China](https://www.arts.cuhk.edu.hk/~music/facility/1),
 - Art Center of [Shanghai University of Finance and Economics](https://english.sufe.edu.cn/), Shanghai, China.
 
 ### &#128187; Skills
 
- - General programming: C/C++, Go, Python
- - Web development: HTML, CSS, JavaScript
+ - General programming: C/C++, Go, Python.
+ - Web development: HTML, CSS, JavaScript.

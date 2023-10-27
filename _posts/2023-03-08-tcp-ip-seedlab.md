@@ -13,12 +13,14 @@ Let's first take a quick run-through of the Transmission Control Protocol (TCP).
 
 <!-- excerpt-end -->
 
-Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed. A client first sends a SYN packet to the server. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
+Establishment of TCP connections is based on a three-way handshake procedure (exchange of three packets) to reserve and announce suitable resources at both ends before data exchange can proceed. A *client* first sends a SYN packet to the *server*. The server, in turn, transmits to the client a SYN/ACK packet as an acknowledgement of the reception of the SYN packet. When the client receives the SYN/ACK packet of the server, it sends to the server an ACK packet in acknowledgement.
 
 ![tcp-handshake](/assets/images/schematic/tcp-handshake.svg){:class="img-responsive" width="85%"}
 <p style="text-align:center;color:gray;font-size:80%;">
 Source: <span><a href="https://hpbn.co/building-blocks-of-tcp/">Ilya Grigorik, <i>High Performance Browser Networking</i>, O'Reilly Media, Inc., 2013.</a></span>
 </p>
+
+The connection from the client to the server is *outbound*, but is *inbound* on the server; vice versa, the server outbound session is inbound on the client[^1].
 
 The fundamental unit of data transfer in TCP is a byte. However, TCP implementations generally work with a larger logical unit size called a *segment* when transmitting packets across an IP internetwork. The *Maximum Segment Size (MSS)* is a tunable parameter for a TCP transfer. The choice of the MSS typically depends on the *Maximum Transmission Unit (MTU)* size supported by the underlying network layer. In most instances, each TCP segment is carried in one IP packet.
 
@@ -31,7 +33,7 @@ The task of TCP is to divide the application-layer data into one or more segment
 
 ## Linux Network Architecture
 
-A bigger picture could be helpful here. As summarized in [this Cloudlfare's blog post](https://blog.cloudflare.com/how-we-built-spectrum/), commonly, there are two distinct layers in the inbound packet path:
+Packet processing has a lot to do with host's operating system. A bigger picture could be helpful here (e.g., for Linux systems take a look at [these slides](https://compas.cs.stonybrook.edu/~nhonarmand/courses/sp17/cse506/slides/14-net.pdf) from [Professor Nima Honarmand](https://compas.cs.stonybrook.edu/~nhonarmand/)'s OS course). As summarized in [this Cloudlfare's blog post](https://blog.cloudflare.com/how-we-built-spectrum/), commonly, there are two distinct layers in the inbound packet path:
 - IP firewall: It is usually a stateless piece of software (let us ignore `conntrack` and IP fragment reassembly for now). The firewall analyzes IP packets and decides whether to `ACCEPT` or `DROP` them.
 - Network stack: Its main task is to dispatch inbound IP packets into sockets, which are then handled by userspace applications.
 
@@ -65,9 +67,9 @@ Lab instructions can be found [here](https://seedsecuritylabs.org/Labs_20.04/Fil
 
 ### Task 1: SYN Flooding Attack
 
-Synchronize (SYN) flooding attacks are a type of denial-of-service attack which exploits a vulnerability in the TCP handshake in an attempt to make a server unavailable to legitimate traffic by consuming all available server resources. By repeatedly sending initial connection request (SYN) packets, the attacker is able to overwhelm all available ports on a targeted server machine, causing the targeted device to respond to legitimate traffic sluggishly or not at all[^1].
+Synchronize (SYN) flooding attacks are a type of denial-of-service attack which exploits a vulnerability in the TCP handshake in an attempt to make a server unavailable to legitimate traffic by consuming all available server resources. By repeatedly sending initial connection request (SYN) packets, the attacker is able to overwhelm all available ports on a targeted server machine, causing the targeted device to respond to legitimate traffic sluggishly or not at all[^2].
 
-In the TCP handshake, the state in which the server waits for the ACK packet of a client is called *half-open*. In this state, the server has prepared the communication with a client by assigning a buffer for the connection. At a server, the maximum number of remembered connection requests that have not received an acknowledgment from connecting client is controlled by a backlog queue[^2]. Based on the amount of memory available, the maximal number of remembered connection requests is affected by `listen()` syscall's `backlog` argument and set by the operating system kernel:
+In the TCP handshake, the state in which the server waits for the ACK packet of a client is called *half-open*. In this state, the server has prepared the communication with a client by assigning a buffer for the connection. At a server, the maximum number of remembered connection requests that have not received an acknowledgment from connecting client is controlled by a backlog queue[^3]. Based on the amount of memory available, the maximal number of remembered connection requests is affected by `listen()` syscall's `backlog` argument and set by the operating system kernel:
 
 ```console
 $ cat /proc/sys/net/ipv4/tcp_max_syn_backlog
@@ -115,7 +117,7 @@ union {
 };
 ```
 
-The choice of sequence number in SYN cookies complies with the basic TCP requirement that sequence numbers increase slowly; the server's ISN increases slightly faster than the client's ISN. A server that uses SYN cookies does not have to drop connections when its SYN backlog queue fills up. Instead it sends back a SYN/ACK packet, exactly as if the SYN backlog queue had been larger. (Exceptions: the server must reject TCP options such as large windows, and it must use one of the eight MSS values that it can encode.) When the server receives an ACK packet, it checks that the secret function works for a recent value of $$t$$, and then rebuilds the SYN backlog queue entry from the encoded MSS[^3]. Related Linux source code is pasted below:
+The choice of sequence number in SYN cookies complies with the basic TCP requirement that sequence numbers increase slowly; the server's ISN increases slightly faster than the client's ISN. A server that uses SYN cookies does not have to drop connections when its SYN backlog queue fills up. Instead it sends back a SYN/ACK packet, exactly as if the SYN backlog queue had been larger. (Exceptions: the server must reject TCP options such as large windows, and it must use one of the eight MSS values that it can encode.) When the server receives an ACK packet, it checks that the secret function works for a recent value of $$t$$, and then rebuilds the SYN backlog queue entry from the encoded MSS[^4]. Related Linux source code is pasted below:
 
 ```c
 // In: /net/ipv4/tcp_input.c
@@ -654,8 +656,10 @@ Lab instructions can be found [here](https://seedsecuritylabs.org/Labs_20.04/Fil
 
 ## Notes
 
-[^1]: [https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/](https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/).
+[^1]: Direction of flows is important if someone wants to configure asymmetric rules; that is, not all protocols require symmetric bandwidth.
 
-[^2]: This SYN backlog queue is also called "request socket queue." There is another backlog queue, maintained by the Linux kernel, called the accept queue. Once an ACK packet is received and validated, a new client connection is ready. This connection is moved into the accept queue, waiting for the application to call `accept()` and receive it. The `net.core.somaxconn` toggle specifies a network-system-wide maximum for the backlog of any socket; that is, it is not system global, but global to a Linux network namespace. Running in containers that have their own network namespaces, the value of `net.core.somaxconn` is set to the built-in kernel default. (More specifically, according to [the official documentation of Docker](https://docs.docker.com/engine/security/), all containers on a given Docker host are sitting on bridge interfaces, each of which gets its own network stack, meaning that a container does not get privileged access to the sockets or interfaces of another container.) When a larger backlog value is provided, the kernel silently caps it at the value of `net.core.somaxconn`. On our SEED VM, this value is `4096`. This [post](https://blog.cloudflare.com/syn-packet-handling-in-the-wild/) from Cloudflare and this [post](https://theojulienne.io/2020/07/03/scaling-linux-services-before-accepting-connections.html) from Theo Julienne provide very good explanations.
+[^2]: [https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/](https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/).
 
-[^3]: [https://cr.yp.to/syncookies.html](https://cr.yp.to/syncookies.html).
+[^3]: This SYN backlog queue is also called "request socket queue." There is another backlog queue, maintained by the Linux kernel, called the accept queue. Once an ACK packet is received and validated, a new client connection is ready. This connection is moved into the accept queue, waiting for the application to call `accept()` and receive it. The `net.core.somaxconn` toggle specifies a network-system-wide maximum for the backlog of any socket; that is, it is not system global, but global to a Linux network namespace. Running in containers that have their own network namespaces, the value of `net.core.somaxconn` is set to the built-in kernel default. (More specifically, according to [the official documentation of Docker](https://docs.docker.com/engine/security/), all containers on a given Docker host are sitting on bridge interfaces, each of which gets its own network stack, meaning that a container does not get privileged access to the sockets or interfaces of another container.) When a larger backlog value is provided, the kernel silently caps it at the value of `net.core.somaxconn`. On our SEED VM, this value is `4096`. This [post](https://blog.cloudflare.com/syn-packet-handling-in-the-wild/) from Cloudflare and this [post](https://theojulienne.io/2020/07/03/scaling-linux-services-before-accepting-connections.html) from Theo Julienne provide very good explanations.
+
+[^4]: [https://cr.yp.to/syncookies.html](https://cr.yp.to/syncookies.html).
