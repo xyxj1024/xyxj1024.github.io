@@ -11,7 +11,7 @@ An awe-inspiring glimpse into the Atlantic<br>
 &#128205; Cape Breton Island, Nova Scotia, Canada, August 2022.
 </p>
 
-![arctic-region](https://drive.google.com/uc?id=1idXsgdzOLvlcoqM0kWhZfX14iOIlxUv8){:class="img-responsive"}
+![arctic-region](https://drive.google.com/uc?export=view&id=1idXsgdzOLvlcoqM0kWhZfX14iOIlxUv8){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
 Most of my travel destinations can be found on this map<br>
 &copy; <a href="https://2009-2017.state.gov/documents/organization/258414.pdf">U.S. Chairmanship of the Arctic Council</a>.
@@ -19,15 +19,9 @@ Most of my travel destinations can be found on this map<br>
 
 ## XUANYUAN Xingjian (轩辕 行健)
 
-<!-- The unordered list immediately after the h1 will be formatted on a single
-line. It is intended to be used for contact details
-<x.xingian@wustl.edu> | +1 (314) 583-3004 | St. Louis, MO, USA
--->
-
-<!-- The paragraph after the h1 and ul and before the first h2 is optional. It
-is intended to be used for a short summary. -->
-
 Once thinking that I am destined for a career as a social scientist, right now I am a dedicated systems engineer. I believe that the practice of documenting, quietly promoting knowledge sharing and cultural understanding, defines the true essence of being human.
+
+<!-- The following information is under revision
 
 ### &#127979; Education
 
@@ -100,3 +94,5 @@ Orchestral and chamber music events held at:
 
  - General programming: C/C++, Go, Python.
  - Web development: HTML, CSS, JavaScript.
+
+-->
