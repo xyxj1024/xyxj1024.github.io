@@ -11,11 +11,13 @@ An awe-inspiring glimpse into the Atlantic<br>
 &#128205; Cape Breton Island, Nova Scotia, Canada, August 2022.
 </p>
 
+<!--
 ![arctic-region](https://drive.google.com/thumbnail?id=1idXsgdzOLvlcoqM0kWhZfX14iOIlxUv8&sz=w1000){:class="img-responsive"}
 <p style="text-align:center;color:gray;font-size:80%;">
 Most of my travel destinations can be found on this map<br>
 &copy; <a href="https://2009-2017.state.gov/documents/organization/258414.pdf">U.S. Chairmanship of the Arctic Council</a>.
 </p>
+-->
 
 ## XUANYUAN Xingjian (轩辕 行健)
 
