@@ -142,7 +142,7 @@ bool inet_bind_bucket_match(const struct inet_bind_bucket *tb, const struct net 
 
 ## Quiz #1
 
-For Quiz #1, we bind two sockets to distinct, explicitly specified IP addresses, and connect the sockets to the same remote address &mdash; `127.9.9.9:1234`. Our `quiz_1.py` program is listed below:
+For Quiz #1, we bind two sockets to distinct, explicitly specified IP addresses, and connect the sockets to the same remote address &mdash; `127.9.9.9:1234`. Our `quiz_1.py` program code is listed below:
 
 ```python
 #!/usr/bin/env -S unshare --user --map-root-user --net -- strace -e %net -- python3

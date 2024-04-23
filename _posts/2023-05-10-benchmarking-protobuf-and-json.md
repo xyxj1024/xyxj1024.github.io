@@ -441,4 +441,4 @@ PASS
 ok  	pb-test	21.233s
 ```
 
-The four columns of the benchmark section are: the number of iterations, time per function call, memory allocation, and the rate of memory allocation, respectively. Note that Protobuf has smaller memory footprints and, in most cases, lower rate of memory allocation than JSON. The `marshal` and `unmarshal` speeds of Protobuf are significantly faster than those of JSON, especially for large data size.
+The four columns of the benchmark section are: the number of iterations, time per function call, memory allocation, and the rate of memory allocation, respectively. Note that Protobuf has smaller memory footprints and, in most cases, lower rates of memory allocation than JSON. The `marshal` and `unmarshal` speeds of Protobuf are significantly faster than those of JSON, especially for large data size.

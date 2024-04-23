@@ -100,13 +100,13 @@ static inline void xa_init_flags(struct xarray *xa, gfp_t flags)
 
 In either case, a `gfp_mask` must be provided to tell the code how memory allocations are to be performed[^5]. Please do note that the macro, variable, and function definitions listed in this post may vary across different Linux kernel versions. A pointer with the `__rcu` prefix is RCU-protected, which means that any dereference of it must be covered by `rcu_read_lock()`, `rcu_read_lock_bh()`, `rcu_read_lock_sched()`, or by the appropriate update-side lock.
 
-It surprised me that something called "[XArray](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt)" is actually behind the radix tree data structure right now. In [this email](https://lkml.iu.edu/hypermail/linux/kernel/1810.2/06430.html), kernel developer Matthew Wilcox introduced XArray ("eXtensible Array") for Linux version 4.20 and explained its advantages over radix tree:
+It surprised me that something called "[XArray](https://www.kernel.org/doc/html/latest/_sources/core-api/xarray.rst.txt)" is actually behind the radix tree data structure right now. In [this email](https://lkml.iu.edu/hypermail/linux/kernel/1810.2/06430.html), kernel developer Matthew Wilcox introduced XArray ("eXtensible Array") for Linux kernel version 4.20 and explained its advantages over radix tree:
 
 > The XArray provides an improved interface to the radix tree data structure, providing locking as part of the API, specifying GFP flags at allocation time, eliminating preloading, less re-walking the tree, more efficient iterations and not exposing RCU-protected pointers to its users.
 
 ### Outdated Radix Tree API
 
-What does the original radix tree look like? Out of curiosity, I checked the `radix-tree.h` file in version 4.10.17 and found the following definitions:
+What does the original radix tree look like? Out of curiosity, I checked the `radix-tree.h` file in Linux kernel version 4.10.17 and found the following definitions:
 
 ```c
 struct radix_tree_node {
