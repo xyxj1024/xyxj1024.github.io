@@ -1,5 +1,5 @@
 basic_settings:
-  site_title: Xingjian
+  site_title: 行健的个人主页
   favicon_image: /assets/images/favicon.png
 
 header_settings:
@@ -12,6 +12,10 @@ menu_settings:
       url: '/'
     - title: 'About'
       url: '/about-en'
+    - title: 'Blog'
+      url: '/blog'
+    - title: 'Journal'
+      url: 'journal'
 
 advanced_settings:
   ajax_loading: false

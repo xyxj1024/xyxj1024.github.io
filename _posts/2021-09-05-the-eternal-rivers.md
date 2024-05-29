@@ -14,9 +14,10 @@ last_modified_at:   "2023-05-01"
 只为少人行。
 </em></p>
 
-【读书摘记】第一部分 &mdash;&mdash; 许倬云著《万古江河：中国历史文化的转折与开展》，湖南人民出版社2017年简体中文版。本书[英文版](http://cup.columbia.edu/book/china/9780231159210) &mdash;&mdash; *China: A New Cultural History* &mdash;&mdash; 由Timothy D. Baker, Jr.和Michael S. Duke翻译，美国哥伦比亚大学出版社于2012年6月出版。
+【读书摘记】
 
-第二部分 &mdash;&mdash; 许倬云著《说中国：一个不断变化的复杂共同体》，广西师范大学出版社2015年简体中文版。
+- 第一部分 &mdash;&mdash; 许倬云著《万古江河：中国历史文化的转折与开展》，湖南人民出版社2017年简体中文版。本书[英文版](http://cup.columbia.edu/book/china/9780231159210) &mdash;&mdash; *China: A New Cultural History* &mdash;&mdash; 由Timothy D. Baker, Jr.和Michael S. Duke翻译，美国哥伦比亚大学出版社于2012年6月出版。
+- 第二部分 &mdash;&mdash; 许倬云著《说中国：一个不断变化的复杂共同体》，广西师范大学出版社2015年简体中文版。
 
 <!-- excerpt-end -->
 

@@ -11,15 +11,17 @@ last_modified_at:   "2023-05-01"
 所以过去这些年我们一直在建议说我们是不是可以接受一种理论&#xFF0C;就是说把文化和文明做一点区分&#xFF0C;文化是与生俱来的习惯&#xFF0C;是使不同的民族保持不同面貌的东西&#xFF0C;是不怎么会变化的东西&#x3002;而文明是一种需要学习得来的&#xFF0C;社会群体交往的规则&#xFF0C;是使不同的人群差异越来越少的东西&#xFF0C;是不断进步的&#x3001;是大家遵循的一种交往的理性&#x3002;假定我们能在意识中区分文化和文明&#xFF0C;我们就知道文化没有好坏之别&#xFF0C;文明才有进步和落后的区别&#x3002;如果在这样的意义上来理解&#xFF0C;那么我们就可以既拥抱文明&#xFF0C;又守护文化&#x3002;
 </em></p>
 
-【读书摘记】第一部分 &mdash;&mdash; 葛兆光著《中国思想史·导论：思想史的写法》复旦大学出版社2009年版。
+【读书摘记】
 
-第二部分 &mdash;&mdash; 葛兆光著《宅兹中国：重建有关“中国”的历史论述》，中华书局2011年简体中文版。[英文版](https://brill.com/display/title/26647)由Jesse Field和秦方翻译，荷兰Koninklijke Brill出版社2017年出版。关于书名，1963年出土于中国陕西省宝鸡市金台区贾村的何尊内底铸有[铭文](https://zh.wikisource.org/zh-hans/%E4%BD%95%E5%B0%8A%E9%8A%98%E6%96%87)：
+- 第一部分 &mdash;&mdash; 葛兆光著《中国思想史·导论：思想史的写法》复旦大学出版社2009年版。
+- 第二部分 &mdash;&mdash; 葛兆光著《宅兹中国：重建有关“中国”的历史论述》，中华书局2011年简体中文版。[英文版](https://brill.com/display/title/26647)由Jesse Field和秦方翻译，荷兰Koninklijke Brill出版社2017年出版。
+- 第三部分 &mdash;&mdash; 葛兆光著《何为中国：疆域、民族、文化与历史》，牛津大学出版社2014年繁体中文版。[英文版](https://www.hup.harvard.edu/catalog.php?isbn=9780674737143)由Michael Gibbs Hill翻译，The Belknap Press of Harvard University Press 2018年出版。
+
+关于“宅兹中国”这一书名，1963年出土于中国陕西省宝鸡市金台区贾村的何尊内底铸有[铭文](https://zh.wikisource.org/zh-hans/%E4%BD%95%E5%B0%8A%E9%8A%98%E6%96%87)：
 
 > 余其宅兹中国，自兹乂民。
 
 这是目前发现的最早的“中国”一词的用例。
-
-第三部分 &mdash;&mdash; 葛兆光著《何为中国：疆域、民族、文化与历史》，牛津大学出版社2014年繁体中文版。[英文版](https://www.hup.harvard.edu/catalog.php?isbn=9780674737143)由Michael Gibbs Hill翻译，The Belknap Press of Harvard University Press 2018年出版。
 
 <!-- excerpt-end -->
 

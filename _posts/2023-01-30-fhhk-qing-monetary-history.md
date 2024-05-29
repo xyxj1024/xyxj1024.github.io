@@ -11,7 +11,11 @@ last_modified_at:   "2023-05-01"
 China was neither primitive nor was its economy simple; rather it was vital, changing, developing. But it did not modernize. It did not accept the challenge of the industrial West and "develop" in this special sense of the term.
 </em></p>
 
-【读书摘记】Frank H. H. King, *Money and Monetary Policy in China: 1845-1895*, Harvard University Press, 1965&#x3002;这部专著记录了十九世纪下半叶 &mdash;&mdash; 1842年第一次鸦片战争结束至1895年中日《马关条约》签订 &mdash;&mdash; 清代中国的货币系统如何适应来自外部工业文明的挑战&#x3002;作者景复朗&#xFF0C;中国经济史学家&#xFF0C;香港大学亚洲研究中心创始主任&#xFF08;1968-1979&#xFF09;&#xFF0C;除本书以外，其著作还包括[四卷本汇丰银行史](https://history.hsbc.com/history/lessons)&#x3002;
+【读书摘记】
+
+- Frank H. H. King, *Money and Monetary Policy in China: 1845-1895*, Harvard University Press, 1965&#x3002;
+
+这部专著记录了十九世纪下半叶 &mdash;&mdash; 1842年第一次鸦片战争结束至1895年中日《马关条约》签订 &mdash;&mdash; 清代中国的货币系统如何适应来自外部工业文明的挑战&#x3002;作者景复朗&#xFF0C;中国经济史学家&#xFF0C;香港大学亚洲研究中心创始主任&#xFF08;1968-1979&#xFF09;&#xFF0C;除本书以外，其著作还包括[四卷本汇丰银行史](https://history.hsbc.com/history/lessons)&#x3002;
 
 <!-- excerpt-end -->
 

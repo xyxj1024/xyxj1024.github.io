@@ -14,7 +14,9 @@ last_modified_at:   "2023-08-01"
 不见江南总断肠。
 </em></p>
 
-【读书摘记】余英时著《论天人之际：中国古代思想起源试探》，中华书局2014年简体中文版。
+【读书摘记】
+
+- 余英时著《论天人之际：中国古代思想起源试探》，中华书局2014年简体中文版。
 
 [葛兆光]({{ site.baseurl }}/blog/Chinese-history/all-under-heaven-and-myriad-states)曾在[《几回林下话沧桑&mdash;&mdash;我们所认识的余英时先生》](https://www.jiemian.com/article/6448139.html)一文中着重提到本书，以下为部分抄录：
 
