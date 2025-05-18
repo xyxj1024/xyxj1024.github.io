@@ -4,7 +4,7 @@ title:              "SEED Labs 2.0: System Security Labs Preview"
 category:           "Hardware Security"
 tags:               hardware-security microarchitecture cache
 permalink:          /blog/seedlabs/system-security
-last_modified_at:   "2023-08-09"
+last_modified_at:   "2024-09-26"
 ---
 
 **This post guides through some background knowledge required in the [SEED Meltdown and Spectre Attack Labs](https://seedsecuritylabs.org/Labs_20.04/System/)**.
@@ -21,6 +21,9 @@ An important concept involved in Meltdown and Spectre attacks is *transient exec
 3. encoding secret data to a covert channel,
 4. flushing transient instructions, and
 5. decoding secret data[^intro1].
+
+A [ACM SIGARCH article](https://www.sigarch.org/secure-computer-architecture-in-the-post-meltdown-world-a-long-road-ahead/) posted by [Daniel Moghimi](https://x.com/flowyroll) on September 26, 2024 speaks out the truth:
+> Meltdown and Spectre, later called transient execution attacks, showed that the distinction between the architecture and microarchitecture is in our head, especially when it comes to security.
 
 ## Table of Contents
 {:.no_toc}

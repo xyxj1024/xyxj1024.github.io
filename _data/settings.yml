@@ -8,7 +8,7 @@ header_settings:
 
 menu_settings:
   menu_items:
-    - title: '2024'
+    - title: '2025'
       url: '/'
     - title: 'About'
       url: '/about-en'
