@@ -5,11 +5,30 @@ permalink:  /about-en
 nav_order:  2
 ---
 
-![me-at-cbi](/assets/images/about/cbi.jpg){:class="img-responsive"}
-<p style="text-align:center;color:gray;font-size:80%;">
-An awe-inspiring glimpse into the Atlantic<br>
-&#128205; Cape Breton Island, Nova Scotia, Canada, August 2022.
-</p>
+<div class="photo-gallery">
+  <div class="slider-container">
+    <div class="photo-slider" id="photoSlider">
+      
+      <div class="photo-item">
+        <img src="/assets/images/about/cbi.jpg" alt="个人照片1">
+        <p style="text-align:center;color:gray;font-size:80%;">
+          An awe-inspiring glimpse into the Atlantic<br>
+          &#128205; Cape Breton Island, Nova Scotia, Canada, August 2022.
+        </p>
+      </div>
+
+      <div class="photo-item">
+        <img src="/assets/images/about/hermaness.jpg" alt="个人照片2">
+        <p style="text-align:center;color:gray;font-size:80%;">
+          Wind, cliffs, and the moorland<br>
+          &#128205; Hermaness NNR, Shetland, Scotland, October 2025.
+        </p>
+      </div>
+
+    </div>
+  </div>  
+  <div class="slider-indicators" id="indicators"></div>
+</div>
 
 <!--
 ![arctic-region](https://drive.google.com/thumbnail?id=1idXsgdzOLvlcoqM0kWhZfX14iOIlxUv8&sz=w1000){:class="img-responsive"}
@@ -100,3 +119,95 @@ Orchestral and chamber music events held at:
  - Web development: HTML, CSS, JavaScript.
 
 -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.getElementById('photoSlider');
+    if (!slider) return;
+    
+    const indicatorsContainer = document.getElementById('indicators');
+    const photoItems = document.querySelectorAll('.photo-item');
+    
+    // 创建指示器
+    photoItems.forEach((_, index) => {
+        const indicator = document.createElement('div');
+        indicator.classList.add('indicator');
+        if (index === 0) indicator.classList.add('active');
+        
+        indicator.addEventListener('click', () => {
+            goToSlide(index);
+        });
+        
+        indicatorsContainer.appendChild(indicator);
+    });
+    
+    const indicators = document.querySelectorAll('.indicator');
+    
+    function goToSlide(index) {
+        const itemWidth = photoItems[0].offsetWidth + 30;
+        slider.scrollTo({
+            left: index * itemWidth,
+            behavior: 'smooth'
+        });
+        
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+        });
+    }
+    
+    slider.addEventListener('scroll', () => {
+        const scrollPosition = slider.scrollLeft;
+        const itemWidth = photoItems[0].offsetWidth + 30;
+        const currentIndex = Math.round(scrollPosition / itemWidth);
+        
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === currentIndex);
+        });
+    });
+    
+    // 触控/鼠标拖动支持
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+    
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+    });
+    
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+    });
+    
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.scrollLeft = scrollLeft - walk;
+    });
+    
+    // 触摸事件
+    slider.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+    
+    slider.addEventListener('touchend', () => {
+        isDown = false;
+    });
+    
+    slider.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        const x = e.touches[0].pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.scrollLeft = scrollLeft - walk;
+    });
+});
+</script>
