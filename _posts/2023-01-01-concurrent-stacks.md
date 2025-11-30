@@ -420,7 +420,7 @@ public class EliminationBackoffStack<T> {
     static final long TIMEOUT = 10;
     static final TimeUnit UNIT = TimeUnit.MILLISECONDS;
     public EliminationBackoffStack() {
-        top = new AtomicReference<>(null);
+        top = new AtomicReference<>(null); // top of stack (null if empty)
         eliminationArray = new EliminationArray<>(
             CAPACITY, TIMEOUT, UNIT
         );
@@ -431,7 +431,7 @@ public class EliminationBackoffStack<T> {
             if (tryPush(n)) return;
             try {
                 T y = eliminationArray.visit(x);
-                if (y == null) return;
+                if (y == null) return; // if found a matching pop, return
             } catch (TimeoutException e) {}   
         }
     }
@@ -441,7 +441,7 @@ public class EliminationBackoffStack<T> {
             if (n != null) return n.value;
             try {
                 T y = eliminationArray.visit(null);
-                if (y != null) return y;
+                if (y != null) return y; // if found a matching push, return its value
             } catch (TimeoutException e) {}
         }
     }
@@ -464,6 +464,28 @@ public class Node<T> {
 
     public Node(T x) {
         value = x;
+    }
+}
+
+public class EliminationArray<T> {
+    Exchangers<T>[] exchangers;
+    final long TIMEOUT;
+    final TimeUnit UNIT;
+    Random random;
+
+    @SuppressWarnings("unchecked")
+    public EliminationArray(int capacity, long timeout, TimeUnit unit) {
+        exchangers = new Exchanger[capacity];
+        for (int i = 0; i < capacity; i++)
+            exchangers[i] = new Exchanger<>();
+        random = new Random();
+        TIMEOUT = timeout;
+        UNIT = unit;
+    }
+
+    public T visit(T x) throws TimeoutException {
+        int i = random.nextInt(exchangers.length);
+        return exchangers[i].exchange(x, TIMEOUT, UNIT);
     }
 }
 ```
